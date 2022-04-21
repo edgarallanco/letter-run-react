@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "components/*": ["src/components/*"],
+      "reducer/*": ["src/reducer/*"],
+      "context/*": ["src/context/*"]
+    }
+  },
+  "exclude": ["node_modules"] 
+}

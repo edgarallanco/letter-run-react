@@ -1,12 +1,15 @@
 import { useLoader, useThree } from "@react-three/fiber";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { MeshBVH, MeshBVHVisualizer } from 'three-mesh-bvh';
 import { Mesh } from "three";
+import { AppDispatchContext } from 'context/AppContext';
+import { Actions } from "reducer/AppReducer";
 
 const Scene = (props) => {
   const gltf = useLoader(GLTFLoader, './../resources/EA_Scene_v2.glb');
+  const { dispatch } = useContext(AppDispatchContext);
 
   useEffect(() => {
     gltf.scene.scale.setScalar(1.5);
@@ -49,6 +52,7 @@ const Scene = (props) => {
     collider.material.wireframe = true;
     collider.material.opacity = 0.5;
     collider.material.transparent = true;
+    dispatch({ type: Actions.UPDATE_COLLIDER, payload: collider });
     // gltf.scene.add(collider);
   });
 

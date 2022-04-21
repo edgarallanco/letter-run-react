@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./"],
+      "alias": {
+        "components": "./src/components",
+        "reducer": "./src/reducer",
+        "context": "./src/context"
+      }
+    }]
+  ]
+}
