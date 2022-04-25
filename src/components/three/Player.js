@@ -20,7 +20,7 @@ const Player = () => {
   const [bkdPressed, setBkdPressed] = useState(false);
   const [lftPressed, setLftPressed] = useState(false);
   const [rgtPressed, setRgtPressed] = useState(false);
-  const [isOnGround, setIsOnGround] = useState(false);
+  const [isOnGround, setIsOnGround] = useState(true);
   const [vector, setVector] = useState(new Vector3());
   const [upVector, setUpVector] = useState(new Vector3(0, 1, 0));
   const [velocity, setVelocity] = useState(new Vector3());
@@ -40,6 +40,9 @@ const Player = () => {
     meshRef.current.castShadow = true;
     meshRef.current.receiveShadow = true;
     meshRef.current.position.set(-38, 15, 10);
+
+    console.log(meshRef.current.position);
+    
     velocity.set(0, 0, 0);
     setVelocity(velocity);
     camera.position.sub(state.controls.target);
@@ -50,9 +53,10 @@ const Player = () => {
     setPlayer(meshRef.current);
 
     registerEvents();
-  }, []);
+  }, [state.controls]);
 
   useFrame((state) => {
+    // console.log(state);
     movePlayer();
   })
 
@@ -67,7 +71,7 @@ const Player = () => {
     if (fwdPressed) {
       vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
-      player.position.set(38, 15, 10);
+      // player.position.set(38, 15, 10);
       console.log(player.position);
       setVector(vector);
     }
