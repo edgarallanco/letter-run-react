@@ -1,23 +1,24 @@
-import { useLoader, useThree } from "@react-three/fiber";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import React, { useContext, useEffect } from "react";
+import {useLoader, useThree} from '@react-three/fiber';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+import React, {useContext, useEffect} from 'react';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { MeshBVH, MeshBVHVisualizer } from 'three-mesh-bvh';
-import { Mesh } from "three";
-import { AppDispatchContext } from 'context/AppContext';
-import { Actions } from "reducer/AppReducer";
+import * as THREE from 'three';
+import {MeshBVH, MeshBVHVisualizer} from 'three-mesh-bvh';
+import {AppDispatchContext} from 'context/AppContext';
+import {Actions} from 'reducer/AppReducer';
 
 const Scene = (props) => {
   const gltf = useLoader(GLTFLoader, './../resources/EA_Scene_v2.glb');
-  const { dispatch } = useContext(AppDispatchContext);
+  const {dispatch} = useContext(AppDispatchContext);
+  let environment, visualizer
+  const {scene} = useThree();
 
   useEffect(() => {
-    gltf.scene.scale.setScalar(1.5);
-    gltf.scene.updateMatrixWorld(true);
-    const geometries = [];
-
-    gltf.scene.traverse((c) => {
-      // console.log(c.userData.name);
+    // collect all geometries to merge
+    let geometries = [];
+    environment = gltf.scene;
+    environment.updateMatrixWorld(true);
+    environment.traverse((c) => {
       if (c.geometry) {
         const cloned = c.geometry.clone();
         cloned.applyMatrix4(c.matrixWorld);
@@ -26,19 +27,14 @@ const Scene = (props) => {
             cloned.deleteAttribute(key);
           }
         }
-
+        // if (c.userData.name === '1_E_Stairs') {
+        //   stairs = c;
+        //   stairsBackup = cloned;
+        //   stairsBackup.userData = 'stairs';
+        //   console.log(c, stairsBackup);
+        // }
         geometries.push(cloned);
       }
-
-      if (c.material) {
-        c.castShadow = true;
-        c.receiveShadow = true;
-        c.material.shadowSide = 2;
-      }
-      // if (c.userData.name === 'LP_Stairs') {
-      //   stairs = c;
-      //   stairs.visible = true;
-      // }
     });
 
     // create the merged geometry
@@ -47,18 +43,24 @@ const Scene = (props) => {
       false
     );
     mergedGeometry.boundsTree = new MeshBVH(mergedGeometry);
-
-    let collider = new Mesh(mergedGeometry);
+    const collider = new THREE.Mesh(mergedGeometry);
     collider.material.wireframe = true;
     collider.material.opacity = 0.5;
     collider.material.transparent = true;
-    dispatch({ type: Actions.UPDATE_COLLIDER, payload: collider });
-    // gltf.scene.add(collider);
-  });
+    visualizer = new MeshBVHVisualizer(collider, 10);
+    dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
+    scene.add(visualizer);
+    scene.add(collider);
+    scene.add(environment);
 
-  return (
-    <primitive {...props} object={gltf.scene} />
-  )
-}
+    environment.traverse((c) => {
+      if (c.material) {
+        c.castShadow = true;
+        c.receiveShadow = true;
+        c.material.shadowSide = 2;
+      }
+    });
+  }, []);
+};
 
 export default Scene;

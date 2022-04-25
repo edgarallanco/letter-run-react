@@ -1,22 +1,19 @@
-import { extend, useThree } from "@react-three/fiber";
-import React, { useContext, useEffect, useRef } from "react";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { AppStateContext, AppDispatchContext } from '../../context/AppContext';
-import { Actions } from "../../reducer/AppReducer";
+import {extend, useThree} from '@react-three/fiber';
+import React, {useContext, useEffect, useRef} from 'react';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import {AppStateContext, AppDispatchContext} from '../../context/AppContext';
+import {Actions} from '../../reducer/AppReducer';
 // Extend will make OrbitControls available as a JSX element called orbitControls for us to use.
-extend({ OrbitControls });
-
+extend({OrbitControls});
 
 const Camera = () => {
-  const { gl, camera } = useThree();
-  const { dispatch } = useContext(AppDispatchContext);
-  const { state } = useContext(AppStateContext);
+  const {gl, camera} = useThree();
+  const {dispatch} = useContext(AppDispatchContext);
+  const {state} = useContext(AppStateContext);
   const cameraRef = useRef();
   const controlsRef = useRef();
 
-  useEffect(() => {
-
-  });
+  useEffect(() => {});
 
   useEffect(() => {
     let camera = cameraRef.current;
@@ -33,9 +30,8 @@ const Camera = () => {
     camera.position.set(10, 50, 50);
     camera.position.sub(controls.target);
 
-    dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
-    dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
-
+    dispatch({type: Actions.UPDATE_CONTROLS, payload: controls});
+    dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
   }, [gl]);
 
   return (
@@ -43,7 +39,7 @@ const Camera = () => {
       <orbitControls args={[camera, gl.domElement]} ref={controlsRef} />
       <perspectiveCamera ref={cameraRef} camera={state.camera} />
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default Camera;
