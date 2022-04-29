@@ -1,11 +1,11 @@
 import './App.css';
 import Stage1 from 'components/Stage1';
-import { AppProvider } from 'context/AppContext';
+import Modal from 'components/Modal';
 
 function App() {
-
   return (
-    <div className="App" style={{ height: window.innerHeight }}>
+    <div className='App' style={{height: window.innerHeight}}>
+      {/* <Modal /> */}
       <Stage1 />
     </div>
   );

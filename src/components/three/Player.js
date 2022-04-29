@@ -1,13 +1,12 @@
 import {useFrame, useThree} from '@react-three/fiber';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Clock} from 'three';
 import {Vector3, Box3, Matrix4, Line3} from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {AppStateContext, AppDispatchContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
-import {useTrimesh} from '@react-three/cannon';
+import {OrbitControls, Stats, RoundedBox} from '@react-three/drei';
+import equal from 'fast-deep-equal';
 
-const Player = () => {
+const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
@@ -30,18 +29,12 @@ const Player = () => {
     meshRef.current.capsuleInfo = {
       radius: 0.5,
       segment: new Line3(new Vector3(), new Vector3(0, -1.0, 0.0)),
-      mass: 400,
-      material: {
-        friction: 0,
-      },
     };
 
     meshRef.current.geometry.translate(0, -0.5, 0);
     meshRef.current.castShadow = true;
     meshRef.current.receiveShadow = true;
     meshRef.current.position.set(-38, 8, 1);
-
-    console.log(meshRef.current.position);
 
     // velocity.set(0, 0, 0);
     setVelocity(velocity);
@@ -57,6 +50,27 @@ const Player = () => {
 
   useFrame((stateCanvas, delta) => {
     movePlayer(Math.min(delta, 0.1), state.collider);
+    // if the player has fallen too far below the level reset their position to the start
+    if (player.position.y < -25) {
+      meshRef.current.position.set(-38, 8, 1);
+      setPlayer(meshRef.current);
+    }
+    if (equal(state.playerPosition, {x: -44, y: 2, z: -19})) {
+      const currentCheckpoint = state.checkpoints.find(
+        (checkpoint) => checkpoint.number === 0
+      );
+      if (!currentCheckpoint) return;
+      setCheckpoint(currentCheckpoint);
+      dispatch({type: Actions.DELETE_CHECKPOINT, payload: 0});
+      setIsModal(true);
+    }
+    if (isSound) {
+      if (player.position.y <= 4) {
+        setEnvSound(false);
+      } else {
+        setEnvSound(true);
+      }
+    }
   });
 
   const movePlayer = (delta, collider) => {
@@ -183,6 +197,7 @@ const Player = () => {
 
     dispatch({type: Actions.UPDATE_CONTROLS, payload: state.controls});
     setPlayer(player);
+    dispatch({type: Actions.UPDATE_PLAYER, payload: player.position});
     // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera});
   };
 
@@ -190,7 +205,7 @@ const Player = () => {
     window.addEventListener(
       'keydown',
       (e) => {
-        // console.log('keydown', player.getPosition());
+        // console.log('keydown', player.position);
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(true);
@@ -240,18 +255,15 @@ const Player = () => {
   };
 
   return (
-    <mesh ref={meshRef} position={player ? player.position : [-38, 15, 10]}>
-      <boxGeometry
-        width={1.0}
-        height={2.0}
-        depth={1.0}
-        segments={10}
-        radius={0.5}
-        mass={400}
-        mate
-      />
-      <meshStandardMaterial attach='material' />
-    </mesh>
+    <>
+      <mesh ref={meshRef} position={player ? player.position : [-38, 15, 10]}>
+        <RoundedBox args={[1.0, 2.0, 1.0]} radius={0.5} segment={10}>
+          <meshLambertMaterial attach='material' color={'white'} />
+        </RoundedBox>
+
+        <meshStandardMaterial attach='material' />
+      </mesh>
+    </>
   );
 };
 

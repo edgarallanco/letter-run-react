@@ -19,16 +19,16 @@ const Camera = () => {
     let camera = cameraRef.current;
     gl.camera = camera;
     const controls = controlsRef.current;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.minDistance = 1;
-    controls.maxDistance = 20;
+    controls.maxPolarAngle = Math.PI / 4;
+    controls.minDistance = 15;
+    controls.maxDistance = 50;
 
-    camera.fov = 75;
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.near = 0.1;
+    // camera.fov = 75;
+    // camera.aspect = window.innerWidth / window.innerHeight;
+    // camera.near = 0.9;
     // camera.far = 20;
-    camera.position.set(10, 50, 50);
-    camera.position.sub(controls.target);
+    // camera.position.set(10, 50, 50);
+    // camera.position.sub(controls.target);
 
     dispatch({type: Actions.UPDATE_CONTROLS, payload: controls});
     dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
