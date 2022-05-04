@@ -16,6 +16,8 @@ export const Actions = {
   UPDATE_SOUND: 'update_sound',
   UPDATE_MODAL: 'update_modal',
   DELETE_CHECKPOINT: 'delete_checkpoint',
+  UPDATE_PLAYER_MESH: 'update_player_mesh',
+  UPDATE_ENVIROMENT: 'update_enviroment',
 };
 
 export const reducer = (state, action) => {
@@ -44,6 +46,16 @@ export const reducer = (state, action) => {
       return {
         ...state,
         isModal: action.payload,
+      };
+    case Actions.UPDATE_PLAYER_MESH:
+      return {
+        ...state,
+        playerMesh: action.payload,
+      };
+    case Actions.UPDATE_ENVIROMENT:
+      return {
+        ...state,
+        enviroment: action.payload,
       };
     case Actions.DELETE_CHECKPOINT:
       return {

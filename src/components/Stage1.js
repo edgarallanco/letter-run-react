@@ -4,13 +4,20 @@ import {Suspense} from 'react';
 import Camera from 'components/three/Camera';
 import Player from 'components/three/Player';
 import Scene from 'components/three/Scene';
+import Sphere from 'components/three/Sphere';
 import {AppProvider} from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
 import {AppStateContext, AppDispatchContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
 import * as THREE from 'three';
 import Modal from './Modal';
-import {Billboard, GizmoHelper, GizmoViewport, Html} from '@react-three/drei';
+import {
+  Billboard,
+  GizmoHelper,
+  GizmoViewport,
+  Html,
+  useContextBridge,
+} from '@react-three/drei';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
@@ -20,9 +27,10 @@ export const Stage1 = () => {
   const [isModal, setIsModal] = useState(false);
   const [checkpoint, setCheckpoint] = useState({});
   const sound = useRef();
+  const ContextBridge = useContextBridge(AppStateContext);
   useEffect(() => {
+    console.log(state);
     if (sound.current !== null) {
-      // sound.current.play()
       isSound && envSound ? sound.current.play() : sound.current.pause();
     }
   }, [envSound, isSound]);
@@ -39,7 +47,6 @@ export const Stage1 = () => {
       <Canvas>
         <Suspense fallback={null}>
           <AppProvider>
-            <Html></Html>
             <GizmoHelper
               alignment='bottom-right' // widget alignment within scene
               margin={[80, 80]} // widget margins (X, Y)
@@ -58,11 +65,14 @@ export const Stage1 = () => {
               setCheckpoint={setCheckpoint}
             />
             <Camera />
-            <Checkpoint
-              url='./resources/beat-loop.mp3'
-              isSound={isSound}
-              position={[-43, 2, -19]}
-            />
+            {state.checkpoints.map(({position, number}) => (
+              <Checkpoint
+                url='./resources/beat-loop.mp3'
+                isSound={isSound}
+                position={position}
+                key={number}
+              />
+            ))}
             <directionalLight
               color={0xffffff}
               intensity={1}
@@ -81,6 +91,7 @@ export const Stage1 = () => {
               position={[0, 100, 135]}
               castShadow={true}
             />
+            {/* <Sphere /> */}
             <Scene checkpoint={checkpoint} isModal={isModal} />
           </AppProvider>
         </Suspense>

@@ -6,24 +6,28 @@ import * as THREE from 'three';
 import {MeshBVH, MeshBVHVisualizer} from 'three-mesh-bvh';
 import {AppDispatchContext, AppStateContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
-import {Html} from '@react-three/drei';
 
 const Scene = ({checkpoint, isModal}) => {
   const gltf = useLoader(GLTFLoader, './../resources/EA_Scene_v2.glb');
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
-  let environment, visualizer;
+  let visualizer, environment;
   const {scene} = useThree();
   const sound = useRef();
   const [stairsBackup, setStairsBackup] = useState();
+  // const [environment, setEnvironment] = useState(null);
   const [stairs, setStairs] = useState();
   let collider;
   const [geometries, setGeometries] = useState([]);
 
   useEffect(() => {
     // collect all geometries to merge
+    if (!state.playerMesh) return;
     const geoms = [];
     environment = gltf.scene;
+    // environment.add(state.playerMesh);
+    // setEnvironment(gltf.scene);
+    dispatch({type: Actions.UPDATE_ENVIROMENT, payload: environment});
     environment.scale.setScalar(1.5);
     environment.updateMatrixWorld(true);
     environment.traverse((c) => {
@@ -47,6 +51,7 @@ const Scene = ({checkpoint, isModal}) => {
     });
     setGeometries(geoms);
     // create the merged geometry
+    // console.log(state.playerMesh, environment);
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
       geoms,
       false
@@ -69,7 +74,7 @@ const Scene = ({checkpoint, isModal}) => {
 
     scene.add(collider);
     scene.add(environment);
-  }, []);
+  }, [state.playerMesh]);
 
   useEffect(() => {
     if (!isModal) return;
@@ -88,8 +93,6 @@ const Scene = ({checkpoint, isModal}) => {
     visualizer = new MeshBVHVisualizer(collider, 10);
     dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
     setStairsBackup(null);
-    scene.add(collider);
-    scene.add(environment);
   }, [isModal]);
 };
 

@@ -10,7 +10,6 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
-
   const meshRef = useRef();
   const speed = 10;
   const [fwdPressed, setFwdPressed] = useState(false);
@@ -43,6 +42,7 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);
     state.controls.update();
+    dispatch({type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current});
     setPlayer(meshRef.current);
 
     registerEvents();
@@ -55,15 +55,19 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
       meshRef.current.position.set(-38, 8, 1);
       setPlayer(meshRef.current);
     }
-    if (equal(state.playerPosition, {x: -44, y: 2, z: -19})) {
-      const currentCheckpoint = state.checkpoints.find(
-        (checkpoint) => checkpoint.number === 0
-      );
-      if (!currentCheckpoint) return;
-      setCheckpoint(currentCheckpoint);
-      dispatch({type: Actions.DELETE_CHECKPOINT, payload: 0});
-      setIsModal(true);
-    }
+    state.checkpoints.find((checkpoint) => {
+      if (
+        equal(state.playerPosition, {
+          x: checkpoint.position[0],
+          y: checkpoint.position[1],
+          z: checkpoint.position[2],
+        })
+      ) {
+        setCheckpoint(checkpoint);
+        dispatch({type: Actions.DELETE_CHECKPOINT, payload: checkpoint.number});
+        setIsModal(true);
+      }
+    });
     if (isSound) {
       if (player.position.y <= 4) {
         setEnvSound(false);
@@ -83,7 +87,6 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     if (fwdPressed) {
       vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
-      // player.position.set(38, 15, 10);
       setVector(vector);
     }
 
@@ -107,10 +110,6 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
 
     velocity.y += isOnGround ? 0 : delta * gravity;
     player.position.addScaledVector(velocity, delta);
-    player.updateMatrixWorld();
-
-    // check how much the collider was moved
-    // deltaVector.subVectors(newPosition, meshRef.position);
     player.updateMatrixWorld();
 
     let tempVector = new Vector3();
@@ -205,7 +204,6 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     window.addEventListener(
       'keydown',
       (e) => {
-        // console.log('keydown', player.position);
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(true);
@@ -234,7 +232,6 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     window.addEventListener(
       'keyup',
       (e) => {
-        // console.log("keyup", e.code);
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(false);
@@ -260,7 +257,6 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
         <RoundedBox args={[1.0, 2.0, 1.0]} radius={0.5} segment={10}>
           <meshLambertMaterial attach='material' color={'white'} />
         </RoundedBox>
-
         <meshStandardMaterial attach='material' />
       </mesh>
     </>

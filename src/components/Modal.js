@@ -1,3 +1,4 @@
+import {AppProvider, AppStateContext} from 'context/AppContext';
 import React, {useEffect, useState, useContext} from 'react';
 import ReactDOM from 'react-dom/client';
 
