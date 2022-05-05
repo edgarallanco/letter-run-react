@@ -1,12 +1,22 @@
 import {useFrame, useThree} from '@react-three/fiber';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Vector3, Box3, Matrix4, Line3} from 'three';
+import {Vector3, Box3, Matrix4, Line3, Quaternion} from 'three';
 import {AppStateContext, AppDispatchContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
 import {OrbitControls, Stats, RoundedBox} from '@react-three/drei';
 import equal from 'fast-deep-equal';
+import stateValtio from 'context/store';
+import {useGLTF, useAnimations} from '@react-three/drei';
+import {getDirectionOffset} from 'src/utils/directionalOffset';
 
-const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
+const Player = ({
+  isModal,
+  setIsModal,
+  isSound,
+  setEnvSound,
+  setCheckpoint,
+  action,
+}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
@@ -21,6 +31,14 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
   const [upVector, setUpVector] = useState(new Vector3(0, 1, 0));
   const [velocity, setVelocity] = useState(new Vector3());
   const [player, setPlayer] = useState();
+  const rotateAngle = new Vector3(0, 1, 0);
+  const rotateQuarternion = new Quaternion();
+  const {nodes, materials, animations} = useGLTF(
+    './../resources/archer-animation.glb'
+  );
+  // const group = useRef();
+  const {actions} = useAnimations(animations, meshRef);
+  const previousAction = usePrevious(stateValtio.action);
 
   useEffect(() => {
     if (!state.controls) return;
@@ -30,7 +48,7 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
       segment: new Line3(new Vector3(), new Vector3(0, -1.0, 0.0)),
     };
 
-    meshRef.current.geometry.translate(0, -0.5, 0);
+    // meshRef.current.geometry.translate(0, -0.5, 0);
     meshRef.current.castShadow = true;
     meshRef.current.receiveShadow = true;
     meshRef.current.position.set(-38, 8, 1);
@@ -48,6 +66,15 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     registerEvents();
   }, [state.controls]);
 
+  useEffect(() => {
+    if (previousAction) {
+      actions[previousAction].fadeOut(0.2);
+      actions[stateValtio.action].stop();
+    }
+    actions[stateValtio.action].play();
+    actions[stateValtio.action].fadeIn(0.2);
+  }, [actions, stateValtio.action, previousAction]);
+
   useFrame((stateCanvas, delta) => {
     movePlayer(Math.min(delta, 0.1), state.collider);
     // if the player has fallen too far below the level reset their position to the start
@@ -55,7 +82,7 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
       meshRef.current.position.set(-38, 8, 1);
       setPlayer(meshRef.current);
     }
-    state.checkpoints.find((checkpoint) => {
+    stateValtio.checkpoints.find((checkpoint) => {
       if (
         equal(state.playerPosition, {
           x: checkpoint.position[0],
@@ -64,7 +91,9 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
         })
       ) {
         setCheckpoint(checkpoint);
-        dispatch({type: Actions.DELETE_CHECKPOINT, payload: checkpoint.number});
+        stateValtio.checkpoints = stateValtio.checkpoints.filter(
+          (chk) => chk.number !== checkpoint.number
+        );
         setIsModal(true);
       }
     });
@@ -74,6 +103,23 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
       } else {
         setEnvSound(true);
       }
+    }
+    var angleYCameraDirection = Math.atan2(
+      meshRef.current.position.x - camera.position.x,
+      meshRef.current.position.z - camera.position.z
+    );
+    const directionOffset = getDirectionOffset(
+      fwdPressed,
+      bkdPressed,
+      rgtPressed,
+      lftPressed
+    );
+    rotateQuarternion.setFromAxisAngle(
+      rotateAngle,
+      directionOffset + angleYCameraDirection
+    );
+    if (stateValtio.action === 'Run Forward') {
+      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.2);
     }
   });
 
@@ -85,24 +131,29 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     let gravity = -30;
 
     if (fwdPressed) {
+      stateValtio.action = 'Run Forward';
       vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
     }
 
     if (bkdPressed) {
+      stateValtio.action = 'Run Forward';
+
       vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
     }
 
     if (lftPressed) {
+      stateValtio.action = 'Run Forward';
       vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
     }
 
     if (rgtPressed) {
+      stateValtio.action = 'Run Forward';
       vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
@@ -232,6 +283,7 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
     window.addEventListener(
       'keyup',
       (e) => {
+        stateValtio.action = 'Standing Idle';
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(false);
@@ -252,15 +304,50 @@ const Player = ({isModal, setIsModal, isSound, setEnvSound, setCheckpoint}) => {
   };
 
   return (
-    <>
-      <mesh ref={meshRef} position={player ? player.position : [-38, 15, 10]}>
-        <RoundedBox args={[1.0, 2.0, 1.0]} radius={0.5} segment={10}>
-          <meshLambertMaterial attach='material' color={'white'} />
-        </RoundedBox>
-        <meshStandardMaterial attach='material' />
-      </mesh>
-    </>
+    <group
+      ref={meshRef}
+      dispose={null}
+      position={player ? player.position : [-38, 15, 10]}
+    >
+      <group rotation={[Math.PI / 2, 0, 0]} scale={0.02}>
+        <primitive object={nodes.Hips} />
+        <skinnedMesh
+          geometry={nodes.Erika_Archer_Body_Mesh.geometry}
+          material={materials.Body_MAT}
+          skeleton={nodes.Erika_Archer_Body_Mesh.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Erika_Archer_Clothes_Mesh.geometry}
+          material={materials.Akai_MAT}
+          skeleton={nodes.Erika_Archer_Clothes_Mesh.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Erika_Archer_Eyelashes_Mesh.geometry}
+          material={materials.Lashes_MAT}
+          skeleton={nodes.Erika_Archer_Eyelashes_Mesh.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Erika_Archer_Eyes_Mesh.geometry}
+          material={materials.EyeSpec_MAT}
+          skeleton={nodes.Erika_Archer_Eyes_Mesh.skeleton}
+        />
+      </group>
+    </group>
   );
 };
+
+useGLTF.preload('/archer-animation.glb');
+
+function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
+}
 
 export default Player;

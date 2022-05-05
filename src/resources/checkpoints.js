@@ -76,7 +76,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 9,
-    position: [-43, 2, -19],
+    position: [-6, 2, 28],
   },
 ];
 

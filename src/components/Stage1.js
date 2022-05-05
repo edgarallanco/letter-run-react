@@ -4,32 +4,21 @@ import {Suspense} from 'react';
 import Camera from 'components/three/Camera';
 import Player from 'components/three/Player';
 import Scene from 'components/three/Scene';
-import Sphere from 'components/three/Sphere';
 import {AppProvider} from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
-import {AppStateContext, AppDispatchContext} from 'context/AppContext';
-import {Actions} from 'reducer/AppReducer';
-import * as THREE from 'three';
+import {AppStateContext} from 'context/AppContext';
 import Modal from './Modal';
-import {
-  Billboard,
-  GizmoHelper,
-  GizmoViewport,
-  Html,
-  useContextBridge,
-} from '@react-three/drei';
+import {GizmoHelper, GizmoViewport} from '@react-three/drei';
+import stateValtio from 'context/store';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
-  const {dispatch} = useContext(AppDispatchContext);
   const [isSound, setIsSound] = useState(false);
   const [envSound, setEnvSound] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [checkpoint, setCheckpoint] = useState({});
   const sound = useRef();
-  const ContextBridge = useContextBridge(AppStateContext);
   useEffect(() => {
-    console.log(state);
     if (sound.current !== null) {
       isSound && envSound ? sound.current.play() : sound.current.pause();
     }
@@ -63,9 +52,10 @@ export const Stage1 = () => {
               envSound={envSound}
               setEnvSound={setEnvSound}
               setCheckpoint={setCheckpoint}
+              action={stateValtio.action}
             />
             <Camera />
-            {state.checkpoints.map(({position, number}) => (
+            {stateValtio.checkpoints.map(({position, number}) => (
               <Checkpoint
                 url='./resources/beat-loop.mp3'
                 isSound={isSound}
@@ -91,15 +81,21 @@ export const Stage1 = () => {
               position={[0, 100, 135]}
               castShadow={true}
             />
-            {/* <Sphere /> */}
             <Scene checkpoint={checkpoint} isModal={isModal} />
           </AppProvider>
         </Suspense>
       </Canvas>
       <button
         className='bg-blue-500 hover:bg-blue-400 absolute text-white top-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded m-6'
-        onClick={() => {
+        onClick={(checkpoints) => {}}
+      >
+        {JSON.stringify(stateValtio.checkpoints.length)} / 10
+      </button>
+      <button
+        className='bg-blue-500 hover:bg-blue-400 absolute text-white bottom-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded m-6'
+        onClick={(checkpoints) => {
           setIsSound(() => setIsSound(!isSound));
+
           // dispatch({type: Actions.UPDATE_SOUND, payload: !state.sound});
         }}
       >

@@ -8,7 +8,7 @@ import {AppDispatchContext, AppStateContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
 
 const Scene = ({checkpoint, isModal}) => {
-  const gltf = useLoader(GLTFLoader, './../resources/EA_Scene_v2.glb');
+  const gltf = useLoader(GLTFLoader, './../resources/EA_Low_v2.glb');
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   let visualizer, environment;
@@ -25,8 +25,6 @@ const Scene = ({checkpoint, isModal}) => {
     if (!state.playerMesh) return;
     const geoms = [];
     environment = gltf.scene;
-    // environment.add(state.playerMesh);
-    // setEnvironment(gltf.scene);
     dispatch({type: Actions.UPDATE_ENVIROMENT, payload: environment});
     environment.scale.setScalar(1.5);
     environment.updateMatrixWorld(true);
@@ -51,15 +49,16 @@ const Scene = ({checkpoint, isModal}) => {
     });
     setGeometries(geoms);
     // create the merged geometry
-    // console.log(state.playerMesh, environment);
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
       geoms,
       false
     );
-    mergedGeometry.boundsTree = new MeshBVH(mergedGeometry);
+    mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
+      maxDepth: 200,
+    });
     const collider = new THREE.Mesh(mergedGeometry);
-    collider.material.wireframe = true;
-    collider.material.opacity = 0.5;
+    // collider.material.wireframe = true;
+    collider.material.opacity = 0;
     collider.material.transparent = true;
     visualizer = new MeshBVHVisualizer(collider, 10);
     dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
@@ -87,9 +86,6 @@ const Scene = ({checkpoint, isModal}) => {
     );
     mergedGeometry.boundsTree = new MeshBVH(mergedGeometry);
     collider = new THREE.Mesh(mergedGeometry);
-    collider.material.wireframe = true;
-    collider.material.opacity = 0.5;
-    collider.material.transparent = true;
     visualizer = new MeshBVHVisualizer(collider, 10);
     dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
     setStairsBackup(null);

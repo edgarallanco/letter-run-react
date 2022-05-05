@@ -4,10 +4,10 @@ import Modal from 'components/Modal';
 import {AppProvider} from 'context/AppContext';
 
 function App() {
+
   return (
     <div className='App' style={{height: window.innerHeight}}>
       <AppProvider>
-        {/* <Modal /> */}
         <Stage1 />
       </AppProvider>
     </div>
