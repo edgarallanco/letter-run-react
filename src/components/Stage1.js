@@ -33,7 +33,7 @@ export const Stage1 = () => {
           checkpoint={checkpoint}
         />
       )}
-      <Canvas>
+      <Canvas shadows>
         <Suspense fallback={null}>
           <AppProvider>
             <GizmoHelper
@@ -55,6 +55,20 @@ export const Stage1 = () => {
               action={stateValtio.action}
             />
             <Camera />
+            <ambientLight intensity={0.7} />
+            <directionalLight
+              position={[10, 100, 50]}
+              castShadow={true}
+              shadow-mapSize={[2048, 2048]}
+            />
+
+            {/* <pointLight distance={8} castShadow position={[0, 50, 0]} /> */}
+            {/* <pointLight
+              distance={15}
+              intensity={5}
+              position={[0, 100, 135]}
+              castShadow={true}
+            /> */}
             {stateValtio.checkpoints.map(({position, number}) => (
               <Checkpoint
                 url='./resources/beat-loop.mp3'
@@ -63,24 +77,6 @@ export const Stage1 = () => {
                 key={number}
               />
             ))}
-            <directionalLight
-              color={0xffffff}
-              intensity={1}
-              position={[1, 1.5, 1]}
-              castShadow={true}
-              shadow={{
-                bias: -1e-4,
-                normalBias: 0.05,
-                mapSize: {setScalar: 2048},
-              }}
-            />
-            <pointLight distance={8} position={[0, 50, 0]} />
-            <pointLight
-              distance={15}
-              intensity={5}
-              position={[0, 100, 135]}
-              castShadow={true}
-            />
             <Scene checkpoint={checkpoint} isModal={isModal} />
           </AppProvider>
         </Suspense>

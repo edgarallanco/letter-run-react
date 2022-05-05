@@ -308,6 +308,8 @@ const Player = ({
       ref={meshRef}
       dispose={null}
       position={player ? player.position : [-38, 15, 10]}
+      receiveShadow={true}
+      castShadow
     >
       <group rotation={[Math.PI / 2, 0, 0]} scale={0.02}>
         <primitive object={nodes.Hips} />
