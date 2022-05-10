@@ -27,4 +27,4 @@ export default function Modal({isModal, setIsModal, checkpoint}) {
   );
 }
 
-root.render(Modal);
+root.render(<Modal />);

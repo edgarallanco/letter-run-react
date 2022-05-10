@@ -8,8 +8,9 @@ import {AppProvider} from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
 import {AppStateContext} from 'context/AppContext';
 import Modal from './Modal';
-import {GizmoHelper, GizmoViewport} from '@react-three/drei';
+import {GizmoHelper, GizmoViewport, Sky} from '@react-three/drei';
 import stateValtio from 'context/store';
+import {Perf} from 'r3f-perf';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
@@ -34,6 +35,23 @@ export const Stage1 = () => {
         />
       )}
       <Canvas shadows>
+        <ambientLight intensity={0.8} position={[0, 30, 15]} />
+        <directionalLight
+          // position={[5, 5, 5]}
+          intensity={1.3}
+          castShadow={true}
+          position={[6, 25, -9]}
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
+          shadow-camera-far={400}
+          shadow-camera-left={-100}
+          shadow-camera-right={100}
+          shadow-camera-top={100}
+          shadow-camera-bottom={-100}
+        />
+
+        {/* <Sky castShadow={true} distance={150} sunPosition={[10, 5, 5]} /> */}
+        <Perf />
         <Suspense fallback={null}>
           <AppProvider>
             <GizmoHelper
@@ -45,6 +63,7 @@ export const Stage1 = () => {
                 labelColor='black'
               />
             </GizmoHelper>
+            <Camera />
             <Player
               isModal={isModal}
               setIsModal={setIsModal}
@@ -54,21 +73,7 @@ export const Stage1 = () => {
               setCheckpoint={setCheckpoint}
               action={stateValtio.action}
             />
-            <Camera />
-            <ambientLight intensity={0.7} />
-            <directionalLight
-              position={[10, 100, 50]}
-              castShadow={true}
-              shadow-mapSize={[2048, 2048]}
-            />
 
-            {/* <pointLight distance={8} castShadow position={[0, 50, 0]} /> */}
-            {/* <pointLight
-              distance={15}
-              intensity={5}
-              position={[0, 100, 135]}
-              castShadow={true}
-            /> */}
             {stateValtio.checkpoints.map(({position, number}) => (
               <Checkpoint
                 url='./resources/beat-loop.mp3'
@@ -77,14 +82,11 @@ export const Stage1 = () => {
                 key={number}
               />
             ))}
-            <Scene checkpoint={checkpoint} isModal={isModal} />
+            <Scene shadows checkpoint={checkpoint} isModal={isModal} />
           </AppProvider>
         </Suspense>
       </Canvas>
-      <button
-        className='bg-blue-500 hover:bg-blue-400 absolute text-white top-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded m-6'
-        onClick={(checkpoints) => {}}
-      >
+      <button className='bg-blue-500 hover:bg-blue-400 absolute text-white top-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded m-6'>
         {JSON.stringify(stateValtio.checkpoints.length)} / 10
       </button>
       <button

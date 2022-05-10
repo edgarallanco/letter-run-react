@@ -21,7 +21,7 @@ const Player = ({
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
   const meshRef = useRef();
-  const speed = 10;
+  const speed = 3;
   const [fwdPressed, setFwdPressed] = useState(false);
   const [bkdPressed, setBkdPressed] = useState(false);
   const [lftPressed, setLftPressed] = useState(false);
@@ -34,26 +34,24 @@ const Player = ({
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const {nodes, materials, animations} = useGLTF(
-    './../resources/archer-animation.glb'
+    './../resources/EA_CharacterAnimated_v3.glb'
   );
-  // const group = useRef();
   const {actions} = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
-
   useEffect(() => {
     if (!state.controls) return;
 
     meshRef.current.capsuleInfo = {
       radius: 0.5,
-      segment: new Line3(new Vector3(), new Vector3(0, -1.0, 0.0)),
+      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 3.5, 0.0)),
     };
 
-    // meshRef.current.geometry.translate(0, -0.5, 0);
+    // meshRef.current.geometry?.translate(0, -0.5, 0);
     meshRef.current.castShadow = true;
     meshRef.current.receiveShadow = true;
     meshRef.current.position.set(-38, 8, 1);
 
-    // velocity.set(0, 0, 0);
+    velocity.set(0, 0, 0);
     setVelocity(velocity);
     camera.position.sub(state.controls.target);
     state.controls.target.copy(meshRef.current.position);
@@ -78,7 +76,7 @@ const Player = ({
   useFrame((stateCanvas, delta) => {
     movePlayer(Math.min(delta, 0.1), state.collider);
     // if the player has fallen too far below the level reset their position to the start
-    if (player.position.y < -25) {
+    if (player?.position.y < -25) {
       meshRef.current.position.set(-38, 8, 1);
       setPlayer(meshRef.current);
     }
@@ -98,13 +96,13 @@ const Player = ({
       }
     });
     if (isSound) {
-      if (player.position.y <= 4) {
+      if (player.position.y <= 3) {
         setEnvSound(false);
       } else {
         setEnvSound(true);
       }
     }
-    var angleYCameraDirection = Math.atan2(
+    const angleYCameraDirection = Math.atan2(
       meshRef.current.position.x - camera.position.x,
       meshRef.current.position.z - camera.position.z
     );
@@ -116,29 +114,29 @@ const Player = ({
     );
     rotateQuarternion.setFromAxisAngle(
       rotateAngle,
-      directionOffset + angleYCameraDirection
+      directionOffset + angleYCameraDirection + 0.5
     );
-    if (stateValtio.action === 'Run Forward') {
+    if (stateValtio.action === 'Anim_Walk') {
       meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.2);
     }
   });
 
   const movePlayer = (delta, collider) => {
-    if (!state.controls) return;
+    if (!state.controls && !state.collider) return;
 
     let player = meshRef.current;
     let angle = state.controls.getAzimuthalAngle();
     let gravity = -30;
 
     if (fwdPressed) {
-      stateValtio.action = 'Run Forward';
+      stateValtio.action = 'Anim_Walk';
       vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
     }
 
     if (bkdPressed) {
-      stateValtio.action = 'Run Forward';
+      stateValtio.action = 'Anim_Walk';
 
       vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
@@ -146,14 +144,14 @@ const Player = ({
     }
 
     if (lftPressed) {
-      stateValtio.action = 'Run Forward';
+      stateValtio.action = 'Anim_Walk';
       vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
     }
 
     if (rgtPressed) {
-      stateValtio.action = 'Run Forward';
+      stateValtio.action = 'Anim_Walk';
       vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
       player.position.addScaledVector(vector, speed * delta);
       setVector(vector);
@@ -173,7 +171,7 @@ const Player = ({
     // adjust player position based on collisions
     const capsuleInfo = player.capsuleInfo;
     tempBox.makeEmpty();
-    tempMat.copy(collider.matrixWorld).invert();
+    // tempMat.copy(collider.matrixWorld).invert();
     tempSegment.copy(capsuleInfo.segment);
 
     // get the position of the capsule in the local space of the collider
@@ -187,7 +185,7 @@ const Player = ({
     tempBox.min.addScalar(-capsuleInfo.radius);
     tempBox.max.addScalar(capsuleInfo.radius);
 
-    collider.geometry.boundsTree.shapecast({
+    collider?.geometry?.boundsTree.shapecast({
       intersectsBounds: (box) => box.intersectsBox(tempBox),
 
       intersectsTriangle: (tri) => {
@@ -215,13 +213,10 @@ const Player = ({
     // triangle collisions and moving it. capsuleInfo.segment.start is assumed to be
     // the origin of the player model.
     const newPosition = tempVector;
-    newPosition.copy(tempSegment.start).applyMatrix4(collider.matrixWorld);
+    newPosition.copy(tempSegment?.start).applyMatrix4(collider?.matrixWorld);
 
     // check how much the collider was moved
     deltaVector.subVectors(newPosition, player.position);
-
-    // if the player was primarily adjusted vertically we assume it's on something we should consider ground
-    setIsOnGround(deltaVector.y > Math.abs(delta * velocity.y * 0.25));
 
     const offset = Math.max(0.0, deltaVector.length() - 1e-5);
     deltaVector.normalize().multiplyScalar(offset);
@@ -230,8 +225,7 @@ const Player = ({
     player.position.add(deltaVector);
 
     // if the player was primarily adjusted vertically we assume it's on something we should consider ground
-    let onGround = deltaVector.y > Math.abs(delta * velocity.y * 0.25);
-    setIsOnGround(onGround);
+    setIsOnGround(deltaVector.y > Math.abs(delta * velocity.y * 0.25));
 
     if (!isOnGround) {
       deltaVector.normalize();
@@ -270,10 +264,11 @@ const Player = ({
             break;
           case 'Space':
             if (isOnGround) {
+              setIsOnGround(false);
+              stateValtio.action = 'Anim_Jump';
               velocity.y = 10.0;
               setVelocity(velocity);
             }
-
             break;
         }
       },
@@ -283,7 +278,7 @@ const Player = ({
     window.addEventListener(
       'keyup',
       (e) => {
-        stateValtio.action = 'Standing Idle';
+        if (isOnGround) stateValtio.action = 'Anim_Idle';
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(false);
@@ -304,41 +299,45 @@ const Player = ({
   };
 
   return (
-    <group
-      ref={meshRef}
-      dispose={null}
-      position={player ? player.position : [-38, 15, 10]}
-      receiveShadow={true}
-      castShadow
-    >
-      <group rotation={[Math.PI / 2, 0, 0]} scale={0.02}>
-        <primitive object={nodes.Hips} />
+    <group>
+      <group
+        dispose={null}
+        ref={meshRef}
+        position={player ? player.position : [-38, 15, 10]}
+        receiveShadow={true}
+        castShadow={true}
+        scale={1}
+        name='metarig'
+        // rotation={[Math.PI / 2, 0, 0]}
+      >
+        <primitive object={nodes.spine} />
+        <group name='Character'>
+          <skinnedMesh
+            name='Plane022'
+            geometry={nodes.Plane022.geometry}
+            material={materials.Character}
+            skeleton={nodes.Plane022.skeleton}
+          />
+          <skinnedMesh
+            name='Plane022_1'
+            geometry={nodes.Plane022_1.geometry}
+            material={materials.Character_Inner}
+            skeleton={nodes.Plane022_1.skeleton}
+          />
+        </group>
         <skinnedMesh
-          geometry={nodes.Erika_Archer_Body_Mesh.geometry}
-          material={materials.Body_MAT}
-          skeleton={nodes.Erika_Archer_Body_Mesh.skeleton}
-        />
-        <skinnedMesh
-          geometry={nodes.Erika_Archer_Clothes_Mesh.geometry}
-          material={materials.Akai_MAT}
-          skeleton={nodes.Erika_Archer_Clothes_Mesh.skeleton}
-        />
-        <skinnedMesh
-          geometry={nodes.Erika_Archer_Eyelashes_Mesh.geometry}
-          material={materials.Lashes_MAT}
-          skeleton={nodes.Erika_Archer_Eyelashes_Mesh.skeleton}
-        />
-        <skinnedMesh
-          geometry={nodes.Erika_Archer_Eyes_Mesh.geometry}
-          material={materials.EyeSpec_MAT}
-          skeleton={nodes.Erika_Archer_Eyes_Mesh.skeleton}
+          name='Eyes'
+          geometry={nodes.Eyes.geometry}
+          material={materials.Character}
+          skeleton={nodes.Eyes.skeleton}
         />
       </group>
     </group>
+    // </group>
   );
 };
 
-useGLTF.preload('/archer-animation.glb');
+useGLTF.preload('/EA_CharacterAnimated_v3.glb');
 
 function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...
