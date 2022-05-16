@@ -13,7 +13,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 1,
-    position: [-15, 1, -12],
+    position: [-15, 1, -14],
     stair: '2_D_Stairs',
   },
   {

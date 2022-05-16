@@ -8,6 +8,7 @@ import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
 import {useGLTF, useAnimations} from '@react-three/drei';
 import {getDirectionOffset} from 'src/utils/directionalOffset';
+import * as THREE from 'three';
 
 const Player = ({
   isModal,
@@ -16,12 +17,13 @@ const Player = ({
   setEnvSound,
   setCheckpoint,
   action,
+  zoom,
 }) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
   const meshRef = useRef();
-  const speed = 3;
+  const speed = 10;
   const [fwdPressed, setFwdPressed] = useState(false);
   const [bkdPressed, setBkdPressed] = useState(false);
   const [lftPressed, setLftPressed] = useState(false);
@@ -34,7 +36,7 @@ const Player = ({
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const {nodes, materials, animations} = useGLTF(
-    './../resources/EA_CharacterAnimated_v3.glb'
+    './../resources/EA_CharacterAnimated_v5.glb'
   );
   const {actions} = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
@@ -80,6 +82,7 @@ const Player = ({
       meshRef.current.position.set(-38, 8, 1);
       setPlayer(meshRef.current);
     }
+
     stateValtio.checkpoints.find((checkpoint) => {
       if (
         equal(state.playerPosition, {
@@ -92,7 +95,10 @@ const Player = ({
         stateValtio.checkpoints = stateValtio.checkpoints.filter(
           (chk) => chk.number !== checkpoint.number
         );
+        console.log(checkpoint);
+        stateValtio.currentCheckpoint = checkpoint;
         setIsModal(true);
+        // isModal = true;
       }
     });
     if (isSound) {
@@ -225,7 +231,11 @@ const Player = ({
     player.position.add(deltaVector);
 
     // if the player was primarily adjusted vertically we assume it's on something we should consider ground
-    setIsOnGround(deltaVector.y > Math.abs(delta * velocity.y * 0.25));
+    setIsOnGround(deltaVector.y > Math.abs(delta * velocity.y * 0.15));
+    console.log(
+      isOnGround
+      // deltaVector.y > Math.abs(delta * velocity.y * 0.45)
+    );
 
     if (!isOnGround) {
       deltaVector.normalize();
@@ -234,15 +244,16 @@ const Player = ({
       velocity.set(0, 0, 0);
     }
 
-    camera.position.sub(state.controls.target);
+    let lastControl = state.controls.target;
+    camera.position.sub(lastControl);
     state.controls.target.copy(player.position);
     camera.position.add(player.position);
     setVelocity(velocity);
 
-    dispatch({type: Actions.UPDATE_CONTROLS, payload: state.controls});
+    // dispatch({type: Actions.UPDATE_CONTROLS, payload: state.controls});
     setPlayer(player);
     dispatch({type: Actions.UPDATE_PLAYER, payload: player.position});
-    // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera});
+    dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
   };
 
   const registerEvents = () => {
@@ -265,9 +276,16 @@ const Player = ({
           case 'Space':
             if (isOnGround) {
               setIsOnGround(false);
-              stateValtio.action = 'Anim_Jump';
+              stateValtio.action = 'Anim_Jump_Start';
               velocity.y = 10.0;
               setVelocity(velocity);
+              // setTimeout(() => {
+              //   stateValtio.action = 'Anim_Jump_Midair';
+              // }, 500);
+              // setTimeout(() => {
+              //   stateValtio.action = 'Anim_Jump_Landing';
+              setIsOnGround(true);
+              // }, 1000);
             }
             break;
         }
@@ -337,7 +355,7 @@ const Player = ({
   );
 };
 
-useGLTF.preload('/EA_CharacterAnimated_v3.glb');
+useGLTF.preload('/EA_CharacterAnimated_v5.glb');
 
 function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...

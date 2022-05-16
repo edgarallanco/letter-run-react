@@ -8,12 +8,13 @@ import {AppProvider} from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
 import {AppStateContext} from 'context/AppContext';
 import Modal from './Modal';
-import {GizmoHelper, GizmoViewport, Sky} from '@react-three/drei';
+import {GizmoHelper, GizmoViewport, Html, Sky} from '@react-three/drei';
 import stateValtio from 'context/store';
 import {Perf} from 'r3f-perf';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
+  const [zoom, setZoom] = useState(false);
   const [isSound, setIsSound] = useState(false);
   const [envSound, setEnvSound] = useState(false);
   const [isModal, setIsModal] = useState(false);
@@ -31,12 +32,14 @@ export const Stage1 = () => {
         <Modal
           isModal={isModal}
           setIsModal={setIsModal}
-          checkpoint={checkpoint}
+          checkpoint={stateValtio.currentCheckpoint}
         />
       )}
-      <Canvas shadows>
+      <Canvas
+       shadows
+      >
         <ambientLight intensity={0.8} position={[0, 30, 15]} />
-        <directionalLight
+        {/* <directionalLight
           // position={[5, 5, 5]}
           intensity={1.3}
           castShadow={true}
@@ -48,8 +51,21 @@ export const Stage1 = () => {
           shadow-camera-right={100}
           shadow-camera-top={100}
           shadow-camera-bottom={-100}
+        /> */}
+        <directionalLight
+          name='Directional Light'
+          castShadow
+          intensity={0.7}
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+          shadow-camera-near={1}
+          shadow-camera-far={2500}
+          shadow-camera-left={-750}
+          shadow-camera-right={750}
+          shadow-camera-top={750}
+          shadow-camera-bottom={-750}
+          position={[376.77, 646.78, -516.24]}
         />
-
         {/* <Sky castShadow={true} distance={150} sunPosition={[10, 5, 5]} /> */}
         <Perf />
         <Suspense fallback={null}>
@@ -57,13 +73,14 @@ export const Stage1 = () => {
             <GizmoHelper
               alignment='bottom-right' // widget alignment within scene
               margin={[80, 80]} // widget margins (X, Y)
+              onUpdate={(e) => console.log(e)}
             >
               <GizmoViewport
                 axisColors={['red', 'green', 'blue']}
                 labelColor='black'
               />
             </GizmoHelper>
-            <Camera />
+            <Camera zoom={zoom} />
             <Player
               isModal={isModal}
               setIsModal={setIsModal}
@@ -72,6 +89,7 @@ export const Stage1 = () => {
               setEnvSound={setEnvSound}
               setCheckpoint={setCheckpoint}
               action={stateValtio.action}
+              zoom={zoom}
             />
 
             {stateValtio.checkpoints.map(({position, number}) => (
@@ -98,6 +116,16 @@ export const Stage1 = () => {
         }}
       >
         Sound is {isSound ? 'On' : 'Off'}
+      </button>
+      <button
+        className='bg-blue-500 hover:bg-blue-400 absolute text-white bottom-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded ml-40 mb-6'
+        onClick={(checkpoints) => {
+          setZoom(!zoom);
+
+          // dispatch({type: Actions.UPDATE_SOUND, payload: !state.sound});
+        }}
+      >
+        Camera position
       </button>
       <audio
         ref={sound}

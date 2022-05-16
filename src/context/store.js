@@ -6,6 +6,7 @@ const stateValtio = proxy({
   action: 'Anim_Idle',
   stairs: [],
   geometries: [],
+  isModal: false
 });
 
 export default stateValtio;
