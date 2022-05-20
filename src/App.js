@@ -1,6 +1,5 @@
 import './App.css';
 import Stage1 from 'components/Stage1';
-import Modal from 'components/Modal';
 import {AppProvider} from 'context/AppContext';
 
 function App() {

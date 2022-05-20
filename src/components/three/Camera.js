@@ -1,16 +1,12 @@
 import {OrthographicCamera} from '@react-three/drei';
 import {extend, useFrame, useThree} from '@react-three/fiber';
-import CameraControls from 'camera-controls';
-import React, {useContext, useEffect, useRef, useMemo, useState} from 'react';
-import {Vector3} from 'three';
+import React, {useContext, useEffect, useRef} from 'react';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {AppStateContext, AppDispatchContext} from '../../context/AppContext';
 import {Actions} from '../../reducer/AppReducer';
-import * as THREE from 'three';
 
 // Extend will make OrbitControls available as a JSX element called orbitControls for us to use.
 extend({OrbitControls});
-
 
 const Camera = ({zoom}) => {
   const {gl, camera} = useThree();
@@ -19,7 +15,6 @@ const Camera = ({zoom}) => {
   const cameraRef = useRef();
   const controlsRef = useRef();
 
-
   useEffect(() => {
     let camera = cameraRef.current;
     gl.camera = camera;
@@ -27,6 +22,11 @@ const Camera = ({zoom}) => {
     controls.maxPolarAngle = Math.PI / 4;
     controls.minDistance = 15;
     controls.maxDistance = 50;
+    controls.enabled = false;
+    controls.enableDamping = false;
+    controls.enablePan = false;
+    controls.enableRotate = false;
+    controls.enableZoom = false;
 
     // camera.fov = 75;
     // camera.aspect = window.innerWidth / window.innerHeight;
@@ -36,34 +36,24 @@ const Camera = ({zoom}) => {
     // camera.position.sub(controls.target);
     dispatch({type: Actions.UPDATE_CONTROLS, payload: controls});
     dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
+    console.log(controls, state.camera);
   }, [gl]);
 
   useFrame((stateThree) => {
     if (zoom) {
-      state.camera.zoom = THREE.MathUtils.lerp(2, 3, 3, 1);
+      state.camera.zoom = 12;
     } else {
       state.camera && (state.camera.zoom = 44);
     }
   });
 
   return (
-    <React.Fragment>
-      <orbitControls args={[camera, gl.domElement]} ref={controlsRef} />
-      {/* <OrthographicCamera
-        ref={cameraRef}
-        camera={state.camera}
-        makeDefault
-        castShadow={true}
-        receiveShadow={true}
-        zoom={45}
-        // top={364}
-        // bottom={-364}
-        // left={-488}
-        // right={488}
-        near={2}
-        far={2000}
-        position={[22, 27, 26]}
-      /> */}
+    <>
+      <orbitControls
+        disabled
+        args={[camera, gl.domElement]}
+        ref={controlsRef}
+      />
       <OrthographicCamera
         name='Personal Camera'
         makeDefault={true}
@@ -73,10 +63,9 @@ const Camera = ({zoom}) => {
         up={[0, 1000, 0]}
         castShadow={true}
         receiveShadow={true}
-        position={[36.97, 91.22, 112.58]}
-        rotation={[-0.68, 0.61, 0.44]}
+        position={[95.35, 124.37, 142.58]}
       />
-    </React.Fragment>
+    </>
   );
 };
 

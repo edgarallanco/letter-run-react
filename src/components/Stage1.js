@@ -7,18 +7,21 @@ import Scene from 'components/three/Scene';
 import {AppProvider} from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
 import {AppStateContext} from 'context/AppContext';
-import Modal from './Modal';
-import {GizmoHelper, GizmoViewport, Html, Sky} from '@react-three/drei';
 import stateValtio from 'context/store';
-import {Perf} from 'r3f-perf';
+import PopUp from './UI/PopUp';
+import Finish from './UI/Finish';
+import Home from './UI/Home';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
   const [zoom, setZoom] = useState(false);
   const [isSound, setIsSound] = useState(false);
   const [envSound, setEnvSound] = useState(false);
-  const [isModal, setIsModal] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
   const [checkpoint, setCheckpoint] = useState({});
+  const [isFinished, setIsFinished] = useState(false);
+  const [isCollection, setIsCollection] = useState(false);
+  const [isHome, setIsHome] = useState(!true);
   const sound = useRef();
   useEffect(() => {
     if (sound.current !== null) {
@@ -26,24 +29,31 @@ export const Stage1 = () => {
     }
   }, [envSound, isSound]);
 
+  const updateCollection = () => {
+    setIsCollection(true);
+    setIsPopup(true);
+  };
+
   return (
     <>
-      {isModal && (
-        <Modal
-          isModal={isModal}
-          setIsModal={setIsModal}
-          checkpoint={stateValtio.currentCheckpoint}
-        />
-      )}
-      <Canvas
-       shadows
-      >
+      {isHome && <Home setIsHome={() => setIsHome(false)} />}
+      <Finish
+        isFinished={isFinished}
+        setIsFinished={() => setIsFinished(false)}
+        isCollection={isCollection}
+      />
+      <PopUp
+        isPopup={isPopup}
+        setIsPopup={() => setIsPopup(false)}
+        isCollection={isCollection}
+        setIsCollection={() => setIsCollection(false)}
+      />
+      <Canvas shadows>
         <ambientLight intensity={0.8} position={[0, 30, 15]} />
-        {/* <directionalLight
-          // position={[5, 5, 5]}
-          intensity={1.3}
-          castShadow={true}
-          position={[6, 25, -9]}
+        <directionalLight
+          name='Directional Light'
+          castShadow
+          intensity={0.7}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-far={400}
@@ -51,82 +61,36 @@ export const Stage1 = () => {
           shadow-camera-right={100}
           shadow-camera-top={100}
           shadow-camera-bottom={-100}
-        /> */}
-        <directionalLight
-          name='Directional Light'
-          castShadow
-          intensity={0.7}
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-          shadow-camera-near={1}
-          shadow-camera-far={2500}
-          shadow-camera-left={-750}
-          shadow-camera-right={750}
-          shadow-camera-top={750}
-          shadow-camera-bottom={-750}
-          position={[376.77, 646.78, -516.24]}
+          position={[6, 25, -9]}
         />
-        {/* <Sky castShadow={true} distance={150} sunPosition={[10, 5, 5]} /> */}
-        <Perf />
         <Suspense fallback={null}>
           <AppProvider>
-            <GizmoHelper
-              alignment='bottom-right' // widget alignment within scene
-              margin={[80, 80]} // widget margins (X, Y)
-              onUpdate={(e) => console.log(e)}
-            >
-              <GizmoViewport
-                axisColors={['red', 'green', 'blue']}
-                labelColor='black'
-              />
-            </GizmoHelper>
             <Camera zoom={zoom} />
             <Player
-              isModal={isModal}
-              setIsModal={setIsModal}
+              isModal={isPopup}
+              setIsModal={updateCollection}
               isSound={isSound}
               envSound={envSound}
               setEnvSound={setEnvSound}
               setCheckpoint={setCheckpoint}
               action={stateValtio.action}
               zoom={zoom}
+              setZoom={setZoom}
             />
 
-            {stateValtio.checkpoints.map(({position, number}) => (
+            {stateValtio.checkpoints.map(({position, number, collected}) => (
               <Checkpoint
                 url='./resources/beat-loop.mp3'
                 isSound={isSound}
                 position={position}
                 key={number}
+                collected={collected}
               />
             ))}
-            <Scene shadows checkpoint={checkpoint} isModal={isModal} />
+            <Scene shadows checkpoint={checkpoint} isModal={isPopup} />
           </AppProvider>
         </Suspense>
       </Canvas>
-      <button className='bg-blue-500 hover:bg-blue-400 absolute text-white top-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded m-6'>
-        {JSON.stringify(stateValtio.checkpoints.length)} / 10
-      </button>
-      <button
-        className='bg-blue-500 hover:bg-blue-400 absolute text-white bottom-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded m-6'
-        onClick={(checkpoints) => {
-          setIsSound(() => setIsSound(!isSound));
-
-          // dispatch({type: Actions.UPDATE_SOUND, payload: !state.sound});
-        }}
-      >
-        Sound is {isSound ? 'On' : 'Off'}
-      </button>
-      <button
-        className='bg-blue-500 hover:bg-blue-400 absolute text-white bottom-0 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded ml-40 mb-6'
-        onClick={(checkpoints) => {
-          setZoom(!zoom);
-
-          // dispatch({type: Actions.UPDATE_SOUND, payload: !state.sound});
-        }}
-      >
-        Camera position
-      </button>
       <audio
         ref={sound}
         id='ambient'
@@ -137,6 +101,52 @@ export const Stage1 = () => {
       >
         <source src='./resources/Nature.mp3' type='audio/mpeg' />
       </audio>
+      <div className='action-wrapper'>
+        <div
+          data-w-id='87254fef-9926-84f7-c31f-da8b1d44c269'
+          className='menu-button'
+          onClick={() => setIsPopup(!isPopup)}
+        >
+          <img
+            src='https://assets.website-files.com/6282420c2cbddcf359590b7f/62836feea64a178412ff6c72_menu-icon.svg'
+            loading='lazy'
+            alt=''
+          />
+        </div>
+        <div
+          data-w-id='eb0a3834-ea05-fb73-d87f-6eb0e88e9c3a'
+          className='sound-button'
+          onClick={() => setIsSound(!isSound)}
+        >
+          {isSound ? (
+            <img
+              src='https://assets.website-files.com/6282420c2cbddcf359590b7f/6283702364d42c4cc5c626ec_sound-on-icon.svg'
+              loading='eager'
+              alt=''
+              className='sound-on'
+            />
+          ) : (
+            <img
+              src='https://assets.website-files.com/6282420c2cbddcf359590b7f/62838d2b392a0881467b57bf_sound-off-icon.svg'
+              loading='eager'
+              alt=''
+              className='sound-off'
+            />
+          )}
+        </div>
+        <div
+          data-w-id='b16b36d1-ec18-bcb7-74ff-5e02b9763e29'
+          className='open-form'
+          onClick={() => setIsFinished(!isFinished)}
+        >
+          <img
+            src='https://assets.website-files.com/6282420c2cbddcf359590b7f/62838dce99bfd3b16f07d95d_Favicon.png'
+            loading='lazy'
+            width='16'
+            alt=''
+          />
+        </div>
+      </div>
     </>
   );
 };

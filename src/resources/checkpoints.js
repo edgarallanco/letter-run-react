@@ -6,6 +6,7 @@ const checkpoint = [
     number: 0,
     position: [-43, 1, -19],
     stair: '1_E_Stairs',
+    collected: false,
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',

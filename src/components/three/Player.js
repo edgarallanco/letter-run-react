@@ -1,29 +1,27 @@
 import {useFrame, useThree} from '@react-three/fiber';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Vector3, Box3, Matrix4, Line3, Quaternion} from 'three';
+import {Vector3, Box3, Matrix4, Line3, Quaternion, Mesh} from 'three';
 import {AppStateContext, AppDispatchContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
-import {OrbitControls, Stats, RoundedBox} from '@react-three/drei';
 import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
 import {useGLTF, useAnimations} from '@react-three/drei';
 import {getDirectionOffset} from 'src/utils/directionalOffset';
-import * as THREE from 'three';
 
 const Player = ({
-  isModal,
   setIsModal,
+  isModal,
   isSound,
   setEnvSound,
   setCheckpoint,
-  action,
   zoom,
+  setZoom,
 }) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
   const meshRef = useRef();
-  const speed = 10;
+  const speed = 3;
   const [fwdPressed, setFwdPressed] = useState(false);
   const [bkdPressed, setBkdPressed] = useState(false);
   const [lftPressed, setLftPressed] = useState(false);
@@ -36,23 +34,20 @@ const Player = ({
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const {nodes, materials, animations} = useGLTF(
-    './../resources/EA_CharacterAnimated_v5.glb'
+    './../resources/EA_Character.glb'
   );
   const {actions} = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
   useEffect(() => {
     if (!state.controls) return;
-
     meshRef.current.capsuleInfo = {
       radius: 0.5,
       segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 3.5, 0.0)),
     };
 
-    // meshRef.current.geometry?.translate(0, -0.5, 0);
+    meshRef.current.geometry?.translate(0, -1.5, 0);
     meshRef.current.castShadow = true;
     meshRef.current.receiveShadow = true;
-    meshRef.current.position.set(-38, 8, 1);
-
     velocity.set(0, 0, 0);
     setVelocity(velocity);
     camera.position.sub(state.controls.target);
@@ -62,7 +57,6 @@ const Player = ({
     state.controls.update();
     dispatch({type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current});
     setPlayer(meshRef.current);
-
     registerEvents();
   }, [state.controls]);
 
@@ -76,7 +70,7 @@ const Player = ({
   }, [actions, stateValtio.action, previousAction]);
 
   useFrame((stateCanvas, delta) => {
-    movePlayer(Math.min(delta, 0.1), state.collider);
+    !isModal && movePlayer(Math.min(delta, 0.1), state.collider);
     // if the player has fallen too far below the level reset their position to the start
     if (player?.position.y < -25) {
       meshRef.current.position.set(-38, 8, 1);
@@ -89,16 +83,13 @@ const Player = ({
           x: checkpoint.position[0],
           y: checkpoint.position[1],
           z: checkpoint.position[2],
-        })
+        }) &&
+        !checkpoint.collected
       ) {
         setCheckpoint(checkpoint);
-        stateValtio.checkpoints = stateValtio.checkpoints.filter(
-          (chk) => chk.number !== checkpoint.number
-        );
-        console.log(checkpoint);
-        stateValtio.currentCheckpoint = checkpoint;
+        checkpoint.collected = true;
+        checkpoint.last = true;
         setIsModal(true);
-        // isModal = true;
       }
     });
     if (isSound) {
@@ -120,10 +111,16 @@ const Player = ({
     );
     rotateQuarternion.setFromAxisAngle(
       rotateAngle,
-      directionOffset + angleYCameraDirection + 0.5
+      directionOffset + angleYCameraDirection + 0.7
     );
     if (stateValtio.action === 'Anim_Walk') {
-      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.2);
+      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.5);
+    }
+    if (stateValtio.action === 'Anim_Jump') {
+      setTimeout(() => {
+        velocity.y = 5.0;
+        setVelocity(velocity);
+      }, 50);
     }
   });
 
@@ -177,7 +174,7 @@ const Player = ({
     // adjust player position based on collisions
     const capsuleInfo = player.capsuleInfo;
     tempBox.makeEmpty();
-    // tempMat.copy(collider.matrixWorld).invert();
+    tempMat.copy(collider?.matrixWorld).invert();
     tempSegment.copy(capsuleInfo.segment);
 
     // get the position of the capsule in the local space of the collider
@@ -232,10 +229,6 @@ const Player = ({
 
     // if the player was primarily adjusted vertically we assume it's on something we should consider ground
     setIsOnGround(deltaVector.y > Math.abs(delta * velocity.y * 0.15));
-    console.log(
-      isOnGround
-      // deltaVector.y > Math.abs(delta * velocity.y * 0.45)
-    );
 
     if (!isOnGround) {
       deltaVector.normalize();
@@ -274,19 +267,12 @@ const Player = ({
             setLftPressed(true);
             break;
           case 'Space':
-            if (isOnGround) {
-              setIsOnGround(false);
-              stateValtio.action = 'Anim_Jump_Start';
-              velocity.y = 10.0;
-              setVelocity(velocity);
-              // setTimeout(() => {
-              //   stateValtio.action = 'Anim_Jump_Midair';
-              // }, 500);
-              // setTimeout(() => {
-              //   stateValtio.action = 'Anim_Jump_Landing';
-              setIsOnGround(true);
-              // }, 1000);
+            if (stateValtio.action !== 'Anim_Jump') {
+              stateValtio.action = 'Anim_Jump';
             }
+            break;
+          case 'KeyZ':
+            setZoom(true);
             break;
         }
       },
@@ -310,6 +296,9 @@ const Player = ({
           case 'ArrowLeft':
             setLftPressed(false);
             break;
+          case 'KeyZ':
+            setZoom(!true);
+            break;
         }
       },
       {passive: true}
@@ -317,45 +306,38 @@ const Player = ({
   };
 
   return (
-    <group>
-      <group
-        dispose={null}
-        ref={meshRef}
-        position={player ? player.position : [-38, 15, 10]}
-        receiveShadow={true}
-        castShadow={true}
-        scale={1}
-        name='metarig'
-        // rotation={[Math.PI / 2, 0, 0]}
-      >
-        <primitive object={nodes.spine} />
-        <group name='Character'>
-          <skinnedMesh
-            name='Plane022'
-            geometry={nodes.Plane022.geometry}
-            material={materials.Character}
-            skeleton={nodes.Plane022.skeleton}
-          />
-          <skinnedMesh
-            name='Plane022_1'
-            geometry={nodes.Plane022_1.geometry}
-            material={materials.Character_Inner}
-            skeleton={nodes.Plane022_1.skeleton}
-          />
-        </group>
+    <mesh
+      ref={meshRef}
+      position={player ? player.position : [-38, 8, 1]}
+      translateY={-0.5}
+      scale={1.3}
+    >
+      <primitive object={nodes.spine} />
+      <group name='Character'>
         <skinnedMesh
-          name='Eyes'
-          geometry={nodes.Eyes.geometry}
+          name='Plane022'
+          geometry={nodes.Plane022.geometry}
           material={materials.Character}
-          skeleton={nodes.Eyes.skeleton}
+          skeleton={nodes.Plane022.skeleton}
+        />
+        <skinnedMesh
+          name='Plane022_1'
+          geometry={nodes.Plane022_1.geometry}
+          material={materials.Character_Inner}
+          skeleton={nodes.Plane022_1.skeleton}
         />
       </group>
-    </group>
-    // </group>
+      <skinnedMesh
+        name='Eyes'
+        geometry={nodes.Eyes.geometry}
+        material={materials.Character}
+        skeleton={nodes.Eyes.skeleton}
+      />
+    </mesh>
   );
 };
 
-useGLTF.preload('/EA_CharacterAnimated_v5.glb');
+useGLTF.preload('/EA_Character.glb');
 
 function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...

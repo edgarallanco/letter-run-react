@@ -26,14 +26,12 @@ const Scene = ({checkpoint, isModal}) => {
     if (!state.playerMesh) return;
     // scene.castShadow = true;
     scene.receiveShadow = true;
-    const helper = new THREE.CameraHelper(camera);
-    scene.add(helper);
     const geoms = [];
+    console.log(camera, scene);
     environment = scene1.scene;
     dispatch({type: Actions.UPDATE_ENVIROMENT, payload: environment});
     environment.scale.setScalar(1.5);
     environment.updateMatrixWorld(true);
-    let stairsArr = stateValtio.checkpoints.map((checkp) => checkp.stair);
 
     environment.traverse((c) => {
       if (c.geometry) {
@@ -64,7 +62,6 @@ const Scene = ({checkpoint, isModal}) => {
       maxDepth: 200,
     });
     const collider = new THREE.Mesh(mergedGeometry);
-    collider.material.wireframe = true;
     collider.material.opacity = 0;
     collider.material.transparent = true;
     visualizer = new MeshBVHVisualizer(collider, 10);
@@ -82,18 +79,18 @@ const Scene = ({checkpoint, isModal}) => {
   }, [state.playerMesh]);
 
   useEffect(() => {
-    if (isModal) return;
+    // if (isModal) return;
     environment = scene1.scene;
     let currentStair = stateValtio.stairs.find(
-      (stair) => stair.name === stateValtio.currentCheckpoint.stair
+      (stair) => stair.name === checkpoint.stair
     );
-    console.log(stateValtio, currentStair);
     if (!currentStair) return;
     environment.children.map((c) => {
       if (c.userData.name === currentStair.name) {
         c.visible = true;
       }
     });
+    currentStair && stateValtio.collection.push(checkpoint.item);
     currentStair && stateValtio.geometries.push(currentStair);
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
       stateValtio.geometries,
