@@ -7,6 +7,7 @@ import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
 import {useGLTF, useAnimations} from '@react-three/drei';
 import {getDirectionOffset} from 'src/utils/directionalOffset';
+import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
 
 const Player = ({
   setIsModal,
@@ -163,6 +164,10 @@ const Player = ({
     velocity.y += isOnGround ? 0 : delta * gravity;
     player.position.addScaledVector(velocity, delta);
     player.updateMatrixWorld();
+    // console.log(player.position);
+    // check if the player is inside in any of the letter
+    let insideLetter = pointInsideGeometry(player.position.x, player.position.z);
+    console.log(insideLetter);
 
     let tempVector = new Vector3();
     let tempVector2 = new Vector3();
