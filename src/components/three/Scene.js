@@ -9,17 +9,17 @@ import {Actions} from 'reducer/AppReducer';
 import stateValtio from 'context/store';
 import {CameraHelper} from 'three';
 import {useGLTF} from '@react-three/drei';
+import useSpline from '@splinetool/r3f-spline';
+import {OrthographicCamera} from '@react-three/drei';
 
 const Scene = ({checkpoint, isModal}) => {
-  const gltf = useLoader(GLTFLoader, './../resources/EA_OneMesh_v4.glb');
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   let visualizer, environment;
-  const mesh = useRef();
   const {scene, camera} = useThree();
   const [stairs, setStairs] = useState([]);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_OneMesh_v4.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_v1.glb');
 
   useEffect(() => {
     // collect all geometries to merge
@@ -27,7 +27,6 @@ const Scene = ({checkpoint, isModal}) => {
     // scene.castShadow = true;
     scene.receiveShadow = true;
     const geoms = [];
-    console.log(camera, scene);
     environment = scene1.scene;
     dispatch({type: Actions.UPDATE_ENVIROMENT, payload: environment});
     environment.scale.setScalar(1.5);
@@ -42,14 +41,14 @@ const Scene = ({checkpoint, isModal}) => {
             cloned.deleteAttribute(key);
           }
         }
-        if (c.userData.name !== 'Geometry') {
-          c.visible = false;
-          cloned.name = c.userData.name;
-          stateValtio.stairs.push(cloned);
-          setStairs(stairs.push(c));
-        } else {
-          geoms.push(cloned);
-        }
+        // if (c.userData.name !== 'Geometry') {
+        //   c.visible = false;
+        //   cloned.name = c.userData.name;
+        //   stateValtio.stairs.push(cloned);
+        //   setStairs(stairs.push(c));
+        // } else {
+        geoms.push(cloned);
+        // }
       }
     });
     stateValtio.geometries = geoms;
@@ -69,11 +68,12 @@ const Scene = ({checkpoint, isModal}) => {
 
     environment.traverse((c) => {
       if (c.material) {
-        c.castShadow = true;
+        c.castShadow = false;
         c.receiveShadow = true;
         c.material.shadowSide = 10;
       }
     });
+    environment.position.y = 0.5;
     scene.add(collider);
     scene.add(environment);
   }, [state.playerMesh]);
@@ -100,6 +100,25 @@ const Scene = ({checkpoint, isModal}) => {
     collider = new THREE.Mesh(mergedGeometry);
     dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
   }, [isModal]);
+  return (
+    <>
+      {/* <group position-x={0} position-y={0.5} position-z={0} scale={1.5}>
+        <mesh geometry={scene1.nodes['Ground'].geometry}></mesh>
+        <mesh
+          geometry={scene1.nodes['1_E_Room'].geometry}
+          material={scene1.nodes['1_E_Room'].material}
+        ></mesh>
+        <mesh
+          geometry={scene1.nodes['1_E_Objects'].geometry}
+          material={scene1.nodes['1_E_Objects'].material}
+        ></mesh>
+        <mesh
+          geometry={scene1.nodes['1_E_Stairs'].geometry}
+          material={scene1.nodes['1_E_Stairs'].material}
+        ></mesh>
+      </group> */}
+    </>
+  );
 };
 
 export default Scene;

@@ -1353,6 +1353,7 @@ blockquote {
   background-color: #fff;
   box-shadow: 1px 1px 30px 0 rgba(0, 0, 0, 0.15);
   z-index: 99;
+  margin-left: 2.5rem;
 }
 
 .tab-button {
@@ -1646,6 +1647,7 @@ blockquote {
   background-color: #1169fe;
   box-shadow: 1px 1px 30px 0 rgba(0, 0, 0, 0.15);
   z-index: 99;
+  margin-right: 2.5rem;
 }
 
 .invert {

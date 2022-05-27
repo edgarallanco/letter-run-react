@@ -49,11 +49,12 @@ export const Stage1 = () => {
         setIsCollection={() => setIsCollection(false)}
       />
       <Canvas shadows>
-        <ambientLight intensity={0.8} position={[0, 30, 15]} />
+        <ambientLight intensity={1} />
         <directionalLight
+          // layers={[2]}
           name='Directional Light'
           castShadow
-          intensity={0.7}
+          intensity={0.2}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-far={400}
@@ -62,6 +63,7 @@ export const Stage1 = () => {
           shadow-camera-top={100}
           shadow-camera-bottom={-100}
           position={[6, 25, -9]}
+          shadow-bias={-0.0005}
         />
         <Suspense fallback={null}>
           <AppProvider>
