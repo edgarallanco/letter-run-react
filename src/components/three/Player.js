@@ -21,14 +21,15 @@ const Player = ({
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera} = useThree();
   const meshRef = useRef();
-  const speed = 3;
+  const [speed, setSpeed] = useState(1);
+  const [gravity, setGravity] = useState(isModal ? 0 : -30);
   const [fwdPressed, setFwdPressed] = useState(false);
   const [bkdPressed, setBkdPressed] = useState(false);
   const [lftPressed, setLftPressed] = useState(false);
   const [rgtPressed, setRgtPressed] = useState(false);
   const [isOnGround, setIsOnGround] = useState(true);
   const [vector, setVector] = useState(new Vector3());
-  const [upVector, setUpVector] = useState(new Vector3(0, 1, 0));
+  const [upVector, setUpVector] = useState(new Vector3(0, 0, 0));
   const [velocity, setVelocity] = useState(new Vector3());
   const [player, setPlayer] = useState();
   const rotateAngle = new Vector3(0, 1, 0);
@@ -42,15 +43,11 @@ const Player = ({
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
       radius: 0.5,
-      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 3.5, 0.0)),
+      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 7.5, 0)),
     };
-
-    meshRef.current.geometry?.translate(0, -1.5, 0);
-    meshRef.current.castShadow = true;
-    meshRef.current.receiveShadow = true;
     velocity.set(0, 0, 0);
     setVelocity(velocity);
-    camera.position.sub(state.controls.target);
+    // camera.position.sub(state.controls.target);
     state.controls.target.copy(meshRef.current.position);
     camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);
@@ -62,15 +59,22 @@ const Player = ({
 
   useEffect(() => {
     if (previousAction) {
-      actions[previousAction].fadeOut(0.2);
+      actions[previousAction].fadeOut(0.3);
       actions[stateValtio.action].stop();
     }
     actions[stateValtio.action].play();
-    actions[stateValtio.action].fadeIn(0.2);
-  }, [actions, stateValtio.action, previousAction]);
+    stateValtio.action === 'Anim_Walk' &&
+      actions[stateValtio.action].fadeIn(0.9);
+  }, [actions, stateValtio.action]);
+
+  useEffect(() => {
+    isModal ? setGravity(0) : setGravity(-30);
+  }, [isModal]);
 
   useFrame((stateCanvas, delta) => {
-    !isModal && movePlayer(Math.min(delta, 0.1), state.collider);
+    meshRef.current.geometry?.translate(0, 0, 0);
+
+    movePlayer(Math.min(delta, 0.1), state.collider);
     // if the player has fallen too far below the level reset their position to the start
     if (player?.position.y < -25) {
       meshRef.current.position.set(-38, 8, 1);
@@ -111,10 +115,10 @@ const Player = ({
     );
     rotateQuarternion.setFromAxisAngle(
       rotateAngle,
-      directionOffset + angleYCameraDirection + 0.7
+      directionOffset + angleYCameraDirection
     );
     if (stateValtio.action === 'Anim_Walk') {
-      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.5);
+      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.9);
     }
     if (stateValtio.action === 'Anim_Jump') {
       setTimeout(() => {
@@ -126,38 +130,50 @@ const Player = ({
 
   const movePlayer = (delta, collider) => {
     if (!state.controls && !state.collider) return;
-
     let player = meshRef.current;
     let angle = state.controls.getAzimuthalAngle();
-    let gravity = -30;
 
-    if (fwdPressed) {
-      stateValtio.action = 'Anim_Walk';
-      vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
-      player.position.addScaledVector(vector, speed * delta);
-      setVector(vector);
-    }
+    if (!isModal) {
+      if (fwdPressed) {
+        stateValtio.action = 'Anim_Walk';
+        speed <= 10 && setSpeed(speed + 0.1);
+        vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
+        player.position.addScaledVector(vector, speed * delta);
+      }
 
-    if (bkdPressed) {
-      stateValtio.action = 'Anim_Walk';
+      if (bkdPressed) {
+        stateValtio.action = 'Anim_Walk';
+        speed <= 10 && setSpeed(speed + 0.1);
+        vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
+        player.position.addScaledVector(vector, speed * delta);
+        // setVector(vector);
+      }
 
-      vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
-      player.position.addScaledVector(vector, speed * delta);
-      setVector(vector);
-    }
+      if (lftPressed) {
+        stateValtio.action = 'Anim_Walk';
+        speed <= 10 && setSpeed(speed + 0.3);
+        vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
+        player.position.addScaledVector(vector, speed * delta);
+        // setVector(vector);
+      }
 
-    if (lftPressed) {
-      stateValtio.action = 'Anim_Walk';
-      vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
-      player.position.addScaledVector(vector, speed * delta);
-      setVector(vector);
-    }
-
-    if (rgtPressed) {
-      stateValtio.action = 'Anim_Walk';
-      vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
-      player.position.addScaledVector(vector, speed * delta);
-      setVector(vector);
+      if (rgtPressed) {
+        stateValtio.action = 'Anim_Walk';
+        speed <= 10 && setSpeed(speed + 0.1);
+        vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
+        player.position.addScaledVector(vector, speed * delta);
+        // setVector(vector);
+      }
+      if (
+        !fwdPressed &&
+        !bkdPressed &&
+        !lftPressed &&
+        !rgtPressed &&
+        speed > 1
+      ) {
+        setSpeed(1);
+        stateValtio.action = 'Anim_Idle';
+      }
     }
 
     velocity.y += isOnGround ? 0 : delta * gravity;
@@ -175,7 +191,7 @@ const Player = ({
     const capsuleInfo = player.capsuleInfo;
     tempBox.makeEmpty();
     tempMat.copy(collider?.matrixWorld).invert();
-    tempSegment.copy(capsuleInfo.segment);
+    tempSegment.copy(new Line3(new Vector3(0, 0, 0), new Vector3(0, 5, 0.0)));
 
     // get the position of the capsule in the local space of the collider
     tempSegment.start.applyMatrix4(player.matrixWorld).applyMatrix4(tempMat);
@@ -216,14 +232,13 @@ const Player = ({
     // triangle collisions and moving it. capsuleInfo.segment.start is assumed to be
     // the origin of the player model.
     const newPosition = tempVector;
-    newPosition.copy(tempSegment?.start).applyMatrix4(collider?.matrixWorld);
+    newPosition.copy(tempSegment.start).applyMatrix4(collider?.matrixWorld);
 
     // check how much the collider was moved
     deltaVector.subVectors(newPosition, player.position);
 
     const offset = Math.max(0.0, deltaVector.length() - 1e-5);
     deltaVector.normalize().multiplyScalar(offset);
-
     // adjust the player model
     player.position.add(deltaVector);
 
@@ -238,13 +253,14 @@ const Player = ({
     }
 
     let lastControl = state.controls.target;
+    state.controls.enabled = false;
     camera.position.sub(lastControl);
     state.controls.target.copy(player.position);
     camera.position.add(player.position);
     setVelocity(velocity);
 
-    // dispatch({type: Actions.UPDATE_CONTROLS, payload: state.controls});
-    setPlayer(player);
+    dispatch({type: Actions.UPDATE_CONTROLS, payload: state.controls});
+    // setPlayer(player);
     dispatch({type: Actions.UPDATE_PLAYER, payload: player.position});
     dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
   };
@@ -282,7 +298,6 @@ const Player = ({
     window.addEventListener(
       'keyup',
       (e) => {
-        if (isOnGround) stateValtio.action = 'Anim_Idle';
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(false);
@@ -299,32 +314,40 @@ const Player = ({
           case 'KeyZ':
             setZoom(!true);
             break;
+          case 'Space':
+            if (stateValtio.action == 'Anim_Jump') {
+              stateValtio.action = 'Anim_Idle';
+            }
+            break;
         }
       },
       {passive: true}
     );
   };
-
   return (
     <mesh
       ref={meshRef}
       position={player ? player.position : [-38, 8, 1]}
-      translateY={-0.5}
       scale={1.3}
+      castShadow={true}
+      receiveShadow
+      // layers={[2]}
     >
-      <primitive object={nodes.spine} />
-      <group name='Character'>
+      <primitive object={nodes.spine} castShadow={true} receiveShadow />
+      <group name='Character' castShadow={true} receiveShadow>
         <skinnedMesh
           name='Plane022'
           geometry={nodes.Plane022.geometry}
           material={materials.Character}
           skeleton={nodes.Plane022.skeleton}
+          castShadow={true}
         />
         <skinnedMesh
           name='Plane022_1'
           geometry={nodes.Plane022_1.geometry}
           material={materials.Character_Inner}
           skeleton={nodes.Plane022_1.skeleton}
+          castShadow={true}
         />
       </group>
       <skinnedMesh
@@ -332,6 +355,8 @@ const Player = ({
         geometry={nodes.Eyes.geometry}
         material={materials.Character}
         skeleton={nodes.Eyes.skeleton}
+        castShadow={true}
+        translateY={5}
       />
     </mesh>
   );
