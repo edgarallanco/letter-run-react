@@ -8,6 +8,7 @@ const stateValtio = proxy({
   geometries: [],
   isModal: false,
   collection: [],
+  track: './resources/Nature.mp3',
 });
 
 export default stateValtio;

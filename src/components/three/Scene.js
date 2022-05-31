@@ -1,5 +1,4 @@
-import {useFrame, useLoader, useThree} from '@react-three/fiber';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+import {useThree} from '@react-three/fiber';
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import * as THREE from 'three';
@@ -7,19 +6,17 @@ import {MeshBVH, MeshBVHVisualizer} from 'three-mesh-bvh';
 import {AppDispatchContext, AppStateContext} from 'context/AppContext';
 import {Actions} from 'reducer/AppReducer';
 import stateValtio from 'context/store';
-import {CameraHelper} from 'three';
 import {useGLTF} from '@react-three/drei';
-import useSpline from '@splinetool/r3f-spline';
-import {OrthographicCamera} from '@react-three/drei';
+
 
 const Scene = ({checkpoint, isModal}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
-  let visualizer, environment;
+  let  environment;
   const {scene, camera} = useThree();
   const [stairs, setStairs] = useState([]);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_v1.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters.glb');
 
   useEffect(() => {
     // collect all geometries to merge

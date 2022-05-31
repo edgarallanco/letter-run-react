@@ -7,20 +7,12 @@ import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
 import {useGLTF, useAnimations} from '@react-three/drei';
 import {getDirectionOffset} from 'src/utils/directionalOffset';
-import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
+import {pointInsideGeometry} from 'src/utils/pointInsideGeometry';
 
-const Player = ({
-  setIsModal,
-  isModal,
-  isSound,
-  setEnvSound,
-  setCheckpoint,
-  zoom,
-  setZoom,
-}) => {
+const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
-  const {scene, camera} = useThree();
+  const {scene, camera, controls} = useThree();
   const meshRef = useRef();
   const [speed, setSpeed] = useState(1);
   const [gravity, setGravity] = useState(isModal ? 0 : -30);
@@ -73,8 +65,6 @@ const Player = ({
   }, [isModal]);
 
   useFrame((stateCanvas, delta) => {
-    meshRef.current.geometry?.translate(0, 0, 0);
-
     movePlayer(Math.min(delta, 0.1), state.collider);
     // if the player has fallen too far below the level reset their position to the start
     if (player?.position.y < -25) {
@@ -97,17 +87,7 @@ const Player = ({
         setIsModal(true);
       }
     });
-    if (isSound) {
-      if (player.position.y <= 3) {
-        setEnvSound(false);
-      } else {
-        setEnvSound(true);
-      }
-    }
-    const angleYCameraDirection = Math.atan2(
-      meshRef.current.position.x - camera.position.x,
-      meshRef.current.position.z - camera.position.z
-    );
+    const angleYCameraDirection = -2.55555;
     const directionOffset = getDirectionOffset(
       fwdPressed,
       bkdPressed,
@@ -180,10 +160,16 @@ const Player = ({
     velocity.y += isOnGround ? 0 : delta * gravity;
     player.position.addScaledVector(velocity, delta);
     player.updateMatrixWorld();
-    // console.log(player.position);
     // check if the player is inside in any of the letter
-    let insideLetter = pointInsideGeometry(player.position.x, player.position.z);
-    console.log(insideLetter);
+    let insideLetter = pointInsideGeometry(
+      player.position.x,
+      player.position.z
+    );
+    if (insideLetter) {
+      setTrack(insideLetter.track);
+    } else {
+      setTrack('./resources/Nature.mp3');
+    }
 
     let tempVector = new Vector3();
     let tempVector2 = new Vector3();
@@ -258,7 +244,7 @@ const Player = ({
     }
 
     let lastControl = state.controls.target;
-    state.controls.enabled = false;
+    // state.controls.enabled = false;
     camera.position.sub(lastControl);
     state.controls.target.copy(player.position);
     camera.position.add(player.position);

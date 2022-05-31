@@ -11,6 +11,8 @@ import stateValtio from 'context/store';
 import PopUp from './UI/PopUp';
 import Finish from './UI/Finish';
 import Home from './UI/Home';
+import EnvSound from './three/EnvSound';
+import {Html, useProgress} from '@react-three/drei';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
@@ -22,12 +24,29 @@ export const Stage1 = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [isCollection, setIsCollection] = useState(false);
   const [isHome, setIsHome] = useState(!true);
-  const sound = useRef();
-  useEffect(() => {
-    if (sound.current !== null) {
-      isSound && envSound ? sound.current.play() : sound.current.pause();
-    }
-  }, [envSound, isSound]);
+  const [track, setTrack] = useState('');
+
+  function Loader() {
+    const {active, progress, errors, item, loaded, total} = useProgress();
+    const [style, setStyle] = React.useState({});
+
+    setTimeout(() => {
+      const newStyle = {
+        opacity: 1,
+        width: `${progress}%`,
+      };
+
+      setStyle(newStyle);
+    }, 200);
+    return (
+      <Html center>
+        <div className='progress'>
+          <div className='progress-done' style={style}>
+          </div>
+        </div>
+      </Html>
+    );
+  }
 
   const updateCollection = () => {
     setIsCollection(true);
@@ -48,7 +67,8 @@ export const Stage1 = () => {
         isCollection={isCollection}
         setIsCollection={() => setIsCollection(false)}
       />
-      <Canvas shadows>
+      <EnvSound isSound={isSound} track={track} />
+      <Canvas shadows gl={{logarithmicDepthBuffer: true}} flat dpr={[1, 2]}>
         <ambientLight intensity={1} />
         <directionalLight
           // layers={[2]}
@@ -65,7 +85,7 @@ export const Stage1 = () => {
           position={[6, 25, -9]}
           shadow-bias={-0.0005}
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loader />}>
           <AppProvider>
             <Camera zoom={zoom} />
             <Player
@@ -78,31 +98,22 @@ export const Stage1 = () => {
               action={stateValtio.action}
               zoom={zoom}
               setZoom={setZoom}
+              setTrack={setTrack}
             />
 
             {stateValtio.checkpoints.map(({position, number, collected}) => (
               <Checkpoint
-                url='./resources/beat-loop.mp3'
+                // url='./resources/beat-loop.mp3'
                 isSound={isSound}
                 position={position}
                 key={number}
                 collected={collected}
               />
             ))}
-            <Scene shadows checkpoint={checkpoint} isModal={isPopup} />
+            <Scene checkpoint={checkpoint} isModal={isPopup} />
           </AppProvider>
         </Suspense>
       </Canvas>
-      <audio
-        ref={sound}
-        id='ambient'
-        loop
-        preload='auto'
-        hidden
-        className='hidden'
-      >
-        <source src='./resources/Nature.mp3' type='audio/mpeg' />
-      </audio>
       <div className='action-wrapper'>
         <div
           data-w-id='87254fef-9926-84f7-c31f-da8b1d44c269'
