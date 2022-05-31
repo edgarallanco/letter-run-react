@@ -60,7 +60,7 @@ const Scene = ({checkpoint, isModal}) => {
     const collider = new THREE.Mesh(mergedGeometry);
     collider.material.opacity = 0;
     collider.material.transparent = true;
-    visualizer = new MeshBVHVisualizer(collider, 10);
+    // visualizer = new MeshBVHVisualizer(collider, 10);
     dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
 
     environment.traverse((c) => {
