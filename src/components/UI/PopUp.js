@@ -139,7 +139,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
                 {isCollection && (
                   <div className='gc-text-wrapper margin-bottom---l gc-text-alignment-center'>
                     <div className='gc-text-xl'>
-                      Congrats! You found our {lastCollected?.item}.
+                      Congrats! You found our {lastCollected?.item_name}.
                     </div>
                   </div>
                 )}

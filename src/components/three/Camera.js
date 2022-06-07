@@ -1,7 +1,4 @@
-import {
-  PerspectiveCamera,
-  OrbitControls,
-} from '@react-three/drei';
+import {PerspectiveCamera, OrbitControls} from '@react-three/drei';
 import {useFrame, useThree} from '@react-three/fiber';
 import React, {useContext, useEffect, useRef} from 'react';
 import {easings, useSpring} from 'react-spring';
@@ -32,6 +29,11 @@ const Camera = ({zoom}) => {
     zoomProp: zoom ? 4 : 12,
   });
 
+  const cameraPos = useSpring({
+     config: {duration: 2000, easing: easings.easeCubic},
+    zoomProp: zoom ? 4 : 12,
+  })
+
   useFrame(({controls}) => (controls.target = state?.playerMesh.position));
 
   useFrame(({camera}) => {
@@ -54,6 +56,7 @@ const Camera = ({zoom}) => {
         maxPolarAngle={Math.PI / 2.5}
         maxAzimuthAngle={Math.PI / 2.8}
         minAzimuthAngle={-Math.PI / 0.52}
+        enableZoom={false}
       />
 
       <PerspectiveCamera

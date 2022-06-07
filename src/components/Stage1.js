@@ -74,7 +74,7 @@ export const Stage1 = () => {
           // layers={[2]}
           name='Directional Light'
           castShadow
-          intensity={0.2}
+          intensity={0.5}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-far={400}

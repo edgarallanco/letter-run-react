@@ -36,7 +36,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
       radius: 0.5,
-      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 7.5, 0)),
+      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 1.5, 0)),
     };
     velocity.set(0, 0, 0);
     setVelocity(velocity);
