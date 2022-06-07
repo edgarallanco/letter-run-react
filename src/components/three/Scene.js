@@ -40,7 +40,6 @@ const Scene = ({checkpoint, isModal}) => {
         if (c.name.includes('Invisible')) {
           c.visible = false;
         }
-        console.log(c);
         if (c.name.includes('Stairs')) {
           c.visible = false;
           cloned.name = c.userData.name;
@@ -87,7 +86,6 @@ const Scene = ({checkpoint, isModal}) => {
     );
     if (!currentStair) return;
     environment.children.map((c) => {
-      console.log(c.userData.name, checkpoint.object);
       if (c.userData.name === currentStair.name) {
         c.visible = true;
       }
@@ -100,10 +98,6 @@ const Scene = ({checkpoint, isModal}) => {
     stateValtio.geometries = currentStair
       ? stateValtio.geometries.filter((geom) => geom.name !== checkpoint.object)
       : stateValtio.geometries;
-    console.log(
-      stateValtio.geometries.filter((geom) => geom.name !== checkpoint.object),
-      stateValtio.geometries
-    );
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
       stateValtio.geometries,
       false
