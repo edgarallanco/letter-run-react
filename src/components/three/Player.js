@@ -15,6 +15,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
   const {scene, camera, controls} = useThree();
   const meshRef = useRef();
   const [speed, setSpeed] = useState(1);
+  const [jump, setJump] = useState(false);
   const [gravity, setGravity] = useState(isModal ? 0 : -30);
   const [fwdPressed, setFwdPressed] = useState(false);
   const [bkdPressed, setBkdPressed] = useState(false);
@@ -101,11 +102,19 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     if (stateValtio.action === 'Anim_Walk') {
       meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.9);
     }
-    if (stateValtio.action === 'Anim_Jump') {
+    if (jump) {
       setTimeout(() => {
         velocity.y = 5.0;
         setVelocity(velocity);
       }, 50);
+      setTimeout(() => {
+        velocity.y = 0;
+        setVelocity(velocity);
+      }, 120);
+      setTimeout(() => {
+        stateValtio.action = 'Anim_Idle';
+        setJump(false);
+      }, 170);
     }
   });
 
@@ -274,7 +283,9 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
             setLftPressed(true);
             break;
           case 'Space':
-            if (stateValtio.action !== 'Anim_Jump') {
+            if (!jump && stateValtio.action !== 'Anim_Jump') {
+              setJump(true);
+              console.log(e);
               stateValtio.action = 'Anim_Jump';
             }
             break;
@@ -306,9 +317,8 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
             setZoom(!true);
             break;
           case 'Space':
-            if (stateValtio.action == 'Anim_Jump') {
-              stateValtio.action = 'Anim_Idle';
-            }
+            // if (stateValtio.action == 'Anim_Jump') {
+            // }
             break;
         }
       },

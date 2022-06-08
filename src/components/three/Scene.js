@@ -40,12 +40,6 @@ const Scene = ({checkpoint, isModal}) => {
         if (c.name.includes('Invisible')) {
           c.visible = false;
         }
-        if (c.name.includes('Ground')) {
-          // c.material = new THREE.MeshStandardMaterial();
-          // c.color = new THREE.Color('black');
-          // c.layers.set(3);
-          console.log(scene);
-        }
         if (c.name.includes('Stairs')) {
           c.visible = false;
           cloned.name = c.userData.name;

@@ -68,7 +68,7 @@ export const Stage1 = () => {
       />
       <EnvSound isSound={isSound} track={track} />
       <Canvas flat shadows gl={{ logarithmicDepthBuffer: true }} dpr={[1, 2]}>
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.6} />
         <directionalLight
           // layers={[2]}
           name="Directional Light"
