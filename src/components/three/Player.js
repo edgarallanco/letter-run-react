@@ -285,7 +285,6 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
           case 'Space':
             if (!jump && stateValtio.action !== 'Anim_Jump') {
               setJump(true);
-              console.log(e);
               stateValtio.action = 'Anim_Jump';
             }
             break;
