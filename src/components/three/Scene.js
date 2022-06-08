@@ -12,10 +12,10 @@ const Scene = ({checkpoint, isModal}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   let environment;
-  const {scene, camera} = useThree();
+  const {scene, camera, gl} = useThree();
   const [stairs, setStairs] = useState([]);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v13.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v14.glb');
 
   useEffect(() => {
     // collect all geometries to merge
@@ -39,6 +39,12 @@ const Scene = ({checkpoint, isModal}) => {
         }
         if (c.name.includes('Invisible')) {
           c.visible = false;
+        }
+        if (c.name.includes('Ground')) {
+          c.material = new THREE.MeshStandardMaterial();
+          c.color = new THREE.Color('black');
+          // c.layers.set(3);
+          console.log(scene);
         }
         if (c.name.includes('Stairs')) {
           c.visible = false;

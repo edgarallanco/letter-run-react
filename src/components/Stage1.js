@@ -12,7 +12,8 @@ import PopUp from './UI/PopUp';
 import Finish from './UI/Finish';
 import Home from './UI/Home';
 import EnvSound from './three/EnvSound';
-import {Html, useProgress} from '@react-three/drei';
+import {Html, Stars, useProgress} from '@react-three/drei';
+import {ACESFilmicToneMapping} from 'three';
 
 export const Stage1 = () => {
   const {state} = useContext(AppStateContext);
@@ -29,7 +30,6 @@ export const Stage1 = () => {
   function Loader() {
     const {active, progress, errors, item, loaded, total} = useProgress();
     const [style, setStyle] = React.useState({});
-
     setTimeout(() => {
       const newStyle = {
         opacity: 1,
@@ -41,8 +41,7 @@ export const Stage1 = () => {
     return (
       <Html center>
         <div className='progress'>
-          <div className='progress-done' style={style}>
-          </div>
+          <div className='progress-done' style={style}></div>
         </div>
       </Html>
     );
@@ -68,7 +67,11 @@ export const Stage1 = () => {
         setIsCollection={() => setIsCollection(false)}
       />
       <EnvSound isSound={isSound} track={track} />
-      <Canvas shadows gl={{logarithmicDepthBuffer: true}} flat dpr={[1, 2]}>
+      <Canvas
+        shadows
+        gl={{logarithmicDepthBuffer: true}}
+        dpr={[1, 2]}
+      >
         <ambientLight intensity={1} />
         <directionalLight
           // layers={[2]}
@@ -87,6 +90,7 @@ export const Stage1 = () => {
         />
         <Suspense fallback={<Loader />}>
           <AppProvider>
+            <Stars />
             <Camera zoom={zoom} />
             <Player
               isModal={isPopup}

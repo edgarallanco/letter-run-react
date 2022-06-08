@@ -4,7 +4,7 @@ const checkpoint = [
     item_name: 'Magic pencil',
     img_url: 'https://cdn.custom-cursor.com/packs/1758/pack2387.png',
     number: 0,
-    position: [-43, 1, -19],
+    position: [-45, 1, -3],
     stair: '1_E_Stairs',
     collected: false,
     object: '1_E_Object',
@@ -15,7 +15,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 1,
-    position: [-15, 1, -14],
+    position: [-26, 2, -3],
     stair: '2_D_Stairs',
     collected: false,
     object: '2_D_Object',
@@ -26,7 +26,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 2,
-    position: [-3, 1, -15],
+    position: [-5, 1, -7],
     stair: '3_G_Stairs',
     collected: false,
     object: '3_G_Object',
@@ -37,7 +37,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 3,
-    position: [14, 1, -2],
+    position: [21, 1, -3],
     stair: '4_A_Stairs',
     collected: false,
     object: '4_A_Object',
