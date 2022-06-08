@@ -41,8 +41,8 @@ const Scene = ({checkpoint, isModal}) => {
           c.visible = false;
         }
         if (c.name.includes('Ground')) {
-          c.material = new THREE.MeshStandardMaterial();
-          c.color = new THREE.Color('black');
+          // c.material = new THREE.MeshStandardMaterial();
+          // c.color = new THREE.Color('black');
           // c.layers.set(3);
           console.log(scene);
         }
