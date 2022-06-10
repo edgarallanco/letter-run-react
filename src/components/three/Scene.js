@@ -15,7 +15,7 @@ const Scene = ({checkpoint, isModal}) => {
   const {scene, camera, gl} = useThree();
   const [stairs, setStairs] = useState([]);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v14.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v16.glb');
 
   useEffect(() => {
     // collect all geometries to merge
@@ -41,11 +41,28 @@ const Scene = ({checkpoint, isModal}) => {
           c.visible = false;
         }
         if (c.name.includes('Stairs')) {
-          c.visible = false;
-          cloned.name = c.userData.name;
-          stateValtio.stairs.push(cloned);
-          setStairs(stairs.push(c));
-        } else if (!c.name.includes('Grass')) {
+          const foundedStair = stateValtio.gameProgress
+            ? stateValtio.gameProgress.find(
+                (check) => check.stair === c.userData.name
+              )
+            : undefined;
+          if (!foundedStair) {
+            c.visible = false;
+            cloned.name = c.userData.name;
+            stateValtio.stairs.push(cloned);
+            setStairs(stairs.push(c));
+          }
+        } else if (c.name.includes('Object')) {
+          const found = stateValtio.gameProgress
+            ? stateValtio.gameProgress.find(
+                (check) => check.object === c.userData.name
+              )
+            : undefined;
+          c.visible = found ? false : true;
+        } else if (
+          !c.name.includes('Grass') &&
+          !c.name.includes('10_N_Water')
+        ) {
           cloned.name = c.userData.name;
           geoms.push(cloned);
         }
@@ -80,6 +97,7 @@ const Scene = ({checkpoint, isModal}) => {
 
   useEffect(() => {
     if (!isModal) return;
+    if (!checkpoint) return;
     environment = scene1.scene;
     let currentStair = stateValtio.stairs.find(
       (stair) => stair.name === checkpoint.stair
@@ -93,7 +111,7 @@ const Scene = ({checkpoint, isModal}) => {
         c.visible = false;
       }
     });
-    currentStair && stateValtio.collection.push(checkpoint.item);
+    currentStair && stateValtio.collection.push(checkpoint.item_name);
     currentStair && stateValtio.geometries.push(currentStair);
     stateValtio.geometries = currentStair
       ? stateValtio.geometries.filter((geom) => geom.name !== checkpoint.object)

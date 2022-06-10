@@ -9,6 +9,7 @@ const stateValtio = proxy({
   isModal: false,
   collection: [],
   track: './resources/Nature.mp3',
+  gameProgress: JSON.parse(localStorage.getItem('EA_checkpoints')),
 });
 
 export default stateValtio;

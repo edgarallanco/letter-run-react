@@ -37,7 +37,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
       radius: 0.5,
-      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 1.5, 0)),
+      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 3.5, 0)),
     };
     velocity.set(0, 0, 0);
     setVelocity(velocity);
@@ -57,8 +57,9 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
       actions[stateValtio.action].stop();
     }
     actions[stateValtio.action].play();
-    stateValtio.action === 'Anim_Walk' &&
+    if (stateValtio.action === 'Anim_Walk' && previousAction === 'Anim_Idle') {
       actions[stateValtio.action].fadeIn(0.9);
+    }
   }, [actions, stateValtio.action]);
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     if (stateValtio.action === 'Anim_Walk') {
       meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.9);
     }
-    if (jump) {
+    if (jump && velocity.y === 0) {
       setTimeout(() => {
         velocity.y = 5.0;
         setVelocity(velocity);
@@ -114,7 +115,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
       setTimeout(() => {
         stateValtio.action = 'Anim_Idle';
         setJump(false);
-      }, 170);
+      }, 190);
     }
   });
 

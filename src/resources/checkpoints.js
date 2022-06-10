@@ -48,7 +48,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 4,
-    position: [38, 1, -15],
+    position: [33, 1, -3],
     stair: '5_R_Stairs',
     collected: false,
     object: '5_R_Object',
@@ -92,7 +92,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 8,
-    position: [13, 1, 29],
+    position: [22, 1, 18],
     stair: '9_A_Stairs',
     collected: false,
     object: '9_A_Object',
@@ -103,7 +103,7 @@ const checkpoint = [
     img_url:
       'https://w7.pngwing.com/pngs/635/274/png-transparent-computer-icons-wi-fi-wifi-password-angle-logo-internet.png',
     number: 9,
-    position: [33, 4, 29],
+    position: [42, 2, 17],
     stair: '10_N_Stairs',
     collected: false,
     object: '10_N_Object',
