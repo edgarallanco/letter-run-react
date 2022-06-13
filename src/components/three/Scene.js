@@ -51,6 +51,8 @@ const Scene = ({checkpoint, isModal}) => {
             cloned.name = c.userData.name;
             stateValtio.stairs.push(cloned);
             setStairs(stairs.push(c));
+          } else {
+            geoms.push(cloned);
           }
         } else if (c.name.includes('Object')) {
           const found = stateValtio.gameProgress
