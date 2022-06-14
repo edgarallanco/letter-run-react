@@ -148,7 +148,7 @@ export const Stage1 = () => {
         </Suspense>
       </Canvas>
       <div className='action-wrapper'>
-        {/* <div
+        <div
           data-w-id='87254fef-9926-84f7-c31f-da8b1d44c269'
           className='menu-button'
           onClick={() => setIsPopup(!isPopup)}
@@ -158,7 +158,7 @@ export const Stage1 = () => {
             loading='lazy'
             alt=''
           />
-        </div> */}
+        </div>
         <div
           data-w-id='eb0a3834-ea05-fb73-d87f-6eb0e88e9c3a'
           className='sound-button'
