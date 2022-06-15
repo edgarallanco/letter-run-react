@@ -326,40 +326,42 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     );
   };
   return (
-    <mesh
-      ref={meshRef}
-      position={player ? player.position : [-38, 8, 1]}
-      scale={1.3}
-      castShadow={true}
-      receiveShadow
-      // layers={[2]}
-    >
-      <primitive object={nodes.spine} castShadow={true} receiveShadow />
-      <group name='Character' castShadow={true} receiveShadow>
-        <skinnedMesh
-          name='Plane022'
-          geometry={nodes.Plane022.geometry}
-          material={materials.Character}
-          skeleton={nodes.Plane022.skeleton}
-          castShadow={true}
-        />
-        <skinnedMesh
-          name='Plane022_1'
-          geometry={nodes.Plane022_1.geometry}
-          material={materials.Character_Inner}
-          skeleton={nodes.Plane022_1.skeleton}
-          castShadow={true}
-        />
-      </group>
-      <skinnedMesh
-        name='Eyes'
-        geometry={nodes.Eyes.geometry}
-        material={materials.Character}
-        skeleton={nodes.Eyes.skeleton}
+    <>
+      <mesh
+        ref={meshRef}
+        position={player ? player.position : [-38, 8, 1]}
+        scale={1.3}
         castShadow={true}
-        translateY={5}
-      />
-    </mesh>
+        receiveShadow
+        // layers={[2]}
+      >
+        <primitive object={nodes.spine} castShadow={true} receiveShadow />
+        <group name='Character' castShadow={true} receiveShadow>
+          <skinnedMesh
+            name='Plane022'
+            geometry={nodes.Plane022.geometry}
+            material={materials.Character}
+            skeleton={nodes.Plane022.skeleton}
+            castShadow={true}
+          />
+          <skinnedMesh
+            name='Plane022_1'
+            geometry={nodes.Plane022_1.geometry}
+            material={materials.Character_Inner}
+            skeleton={nodes.Plane022_1.skeleton}
+            castShadow={true}
+          />
+        </group>
+        <skinnedMesh
+          name='Eyes'
+          geometry={nodes.Eyes.geometry}
+          material={materials.Character}
+          skeleton={nodes.Eyes.skeleton}
+          castShadow={true}
+          translateY={5}
+        />
+      </mesh>
+    </>
   );
 };
 

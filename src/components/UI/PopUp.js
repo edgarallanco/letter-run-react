@@ -144,24 +144,26 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
                   </div>
                 )}
                 <div className='tab-collection-grid'>
-                  {stateValtio.checkpoints.map(({collected, number, last}) => (
-                    <div
-                      id='w-node-_3ad74d17-46d4-9114-ce6a-1467a37ae9e3-992107f9'
-                      className={`collection-item  ${
-                        last ? 'cc-just-collected' : 'cc-collected'
-                      }`}
-                      key={number}
-                    >
-                      {collected && (
-                        <img
-                          loading='lazy'
-                          src='images/notebook.png'
-                          alt=''
-                          className='blending-darken'
-                        />
-                      )}
-                    </div>
-                  ))}
+                  {stateValtio.checkpoints.map(
+                    ({collected, number, last, img_url}) => (
+                      <div
+                        id='w-node-_3ad74d17-46d4-9114-ce6a-1467a37ae9e3-992107f9'
+                        className={`collection-item  ${
+                          last ? 'cc-just-collected' : 'cc-collected'
+                        }`}
+                        key={number}
+                      >
+                        {collected && (
+                          <img
+                            loading='lazy'
+                            src={img_url}
+                            alt=''
+                            className='blending-darken'
+                          />
+                        )}
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </animated.div>

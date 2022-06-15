@@ -106,7 +106,7 @@ export const Stage1 = () => {
           // layers={[2]}
           name='Directional Light'
           castShadow
-          intensity={0.5}
+          intensity={0.4}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-far={400}
@@ -116,6 +116,12 @@ export const Stage1 = () => {
           shadow-camera-bottom={-100}
           position={[6, 25, -9]}
           shadow-bias={-0.0005}
+          // makeDefault={true}
+        />
+        <spotLight
+          intensity={0.5}
+          position={[300, 300, 4000]}
+          castShadow={false}
         />
         <Suspense fallback={<Loader />}>
           <AppProvider>
