@@ -127,14 +127,14 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     if (!isModal) {
       if (fwdPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 10 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.1);
         vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
       }
 
       if (bkdPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 10 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.1);
         vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // setVector(vector);
@@ -142,7 +142,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
 
       if (lftPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 10 && setSpeed(speed + 0.3);
+        speed <= 7 && setSpeed(speed + 0.1);
         vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // setVector(vector);
@@ -150,7 +150,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
 
       if (rgtPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 10 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.1);
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // setVector(vector);
