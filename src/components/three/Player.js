@@ -29,7 +29,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const {nodes, materials, animations} = useGLTF(
-    './../resources/EA_Character.glb'
+    './../resources/EA_CharacterAnimated_v5.glb'
   );
   const {actions} = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
