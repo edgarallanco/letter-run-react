@@ -15,7 +15,7 @@ const Scene = ({checkpoint, isModal}) => {
   const {scene, camera, gl} = useThree();
   const [stairs, setStairs] = useState([]);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v16.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v17.glb');
 
   useEffect(() => {
     // collect all geometries to merge

@@ -67,7 +67,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
   }, [isModal]);
 
   useFrame((stateCanvas, delta) => {
-    movePlayer(Math.min(delta, 0.1), state.collider);
+    if (!isModal) movePlayer(Math.min(delta, 0.1), state.collider);
     // if the player has fallen too far below the level reset their position to the start
     if (player?.position.y < -25) {
       meshRef.current.position.set(-38, 8, 1);
@@ -101,7 +101,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
       directionOffset + angleYCameraDirection
     );
     if (stateValtio.action === 'Anim_Walk') {
-      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.9);
+      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.1);
     }
     if (jump && velocity.y === 0) {
       setTimeout(() => {
@@ -316,10 +316,6 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
           case 'KeyZ':
             setZoom(!true);
             break;
-          case 'Space':
-            // if (stateValtio.action == 'Anim_Jump') {
-            // }
-            break;
         }
       },
       {passive: true}
@@ -365,7 +361,7 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
   );
 };
 
-useGLTF.preload('/EA_Character.glb');
+useGLTF.preload('/EA_CharacterAnimated_v5.glb');
 
 function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...

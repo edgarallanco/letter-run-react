@@ -1,16 +1,10 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
-import {useThree, useLoader} from '@react-three/fiber';
-import * as THREE from 'three';
-import {AppStateContext, AppDispatchContext} from 'context/AppContext';
-import {Actions} from 'reducer/AppReducer';
+import React from 'react';
 
-function Checkpoint({url, position, isSound, collected}) {
+function Checkpoint({ position, collected}) {
   return (
     <>
       {!collected && (
         <mesh position={position}>
-          <boxGeometry />
-          <meshBasicMaterial color='hotpink' />
         </mesh>
       )}
     </>

@@ -1,5 +1,5 @@
-import React, {useRef, useContext, useState, useEffect} from 'react';
-import {Canvas, useThree, useLoader} from '@react-three/fiber';
+import React, {useContext, useState, useEffect} from 'react';
+import {Canvas} from '@react-three/fiber';
 import {Suspense} from 'react';
 import Camera from 'components/three/Camera';
 import Player from 'components/three/Player';
@@ -13,7 +13,6 @@ import Finish from './UI/Finish';
 import Home from './UI/Home';
 import EnvSound from './three/EnvSound';
 import {Html, Stars, useProgress} from '@react-three/drei';
-import {ACESFilmicToneMapping} from 'three';
 
 function Loader() {
   const {active, progress, errors, item, loaded, total} = useProgress();
@@ -142,8 +141,6 @@ export const Stage1 = () => {
 
             {stateValtio.checkpoints.map(({position, number, collected}) => (
               <Checkpoint
-                // url='./resources/beat-loop.mp3'
-                isSound={isSound}
                 position={position}
                 key={number}
                 collected={collected}
