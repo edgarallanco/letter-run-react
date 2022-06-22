@@ -12,11 +12,12 @@ import PopUp from './UI/PopUp';
 import Finish from './UI/Finish';
 import Home from './UI/Home';
 import EnvSound from './three/EnvSound';
+import LetterSound from './three/LetterSound';
 import {Html, Stars, useProgress} from '@react-three/drei';
 
 function Loader() {
   const {active, progress, errors, item, loaded, total} = useProgress();
-  const [style, setStyle] = React.useState({});
+  const [style, setStyle] = useState({});
 
   setTimeout(() => {
     const newStyle = {
@@ -44,6 +45,7 @@ export const Stage1 = () => {
   const [checkpoint, setCheckpoint] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
   const [isCollection, setIsCollection] = useState(false);
+  const [isInLetter, setIsInLetter] = useState(false);
   const [isHome, setIsHome] = useState(!true);
   const [track, setTrack] = useState('');
 
@@ -98,7 +100,8 @@ export const Stage1 = () => {
         isCollection={isCollection}
         setIsCollection={() => setIsCollection(false)}
       />
-      <EnvSound isSound={isSound} track={track} />
+      <EnvSound isSound={isSound} track={track} isInLetter={isInLetter} />
+      <LetterSound isSound={isSound} track={track} isInLetter={isInLetter} />
       <Canvas flat shadows gl={{logarithmicDepthBuffer: true}} dpr={[1, 2]}>
         <ambientLight intensity={0.6} />
         <directionalLight
@@ -124,7 +127,6 @@ export const Stage1 = () => {
         />
         <Suspense fallback={<Loader />}>
           <AppProvider>
-            <Stars />
             <Camera zoom={zoom} />
             <Player
               isModal={isPopup}
@@ -137,6 +139,7 @@ export const Stage1 = () => {
               zoom={zoom}
               setZoom={setZoom}
               setTrack={setTrack}
+              setIsInLetter={setIsInLetter}
             />
 
             {stateValtio.checkpoints.map(({position, number, collected}) => (

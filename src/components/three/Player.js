@@ -9,7 +9,14 @@ import {useGLTF, useAnimations} from '@react-three/drei';
 import {getDirectionOffset} from 'src/utils/directionalOffset';
 import {pointInsideGeometry} from 'src/utils/pointInsideGeometry';
 
-const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
+const Player = ({
+  setIsModal,
+  isModal,
+  setCheckpoint,
+  setZoom,
+  setTrack,
+  setIsInLetter,
+}) => {
   const {state} = useContext(AppStateContext);
   const {dispatch} = useContext(AppDispatchContext);
   const {scene, camera, controls} = useThree();
@@ -29,11 +36,12 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const {nodes, materials, animations} = useGLTF(
-    './../resources/EA_CharacterAnimated_v5.glb'
+    './../resources/EA_CharacterAnimated_v8.glb'
   );
   const {actions} = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
   useEffect(() => {
+    console.log(animations);
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
       radius: 0.5,
@@ -105,17 +113,18 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
     }
     if (jump && velocity.y === 0) {
       setTimeout(() => {
-        velocity.y = 5.0;
-        setVelocity(velocity);
-      }, 50);
+        // velocity.y = 4.0;
+        // setVelocity(velocity);
+        // stateValtio.action = 'Anim_Jump_Air';
+      }, 360);
+      // setTimeout(() => {
+      //   // velocity.y = 2;
+      //   setVelocity(velocity);
+      // }, 370);
       setTimeout(() => {
-        velocity.y = 0;
-        setVelocity(velocity);
-      }, 120);
-      setTimeout(() => {
-        stateValtio.action = 'Anim_Idle';
         setJump(false);
-      }, 190);
+        stateValtio.action = 'Anim_Idle';
+      }, 560);
     }
   });
 
@@ -176,9 +185,10 @@ const Player = ({setIsModal, isModal, setCheckpoint, setZoom, setTrack}) => {
       player.position.z
     );
     if (insideLetter) {
+      setIsInLetter(true);
       setTrack(insideLetter.track);
     } else {
-      setTrack('./resources/Nature.mp3');
+      setIsInLetter(false);
     }
 
     let tempVector = new Vector3();
