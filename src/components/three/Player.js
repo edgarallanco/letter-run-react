@@ -36,7 +36,7 @@ const Player = ({
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const {nodes, materials, animations} = useGLTF(
-    './../resources/EA_CharacterAnimated_v8.glb'
+    './../resources/EA_CharacterAnimated_v9.glb'
   );
   const {actions} = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
@@ -113,18 +113,18 @@ const Player = ({
     }
     if (jump && velocity.y === 0) {
       setTimeout(() => {
-        // velocity.y = 4.0;
-        // setVelocity(velocity);
+        velocity.y = 6.0;
+        setVelocity(velocity);
         // stateValtio.action = 'Anim_Jump_Air';
-      }, 360);
-      // setTimeout(() => {
-      //   // velocity.y = 2;
-      //   setVelocity(velocity);
-      // }, 370);
+      }, 60);
+      setTimeout(() => {
+        if (stateValtio.action == 'Anim_Jump') stateValtio.action = 'Anim_Idle';
+        //   // velocity.y = 2;
+        //   setVelocity(velocity);
+      }, 370);
       setTimeout(() => {
         setJump(false);
-        stateValtio.action = 'Anim_Idle';
-      }, 560);
+      }, 460);
     }
   });
 
@@ -136,33 +136,30 @@ const Player = ({
     if (!isModal) {
       if (fwdPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
       }
 
       if (bkdPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // setVector(vector);
       }
 
       if (lftPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.2);
         vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // setVector(vector);
       }
 
       if (rgtPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.1);
+        speed <= 7 && setSpeed(speed + 0.2);
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // setVector(vector);
       }
       if (
         !fwdPressed &&
@@ -296,7 +293,8 @@ const Player = ({
           case 'Space':
             if (!jump && stateValtio.action !== 'Anim_Jump') {
               setJump(true);
-              stateValtio.action = 'Anim_Jump';
+              if (stateValtio.action !== 'Anim_Walk')
+                stateValtio.action = 'Anim_Jump';
             }
             break;
           case 'KeyZ':
