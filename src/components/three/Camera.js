@@ -1,20 +1,20 @@
-import {PerspectiveCamera, OrbitControls} from '@react-three/drei';
-import {useFrame, useThree} from '@react-three/fiber';
-import React, {useContext, useEffect, useRef} from 'react';
-import {easings, useSpring} from 'react-spring';
-import {Vector3} from 'three';
-import {TWEEN} from 'three/examples/jsm/libs/tween.module.min';
-import {AppStateContext, AppDispatchContext} from '../../context/AppContext';
-import {Actions} from '../../reducer/AppReducer';
+import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
+import React, { useContext, useEffect, useRef } from 'react';
+import { easings, useSpring } from 'react-spring';
+import { Vector3 } from 'three';
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min';
+import { AppStateContext, AppDispatchContext } from '../../context/AppContext';
+import { Actions } from '../../reducer/AppReducer';
 import * as THREE from 'three';
 
 // Extend will make OrbitControls available as a JSX element called orbitControls for us to use.
 // extend({OrbitControls, MapControls});
 
-const Camera = ({zoom}) => {
-  const {gl, camera, scene} = useThree();
-  const {dispatch} = useContext(AppDispatchContext);
-  const {state} = useContext(AppStateContext);
+const Camera = ({ zoom }) => {
+  const { gl, camera, scene } = useThree();
+  const { dispatch } = useContext(AppDispatchContext);
+  const { state } = useContext(AppStateContext);
   const cameraRef = useRef();
   const controlsRef = useRef();
 
@@ -22,29 +22,32 @@ const Camera = ({zoom}) => {
     // let camera = cameraRef.current;
     // gl.camera = camera;
     const controls = controlsRef.current;
-    dispatch({type: Actions.UPDATE_CONTROLS, payload: controls});
-    dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
+    dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
+    dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
   }, [gl]);
 
   const zoomAnim = useSpring({
-    config: {duration: 2000, easing: easings.easeCubic},
+    config: { duration: 1000, easing: easings.easeCubic },
     zoomProp: zoom ? 4 : 12,
   });
 
   const cameraPos = useSpring({
-    config: {duration: 2000, easing: easings.easeCubic},
+    config: { duration: 2000, easing: easings.easeCubic },
     zoomProp: zoom ? new Vector3(10, 15, 10) : 12,
   });
 
-  useFrame(({controls}) => (controls.target = state?.playerMesh.position));
+  useFrame(({ controls }) => (controls.target = state?.playerMesh.position));
 
-  useFrame(({camera}) => {
-    if (zoom) {
-      camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
-    } else if (camera.zoom !== 12) {
-      camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
-    }
-  });
+  // useFrame(({ camera }) => {
+  //   console.log(zoomAnim.zoomProp.animation.values);
+  //   if (zoomAnim.zoomProp.animation.values[0]) {
+  //     if (zoom) {
+  //       camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+  //     } else if (camera.zoom !== 12) {
+  //       camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+  //     }
+  //   }
+  // });
 
   return (
     <>

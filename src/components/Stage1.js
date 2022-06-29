@@ -149,7 +149,7 @@ export const Stage1 = () => {
                 collected={collected}
               />
             ))}
-            <Scene checkpoint={checkpoint} isModal={isPopup} />
+            <Scene checkpoint={checkpoint} isModal={isPopup} setZoom={setZoom} setModal={updateCollection} />
           </AppProvider>
         </Suspense>
       </Canvas>

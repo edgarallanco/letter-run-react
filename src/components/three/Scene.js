@@ -1,21 +1,48 @@
-import {useThree} from '@react-three/fiber';
-import React, {useContext, useEffect, useState, useRef} from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import * as THREE from 'three';
-import {MeshBVH, MeshBVHVisualizer} from 'three-mesh-bvh';
-import {AppDispatchContext, AppStateContext} from 'context/AppContext';
-import {Actions} from 'reducer/AppReducer';
+import { MeshBVH, MeshBVHVisualizer } from 'three-mesh-bvh';
+import { AppDispatchContext, AppStateContext } from 'context/AppContext';
+import { Actions } from 'reducer/AppReducer';
 import stateValtio from 'context/store';
-import {useGLTF} from '@react-three/drei';
+import { useAnimations, useGLTF } from '@react-three/drei';
+import { Vector3 } from 'three';
+import { easings, useSpring } from 'react-spring';
 
-const Scene = ({checkpoint, isModal}) => {
-  const {state} = useContext(AppStateContext);
-  const {dispatch} = useContext(AppDispatchContext);
+const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
   let environment;
-  const {scene, camera, gl} = useThree();
+  const { scene, gl } = useThree();
   const [stairs, setStairs] = useState([]);
+  const [launchRocket, setLaunchRocket] = useState(false);
+  const [zoomCamera, setZoomCamera] = useState(false);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v18.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v19.glb');
+  const { actions } = useAnimations(scene1.animations, scene1.nodes["7_L_Object"]);
+
+  const zoomAnim = useSpring({
+    config: { duration: 1000, easing: easings.easeCubic },
+    zoomProp: zoomCamera ? 6 : 12,
+  });
+
+  useFrame(({ controls }) => (controls.target = state?.playerMesh.position));
+
+  useFrame(({ camera }, delta) => {
+    if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {
+      let vector = new Vector3(0, 0, 0);
+      let angle = state.controls.getAzimuthalAngle();
+      let upVector = new Vector3(0, 0, 0);
+      vector.set(0, -0.02, 0).applyAxisAngle(upVector, angle);
+      scene1.nodes["7_L_Button"].position.addScaledVector(vector, 30 * Math.min(delta, 0.1));
+      setZoomCamera(true);
+    } else if (launchRocket && zoomCamera) {
+      if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 6) {
+        state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+      } 
+    }
+  });
 
   useEffect(() => {
     // collect all geometries to merge
@@ -24,9 +51,10 @@ const Scene = ({checkpoint, isModal}) => {
     scene.receiveShadow = true;
     const geoms = [];
     environment = scene1.scene;
-    dispatch({type: Actions.UPDATE_ENVIROMENT, payload: environment});
+    dispatch({ type: Actions.UPDATE_ENVIROMENT, payload: environment });
     environment.scale.setScalar(1.5);
     environment.updateMatrixWorld(true);
+    // console.log(scene1);
 
     environment.traverse((c) => {
       if (c.geometry) {
@@ -43,8 +71,8 @@ const Scene = ({checkpoint, isModal}) => {
         if (c.name.includes('Stairs')) {
           const foundedStair = stateValtio.gameProgress
             ? stateValtio.gameProgress.find(
-                (check) => check.stair === c.userData.name
-              )
+              (check) => check.stair === c.userData.name
+            )
             : undefined;
           if (!foundedStair) {
             c.visible = false;
@@ -57,8 +85,8 @@ const Scene = ({checkpoint, isModal}) => {
         } else if (c.name.includes('Object')) {
           const found = stateValtio.gameProgress
             ? stateValtio.gameProgress.find(
-                (check) => check.object === c.userData.name
-              )
+              (check) => check.object === c.userData.name
+            )
             : undefined;
           c.visible = found ? false : true;
         } else if (
@@ -68,6 +96,10 @@ const Scene = ({checkpoint, isModal}) => {
           cloned.name = c.userData.name;
           geoms.push(cloned);
         }
+
+        // if(c.name === '7_L_Button') {
+        //   c.position.y = -0.05;
+        // }
       }
     });
     stateValtio.geometries = geoms;
@@ -83,7 +115,7 @@ const Scene = ({checkpoint, isModal}) => {
     collider.material.opacity = 0;
     collider.material.transparent = true;
     // visualizer = new MeshBVHVisualizer(collider, 10);
-    dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
+    dispatch({ type: Actions.UPDATE_COLLIDER, payload: collider });
 
     environment.traverse((c) => {
       if (c.material) {
@@ -98,9 +130,10 @@ const Scene = ({checkpoint, isModal}) => {
   }, [state.playerMesh]);
 
   useEffect(() => {
-    if (!isModal) return;
+    // if (!isModal) return;
     if (!checkpoint) return;
     environment = scene1.scene;
+    // console.log(checkpoint);
     let currentStair = stateValtio.stairs.find(
       (stair) => stair.name === checkpoint.stair
     );
@@ -110,7 +143,28 @@ const Scene = ({checkpoint, isModal}) => {
         c.visible = true;
       }
       if (c.userData.name === checkpoint.object) {
-        c.visible = false;
+        if (checkpoint.item_name === 'Spaceship') {
+          console.log("Spaceship.");
+          setLaunchRocket(true);
+          setTimeout(() => {
+            // state.camera.zoom = 6;
+            dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
+            setTimeout(() => {
+              actions["Anim_Rocket"].play();
+              setZoomCamera(false);
+              setTimeout(() => {
+                c.visible = false;
+                setModal(true);
+                setLaunchRocket(false);
+                state.camera.zoom = 12;
+                dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
+                actions["Anim_Rocket"].stop();
+              }, 2000)
+            }, 500);
+          }, 1000);
+        } else {
+          c.visible = false;
+        }
       }
     });
     currentStair && stateValtio.collection.push(checkpoint.item_name);
@@ -124,8 +178,8 @@ const Scene = ({checkpoint, isModal}) => {
     );
     mergedGeometry.boundsTree = new MeshBVH(mergedGeometry);
     collider = new THREE.Mesh(mergedGeometry);
-    dispatch({type: Actions.UPDATE_COLLIDER, payload: collider});
-  }, [isModal]);
+    dispatch({ type: Actions.UPDATE_COLLIDER, payload: collider });
+  }, [checkpoint]);
 };
 
 export default Scene;

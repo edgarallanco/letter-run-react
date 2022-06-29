@@ -1,13 +1,13 @@
-import {useFrame, useThree} from '@react-three/fiber';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Vector3, Box3, Matrix4, Line3, Quaternion, Mesh} from 'three';
-import {AppStateContext, AppDispatchContext} from 'context/AppContext';
-import {Actions} from 'reducer/AppReducer';
+import { useFrame, useThree } from '@react-three/fiber';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Vector3, Box3, Matrix4, Line3, Quaternion, Mesh } from 'three';
+import { AppStateContext, AppDispatchContext } from 'context/AppContext';
+import { Actions } from 'reducer/AppReducer';
 import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
-import {useGLTF, useAnimations} from '@react-three/drei';
-import {getDirectionOffset} from 'src/utils/directionalOffset';
-import {pointInsideGeometry} from 'src/utils/pointInsideGeometry';
+import { useGLTF, useAnimations } from '@react-three/drei';
+import { getDirectionOffset } from 'src/utils/directionalOffset';
+import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
 
 const Player = ({
   setIsModal,
@@ -17,9 +17,9 @@ const Player = ({
   setTrack,
   setIsInLetter,
 }) => {
-  const {state} = useContext(AppStateContext);
-  const {dispatch} = useContext(AppDispatchContext);
-  const {scene, camera, controls} = useThree();
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
+  const { scene, camera, controls } = useThree();
   const meshRef = useRef();
   const [speed, setSpeed] = useState(1);
   const [jump, setJump] = useState(false);
@@ -35,13 +35,12 @@ const Player = ({
   const [player, setPlayer] = useState();
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
-  const {nodes, materials, animations} = useGLTF(
+  const { nodes, materials, animations } = useGLTF(
     './../resources/EA_CharacterAnimated_v9.glb'
   );
-  const {actions} = useAnimations(animations, meshRef);
+  const { actions } = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
   useEffect(() => {
-    console.log(animations);
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
       radius: 0.5,
@@ -54,7 +53,7 @@ const Player = ({
     camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);
     state.controls.update();
-    dispatch({type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current});
+    dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current });
     setPlayer(meshRef.current);
     registerEvents();
   }, [state.controls]);
@@ -94,7 +93,8 @@ const Player = ({
         setCheckpoint(checkpoint);
         checkpoint.collected = true;
         checkpoint.last = true;
-        setIsModal(true);
+        if (checkpoint.item_name !== "Spaceship")
+          setIsModal(true);
       }
     });
     const angleYCameraDirection = -2.55555;
@@ -267,10 +267,10 @@ const Player = ({
     camera.position.add(player.position);
     setVelocity(velocity);
 
-    dispatch({type: Actions.UPDATE_CONTROLS, payload: state.controls});
+    dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     // setPlayer(player);
-    dispatch({type: Actions.UPDATE_PLAYER, payload: player.position});
-    dispatch({type: Actions.UPDATE_CAMERA, payload: camera});
+    dispatch({ type: Actions.UPDATE_PLAYER, payload: player.position });
+    dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
   };
 
   const registerEvents = () => {
@@ -302,7 +302,7 @@ const Player = ({
             break;
         }
       },
-      {passive: true}
+      { passive: true }
     );
 
     window.addEventListener(
@@ -326,7 +326,7 @@ const Player = ({
             break;
         }
       },
-      {passive: true}
+      { passive: true }
     );
   };
   return (
@@ -337,7 +337,7 @@ const Player = ({
         scale={1.3}
         castShadow={true}
         receiveShadow
-        // layers={[2]}
+      // layers={[2]}
       >
         <primitive object={nodes.spine} castShadow={true} receiveShadow />
         <group name='Character' castShadow={true} receiveShadow>
