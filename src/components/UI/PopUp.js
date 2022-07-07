@@ -18,7 +18,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
   }, [isCollection]);
 
   const onClose = () => {
-    setIsPopup();
+    setIsPopup(false);
     stateValtio.checkpoints.map((check) => (check.last = false));
     setIsCollection();
   };

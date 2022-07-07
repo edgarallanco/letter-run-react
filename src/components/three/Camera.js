@@ -1,6 +1,6 @@
 import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { easings, useSpring } from 'react-spring';
 import { Vector3 } from 'three';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min';
@@ -17,6 +17,13 @@ const Camera = ({ zoom }) => {
   const { state } = useContext(AppStateContext);
   const cameraRef = useRef();
   const controlsRef = useRef();
+  const [zoomPressed, setZoomPressed] = useState(true);
+
+  useEffect(() => {
+    if (zoom) {
+      setZoomPressed(true);
+    }
+  }, [zoom]);
 
   useEffect(() => {
     // let camera = cameraRef.current;
@@ -38,16 +45,19 @@ const Camera = ({ zoom }) => {
 
   useFrame(({ controls }) => (controls.target = state?.playerMesh.position));
 
-  // useFrame(({ camera }) => {
-  //   console.log(zoomAnim.zoomProp.animation.values);
-  //   if (zoomAnim.zoomProp.animation.values[0]) {
-  //     if (zoom) {
-  //       camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
-  //     } else if (camera.zoom !== 12) {
-  //       camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
-  //     }
-  //   }
-  // });
+  useFrame(({ camera }) => {
+    // console.log(zoomAnim.zoomProp.animation.values);
+    if (zoomAnim.zoomProp.animation.values[0]) {
+      if (zoom) {
+        camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+      } else if (zoomPressed) {
+        if (camera.zoom !== 12)
+          camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+        else
+          setZoomPressed(false);
+      }
+    }
+  });
 
   return (
     <>

@@ -16,6 +16,7 @@ const Player = ({
   setZoom,
   setTrack,
   setIsInLetter,
+  isPlaying
 }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
@@ -28,6 +29,7 @@ const Player = ({
   const [bkdPressed, setBkdPressed] = useState(false);
   const [lftPressed, setLftPressed] = useState(false);
   const [rgtPressed, setRgtPressed] = useState(false);
+  const [jumpPressed, setJumpressed] = useState(false);
   const [isOnGround, setIsOnGround] = useState(true);
   const [vector, setVector] = useState(new Vector3());
   const [upVector, setUpVector] = useState(new Vector3(0, 0, 0));
@@ -44,8 +46,10 @@ const Player = ({
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
       radius: 0.5,
-      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 3.5, 0)),
+      segment: new Line3(new Vector3(0, 0, 0), new Vector3(0, 3.5, 0))
     };
+    // set the character facing the map
+    meshRef.current.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
     velocity.set(0, 0, 0);
     setVelocity(velocity);
     // camera.position.sub(state.controls.target);
@@ -55,8 +59,12 @@ const Player = ({
     state.controls.update();
     dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current });
     setPlayer(meshRef.current);
-    registerEvents();
   }, [state.controls]);
+
+  useEffect(() => {
+    if (isPlaying)
+      registerEvents();
+  }, [isPlaying]);
 
   useEffect(() => {
     if (previousAction) {
@@ -64,6 +72,7 @@ const Player = ({
       actions[stateValtio.action].stop();
     }
     actions[stateValtio.action].play();
+    // console.log(stateValtio.action);
     if (stateValtio.action === 'Anim_Walk' && previousAction === 'Anim_Idle') {
       actions[stateValtio.action].fadeIn(0.9);
     }
@@ -93,8 +102,10 @@ const Player = ({
         setCheckpoint(checkpoint);
         checkpoint.collected = true;
         checkpoint.last = true;
-        if (checkpoint.item_name !== "Spaceship")
+        if (checkpoint.item_name !== "Spaceship") {
+          stateValtio.action = "Anim_Idle";
           setIsModal(true);
+        }
       }
     });
     const angleYCameraDirection = -2.55555;
@@ -117,11 +128,11 @@ const Player = ({
         setVelocity(velocity);
         // stateValtio.action = 'Anim_Jump_Air';
       }, 60);
-      setTimeout(() => {
-        if (stateValtio.action == 'Anim_Jump') stateValtio.action = 'Anim_Idle';
-        //   // velocity.y = 2;
-        //   setVelocity(velocity);
-      }, 370);
+      // setTimeout(() => {
+      //   if (stateValtio.action == 'Anim_Jump') stateValtio.action = 'Anim_Idle';
+      //   //   // velocity.y = 2;
+      //   //   setVelocity(velocity);
+      // }, 370);
       setTimeout(() => {
         setJump(false);
       }, 460);
@@ -129,9 +140,13 @@ const Player = ({
   });
 
   const movePlayer = (delta, collider) => {
+    if (!isPlaying)
+      return;
+
     if (!state.controls && !state.collider) return;
     let player = meshRef.current;
     let angle = state.controls.getAzimuthalAngle();
+    // console.log(player);
 
     if (!isModal) {
       if (fwdPressed) {
@@ -161,12 +176,24 @@ const Player = ({
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
       }
+
+      if (jumpPressed) {
+        stateValtio.action = 'Anim_Jump';
+        // console.log(jump);
+        if (!jump) {
+          setJump(true);
+          stateValtio.action = 'Anim_Jump';
+        }
+      } else {
+        setJump(false);
+      }
+
       if (
         !fwdPressed &&
         !bkdPressed &&
         !lftPressed &&
         !rgtPressed &&
-        speed > 1
+        !jump
       ) {
         setSpeed(1);
         stateValtio.action = 'Anim_Idle';
@@ -273,6 +300,10 @@ const Player = ({
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
   };
 
+  const closeModal = () => {
+      setIsModal(false);
+  }
+
   const registerEvents = () => {
     window.addEventListener(
       'keydown',
@@ -291,14 +322,13 @@ const Player = ({
             setLftPressed(true);
             break;
           case 'Space':
-            if (!jump && stateValtio.action !== 'Anim_Jump') {
-              setJump(true);
-              if (stateValtio.action !== 'Anim_Walk')
-                stateValtio.action = 'Anim_Jump';
-            }
+            setJumpressed(true);
             break;
-          case 'KeyZ':
+          case 'KeyM':
             setZoom(true);
+            break;
+          case 'Escape':
+            closeModal();
             break;
         }
       },
@@ -321,19 +351,29 @@ const Player = ({
           case 'ArrowLeft':
             setLftPressed(false);
             break;
-          case 'KeyZ':
+          case 'KeyM':
             setZoom(!true);
+            break;
+          case 'Space':
+            setJumpressed(false);
             break;
         }
       },
       { passive: true }
+    );
+
+    // close the modal when click anywhere
+    window.addEventListener(
+      'click', (e) => {
+        closeModal();
+      }
     );
   };
   return (
     <>
       <mesh
         ref={meshRef}
-        position={player ? player.position : [-38, 8, 1]}
+        position={player ? player.position : [-57.53, 3.79, -8]}
         scale={1.3}
         castShadow={true}
         receiveShadow

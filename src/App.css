@@ -3,24 +3,88 @@
 @tailwind utilities;
 
 .progress {
-	background-color: #d8d8d8;
-	border-radius: 20px;
-	position: relative;
-	margin: 15px 0;
-	height: 30px;
-	width: 300px;
+  background-color: #d8d8d8;
+  border-radius: 20px;
+  position: relative;
+  margin: 15px 0;
+  height: 30px;
+  width: 300px;
 }
 
 .progress-done {
-	background: linear-gradient(to left, #1169fe, #3898ecc9);
-    box-shadow: 0 3px 3px -5px #3898ec, 0 2px 5px #0082f3;
-	border-radius: 20px;
-	color: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
-	width: 0;
-	opacity: 0; 
-	transition: 1s ease 0.3s;
+  background: linear-gradient(to left, #1169fe, #3898ecc9);
+  box-shadow: 0 3px 3px -5px #3898ec, 0 2px 5px #0082f3;
+  border-radius: 20px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 0;
+  opacity: 0;
+  transition: 1s ease 0.3s;
+}
+
+.intro-wrapper {
+  position: fixed;
+  left: 0;
+  width: 400px;
+  z-index: 1;
+}
+
+.intro-wrapper .hello-world h1 {
+  position: absolute;
+  width: 338px;
+  height: 224px;
+  left: 97px;
+  top: 147px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 140px;
+  line-height: 80%;
+  /* or 112px */
+
+  display: flex;
+  align-items: flex-end;
+  letter-spacing: -0.04em;
+
+  color: #222222;
+}
+
+.intro-wrapper .welcome p {
+  position: absolute;
+  width: 420px;
+  height: 96px;
+  left: 97px;
+  top: 406px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 32px;
+  /* or 178% */
+
+
+  color: #222222;
+
+  opacity: 0.8;
+}
+
+.start .button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 24px 18px 32px;
+  gap: 14px;
+
+  position: absolute;
+  width: 187px;
+  height: 60px;
+  left: 97px;
+  top: 577px;
+
+  background: #4FE9A4;
+  border-radius: 30px;
 }

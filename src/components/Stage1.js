@@ -1,32 +1,49 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {Canvas} from '@react-three/fiber';
-import {Suspense} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { Suspense } from 'react';
 import Camera from 'components/three/Camera';
 import Player from 'components/three/Player';
 import Scene from 'components/three/Scene';
-import {AppProvider} from 'context/AppContext';
+import { AppProvider } from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
-import {AppStateContext} from 'context/AppContext';
+import { AppStateContext } from 'context/AppContext';
 import stateValtio from 'context/store';
 import PopUp from './UI/PopUp';
 import Finish from './UI/Finish';
 import Home from './UI/Home';
+import Intro from './UI/Intro';
 import EnvSound from './three/EnvSound';
 import LetterSound from './three/LetterSound';
-import {Html, Stars, useProgress} from '@react-three/drei';
+import { Html, Stars, useProgress } from '@react-three/drei';
 
-function Loader() {
-  const {active, progress, errors, item, loaded, total} = useProgress();
+const Loader = ({ setHasLoaded }) => {
+  const { active, progress, errors, item, loaded, total } = useProgress();
   const [style, setStyle] = useState({});
 
-  setTimeout(() => {
+  // setTimeout(() => {
+  // const newStyle = {
+  //   opacity: 1,
+  //   width: `${progress}%`,
+  // };
+  // console.log(progress)¸
+  // if (progress === 100)
+  //   setHasLoaded(true);
+
+  // setStyle(newStyle);
+  // }, 200);
+
+  useEffect(() => {
     const newStyle = {
       opacity: 1,
-      width: `${progress}%`,
+      width: `100%`,
     };
+    // console.log(total);
+    if (progress === 100)
+      setHasLoaded(true);
 
     setStyle(newStyle);
-  }, 200);
+  }, [progress])
+
   return (
     <Html center>
       <div className='progress'>
@@ -37,7 +54,7 @@ function Loader() {
 }
 
 export const Stage1 = () => {
-  const {state} = useContext(AppStateContext);
+  const { state } = useContext(AppStateContext);
   const [zoom, setZoom] = useState(false);
   const [isSound, setIsSound] = useState(false);
   const [envSound, setEnvSound] = useState(false);
@@ -48,6 +65,8 @@ export const Stage1 = () => {
   const [isInLetter, setIsInLetter] = useState(false);
   const [isHome, setIsHome] = useState(!true);
   const [track, setTrack] = useState('');
+  const [isPlaying, setIsplaying] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -71,7 +90,7 @@ export const Stage1 = () => {
   useEffect(() => {
     const gameProgress = JSON.parse(localStorage.getItem('EA_checkpoints'));
     if (gameProgress) {
-      const ids = new Set(gameProgress.map(({number}) => number));
+      const ids = new Set(gameProgress.map(({ number }) => number));
       stateValtio.collection = gameProgress;
       stateValtio.checkpoints.map((check) => {
         if (ids.has(check.number)) {
@@ -81,14 +100,15 @@ export const Stage1 = () => {
     }
   }, []);
 
-  const updateCollection = () => {
-    setIsCollection(true);
-    setIsPopup(true);
+  const updateCollection = (open) => {
+    setIsCollection(open);
+    setIsPopup(open);
   };
 
   return (
     <>
       {isHome && <Home setIsHome={() => setIsHome(false)} />}
+      {!isPlaying && hasLoaded && <Intro setIsplaying={setIsplaying} />}
       <Finish
         isFinished={isFinished}
         setIsFinished={() => setIsFinished(false)}
@@ -102,7 +122,7 @@ export const Stage1 = () => {
       />
       <EnvSound isSound={isSound} track={track} isInLetter={isInLetter} />
       <LetterSound isSound={isSound} track={track} isInLetter={isInLetter} />
-      <Canvas flat shadows gl={{logarithmicDepthBuffer: true}} dpr={[1, 2]}>
+      <Canvas flat shadows gl={{ logarithmicDepthBuffer: true }} dpr={[1, 2]}>
         <ambientLight intensity={0.6} />
         <directionalLight
           // layers={[2]}
@@ -118,14 +138,14 @@ export const Stage1 = () => {
           shadow-camera-bottom={-100}
           position={[6, 25, -9]}
           shadow-bias={-0.0005}
-          // makeDefault={true}
+        // makeDefault={true}
         />
         <spotLight
           intensity={0.5}
           position={[300, 300, 4000]}
           castShadow={false}
         />
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Loader setHasLoaded={setHasLoaded} />}>
           <AppProvider>
             <Camera zoom={zoom} />
             <Player
@@ -140,9 +160,10 @@ export const Stage1 = () => {
               setZoom={setZoom}
               setTrack={setTrack}
               setIsInLetter={setIsInLetter}
+              isPlaying={isPlaying}
             />
 
-            {stateValtio.checkpoints.map(({position, number, collected}) => (
+            {stateValtio.checkpoints.map(({ position, number, collected }) => (
               <Checkpoint
                 position={position}
                 key={number}

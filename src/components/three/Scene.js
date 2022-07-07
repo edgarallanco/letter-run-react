@@ -19,7 +19,7 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
   const [launchRocket, setLaunchRocket] = useState(false);
   const [zoomCamera, setZoomCamera] = useState(false);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v19.glb');
+  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v20.glb');
   const { actions } = useAnimations(scene1.animations, scene1.nodes["7_L_Object"]);
 
   const zoomAnim = useSpring({
@@ -40,8 +40,11 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
     } else if (launchRocket && zoomCamera) {
       if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 6) {
         state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
-      } 
+      }
     }
+
+    if (scene1.nodes["Tutorial"].material.opacity < 1)
+      scene1.nodes["Tutorial"].material.opacity += 0.005;
   });
 
   useEffect(() => {
@@ -54,7 +57,14 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
     dispatch({ type: Actions.UPDATE_ENVIROMENT, payload: environment });
     environment.scale.setScalar(1.5);
     environment.updateMatrixWorld(true);
+    scene1.nodes["Tutorial"].material.transparent = true;
+    scene1.nodes["Tutorial"].material.opacity = 0.01;
+    scene1.nodes['1_E_Object'].material.metalness = 0;
+    // scene1.nodes['1_E_Object'].visible = false;
     // console.log(scene1);
+    // scene1.nodes['Letters'].children.forEach((mesh) => {
+    //   mesh.material.metalness = 1;
+    // });
 
     environment.traverse((c) => {
       if (c.geometry) {
@@ -144,7 +154,7 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
       }
       if (c.userData.name === checkpoint.object) {
         if (checkpoint.item_name === 'Spaceship') {
-          console.log("Spaceship.");
+          // console.log("Spaceship.");
           setLaunchRocket(true);
           setTimeout(() => {
             // state.camera.zoom = 6;
@@ -154,6 +164,7 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
               setZoomCamera(false);
               setTimeout(() => {
                 c.visible = false;
+                stateValtio.action = 'Anim_Idle';
                 setModal(true);
                 setLaunchRocket(false);
                 state.camera.zoom = 12;
