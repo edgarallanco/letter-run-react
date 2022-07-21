@@ -29,7 +29,7 @@
     "start": "webpack-dev-server --config ./webpack.config.js --mode development --progress --color --port 3000",
     "build": "webpack --mode development",
     "test": "react-app-rewired test",
-    "deploy": "aws s3 cp ./dist/bundle.js s3://BUCKETNAME/ --acl public-read",
+    "deploy": "aws s3 cp ./dist/bundle.js s3://fargamot",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
