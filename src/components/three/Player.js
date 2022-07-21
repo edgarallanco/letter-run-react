@@ -38,7 +38,7 @@ const Player = ({
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const { nodes, materials, animations } = useGLTF(
-    './../resources/EA_CharacterAnimated_v9.glb'
+    'https://fargamot.s3.amazonaws.com/resources/EA_CharacterAnimated_v9.glb'
   );
   const { actions } = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
@@ -409,7 +409,7 @@ const Player = ({
   );
 };
 
-useGLTF.preload('/EA_CharacterAnimated_v5.glb');
+useGLTF.preload('https://fargamot.s3.amazonaws.com/resources/EA_CharacterAnimated_v9.glb');
 
 function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...

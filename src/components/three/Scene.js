@@ -19,13 +19,31 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal }) => {
   const [launchRocket, setLaunchRocket] = useState(false);
   const [zoomCamera, setZoomCamera] = useState(false);
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v20.glb');
-  const { actions } = useAnimations(scene1.animations, scene1.nodes["7_L_Object"]);
+  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v25.glb');
+  const animations = [];
+
+  scene1.animations.forEach((ani) => {
+    let exists = animations.find((a) => {
+      return a.name === ani.name;
+    });
+    if (!exists)
+      animations.push(ani);
+  });
+
+  const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
     config: { duration: 1000, easing: easings.easeCubic },
     zoomProp: zoomCamera ? 6 : 12,
   });
+
+  useEffect(() => {
+    scene1.nodes["CameraSolver"].visible = false;
+    scene1.animations.forEach((a) => {
+      if (a.name !== 'Anim_CameraSolver' && a.name !== 'Anim_Rocket')
+        actions[a.name].play();
+    });
+  }, []);
 
   useFrame(({ controls }) => (controls.target = state?.playerMesh.position));
 

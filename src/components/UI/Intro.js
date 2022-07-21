@@ -1,4 +1,5 @@
 import React from "react";
+import Arrow from '../../assets/images/arrow.svg';
 
 const Intro = ({setIsplaying}) => {
   const play = () => {
@@ -15,7 +16,7 @@ const Intro = ({setIsplaying}) => {
       <div className="start">
         <a href="#" className="button" onClick={play}>
           <span>Start Playing</span>
-          <img src="images/arrow.svg"/>
+          <img src={Arrow}/>
         </a>
       </div>
     </div>

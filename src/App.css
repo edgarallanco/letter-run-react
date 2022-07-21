@@ -33,6 +33,7 @@
 }
 
 .intro-wrapper .hello-world h1 {
+  margin: 0;
   position: absolute;
   width: 338px;
   height: 224px;
@@ -78,6 +79,7 @@
   align-items: center;
   padding: 18px 24px 18px 32px;
   gap: 14px;
+  color: #000;
 
   position: absolute;
   width: 187px;

@@ -39,7 +39,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
           className='close-menu-wrapper w-inline-block'
           onClick={onClose}
         >
-          <img src='images/close-menu.svg' loading='lazy' alt='' />
+          <img src='https://fargamot.s3.amazonaws.com/images/close-menu.svg' loading='lazy' alt='' />
         </a>
         <div
           data-current='Tab 1'
@@ -56,7 +56,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
               }`}
               onClick={() => setTab('INSTRUCTIONS')}
             >
-              <img loading='lazy' src='images/instructions-icon.svg' alt='' />
+              <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/instructions-icon.svg' alt='' />
               <div>Instructions</div>
             </a>
             <a
@@ -66,7 +66,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
               }`}
               onClick={() => setTab('COLLECTION')}
             >
-              <img loading='lazy' src='images/collection-icon.svg' alt='' />
+              <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/collection-icon.svg' alt='' />
               <div>Collection</div>
             </a>
             <a
@@ -76,7 +76,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
               }`}
               onClick={() => setTab('ABOUT')}
             >
-              <img loading='lazy' src='images/about-icon.svg' alt='' />
+              <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/about-icon.svg' alt='' />
               <div>About</div>
             </a>
           </div>
@@ -92,7 +92,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
                 <div className='tab-content-grid'>
                   <div className='tab-content-wrapper'>
                     <div className='tab-content-left'>
-                      <img loading='lazy' src='images/arrows.svg' alt='' />
+                      <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/arrows.svg' alt='' />
                     </div>
                     <div className='tab-content-right'>
                       <div>Keyboard arrows to move around</div>
@@ -100,7 +100,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
                   </div>
                   <div className='tab-content-wrapper'>
                     <div className='tab-content-left'>
-                      <img loading='lazy' src='images/spacebar.svg' alt='' />
+                      <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/spacebar.svg' alt='' />
                     </div>
                     <div className='tab-content-right'>
                       <div>Spacebar to jump</div>
@@ -108,7 +108,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
                   </div>
                   <div className='tab-content-wrapper'>
                     <div className='tab-content-left'>
-                      <img loading='lazy' src='images/button-c.svg' alt='' />
+                      <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/button-c.svg' alt='' />
                     </div>
                     <div className='tab-content-right'>
                       <div>“C” key to switch camera angles</div>
@@ -116,7 +116,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
                   </div>
                   <div className='tab-content-wrapper cc-last-tab'>
                     <div className='tab-content-left'>
-                      <img loading='lazy' src='images/button-m.svg' alt='' />
+                      <img loading='lazy' src='https://fargamot.s3.amazonaws.com/images/button-m.svg' alt='' />
                     </div>
                     <div className='tab-content-right'>
                       <div>
