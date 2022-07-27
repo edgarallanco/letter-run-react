@@ -66,6 +66,7 @@ export const Stage1 = () => {
   const [isHome, setIsHome] = useState(!true);
   const [track, setTrack] = useState('');
   const [isPlaying, setIsplaying] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
@@ -108,7 +109,7 @@ export const Stage1 = () => {
   return (
     <>
       {isHome && <Home setIsHome={() => setIsHome(false)} />}
-      {!isPlaying && hasLoaded && <Intro setIsplaying={setIsplaying} />}
+      {!isPlaying && hasLoaded && introDone && <Intro setIsplaying={setIsplaying} />}
       <Finish
         isFinished={isFinished}
         setIsFinished={() => setIsFinished(false)}
@@ -170,7 +171,12 @@ export const Stage1 = () => {
                 collected={collected}
               />
             ))}
-            <Scene checkpoint={checkpoint} isModal={isPopup} setZoom={setZoom} setModal={updateCollection} />
+            <Scene checkpoint={checkpoint} isModal={isPopup} 
+              isPlaying={isPlaying}
+              introDone={introDone}
+              setIntroDone={setIntroDone}
+              setZoom={setZoom} 
+              setModal={updateCollection} />
           </AppProvider>
         </Suspense>
       </Canvas>

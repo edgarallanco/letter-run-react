@@ -9,7 +9,8 @@
       "alias": {
         "components": "./src/components",
         "reducer": "./src/reducer",
-        "context": "./src/context"
+        "context": "./src/context",
+        "scripts": "./src/scripts"
       }
     }]
   ]
