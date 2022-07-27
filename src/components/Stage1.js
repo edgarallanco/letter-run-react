@@ -15,6 +15,7 @@ import Intro from './UI/Intro';
 import EnvSound from './three/EnvSound';
 import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
+import GlobalVars from 'src/components/globalVar';
 
 const Loader = ({ setHasLoaded }) => {
   const { active, progress, errors, item, loaded, total } = useProgress();
