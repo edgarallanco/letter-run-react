@@ -11,7 +11,7 @@ import { Vector3 } from 'three';
 import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
 
-const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
+const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   let environment;
@@ -19,7 +19,7 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
   const [stairs, setStairs] = useState([]);
   const [launchRocket, setLaunchRocket] = useState(false);
   const [zoomCamera, setZoomCamera] = useState(false);
-  const [moveToStart, setMoveToStart] = useState(false);
+  // const [moveToStart, setMoveToStart] = useState(false);
   const [movement, setMovement] = useState();
   const [currentRoute, setCurrentRoute] = useState(0);
   let collider;
@@ -83,9 +83,9 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
     scene1.nodes['CameraSolver'].rotation.set(0, 0, 0);
     console.log(state.camera.rotation);
 
-    setTimeout(() => {
-      setMoveToStart(true);
-    }, 100);
+    // setTimeout(() => {
+    //   setMoveToStart(true);
+    // }, 100);
   }, [state.playerMesh]);
 
   useFrame(({ controls }) => {

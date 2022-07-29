@@ -16,7 +16,7 @@ import EnvSound from './three/EnvSound';
 import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
 
-const Loader = ({ setHasLoaded }) => {
+const Loader = ({ setHasLoaded, setMoveToStart }) => {
   const { active, progress, errors, item, loaded, total } = useProgress();
   const [style, setStyle] = useState({});
 
@@ -38,8 +38,10 @@ const Loader = ({ setHasLoaded }) => {
       width: `100%`,
     };
     // console.log(total);
-    if (progress === 100)
+    if (progress === 100) {
       setHasLoaded(true);
+      setMoveToStart(true);
+    }
 
     setStyle(newStyle);
   }, [progress])
@@ -67,6 +69,7 @@ export const Stage1 = () => {
   const [track, setTrack] = useState('');
   const [isPlaying, setIsplaying] = useState(false);
   const [introDone, setIntroDone] = useState(false);
+  const [moveToStart, setMoveToStart] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
@@ -146,7 +149,7 @@ export const Stage1 = () => {
           position={[300, 300, 4000]}
           castShadow={false}
         />
-        <Suspense fallback={<Loader setHasLoaded={setHasLoaded} />}>
+        <Suspense fallback={<Loader setHasLoaded={setHasLoaded} setMoveToStart={setMoveToStart} />}>
           <AppProvider>
             <Camera zoom={zoom} />
             <Player
@@ -174,6 +177,7 @@ export const Stage1 = () => {
             <Scene checkpoint={checkpoint} isModal={isPopup} 
               isPlaying={isPlaying}
               setIsplaying={setIsplaying}
+              moveToStart={moveToStart}
               introDone={introDone}
               setIntroDone={setIntroDone}
               setZoom={setZoom} 
