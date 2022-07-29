@@ -83,7 +83,7 @@ const Camera = ({ zoom }) => {
         // up={[0, 10000, 0]}
         castShadow={true}
         receiveShadow={true}
-        position={[95.35, 124.37, 142.58]}
+        position={[0, 124.37, 0]}
       />
     </>
   );

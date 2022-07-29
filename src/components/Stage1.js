@@ -109,7 +109,7 @@ export const Stage1 = () => {
   return (
     <>
       {isHome && <Home setIsHome={() => setIsHome(false)} />}
-      {!isPlaying && hasLoaded && introDone && <Intro setIsplaying={setIsplaying} />}
+      {/* {!isPlaying && hasLoaded && introDone && <Intro setIsplaying={setIsplaying} />} */}
       <Finish
         isFinished={isFinished}
         setIsFinished={() => setIsFinished(false)}
@@ -173,6 +173,7 @@ export const Stage1 = () => {
             ))}
             <Scene checkpoint={checkpoint} isModal={isPopup} 
               isPlaying={isPlaying}
+              setIsplaying={setIsplaying}
               introDone={introDone}
               setIntroDone={setIntroDone}
               setZoom={setZoom} 
