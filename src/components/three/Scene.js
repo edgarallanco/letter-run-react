@@ -12,7 +12,7 @@ import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
 import Intro from 'components/UI/Intro';
 
-const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
+const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   let environment;
@@ -20,17 +20,24 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
   const [stairs, setStairs] = useState([]);
   const [launchRocket, setLaunchRocket] = useState(false);
   const [zoomCamera, setZoomCamera] = useState(false);
-  const [moveToStart, setMoveToStart] = useState(false);
+  // const [moveToStart, setMoveToStart] = useState(false);
   const [movement, setMovement] = useState();
   const [currentRoute, setCurrentRoute] = useState(0);
   let collider;
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v26.glb');
   const animations = [];
+  // const cameraRoutes = [
+  //   { pos: [0, 347.59, -3], rotation: [0, 0, 0] },
+  //   { pos: [1.6839, 181.23, -50.205], rotation: [34.6, 18.3, 0] },
+  //   { pos: [8.2254, 95.891, -70.757], rotation: [34.6, 18.3, 0] },
+  //   { pos: [-57.53, 10.79, -8], rotation: [60.6, 0, 36] },
+  // ]
+
   const cameraRoutes = [
-    [31.38445573844476, -19.678934669579434],
-    [32.74560728012071, 32.09665054408821],
-    [-45.99342762761975, 12.280006304812702],
-    [-57.53, -8]
+    { pos: [31.38445573844476, 181.23, -19.678934669579434], rotation: [13, 6.57, 0] },
+    { pos: [32.74560728012071, 95.891, 32.09665054408821], rotation: [34.6, 18.3, 0] },
+    { pos: [-45.99342762761975, 95.891, 12.280006304812702], rotation: [34.6, 18.3, 0] },
+    { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
   scene1.animations.forEach((ani) => {
@@ -50,8 +57,13 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
 
   const introZoomAnim = useSpring({
     config: { duration: 1000, easing: easings.easeCubic },
-    zoomProp: !zoomCamera ? 4 : 12,
+    zoomProp: !zoomCamera ? 1 : 12,
   });
+
+  const [cubeSpring, api] = useSpring(() => ({
+    x: scene1.nodes['CameraSolver'].position.x,
+    z: scene1.nodes['CameraSolver'].position.z
+  }));
 
   useEffect(() => {
     if (!state.playerMesh)
@@ -67,29 +79,18 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
     // }, 1000);
 
     scene1.nodes['CameraSolver'].visible = false;
-    scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
+    // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
+    scene1.nodes['CameraSolver'].position.set(0, state.playerMesh.position.y, 0);
+    scene1.nodes['CameraSolver'].rotation.set(0, 0, 0);
+    console.log(state.camera.rotation);
 
-    setTimeout(() => {
-      setZoomCamera(true);
-      //setMoveToStart(true);
-    }, 100);
-
-    // console.log(actions["Anim_CameraSolver"]);
-    // if (actions["Anim_CameraSolver"]) {
-    //   actions["Anim_CameraSolver"].play();
-    //   setTimeout(() => {
-    //     console.log(scene1.nodes['CameraSolver'].position);
-    //     console.log(state.playerMesh.position);
-    //     actions["Anim_CameraSolver"].stop();
-    //     setZoomCamera(true);
-    //     setMoveToStart(true);
-
-    //   }, [5000]);
-    // }
+    // setTimeout(() => {
+    //   setMoveToStart(true);
+    // }, 100);
   }, [state.playerMesh]);
 
   useFrame(({ controls }) => {
-    controls.target = isPlaying || introDone ? state?.playerMesh.position : scene1.nodes['CameraSolver'].position;
+    controls.target = isPlaying ? state?.playerMesh.position : scene1.nodes['CameraSolver'].position;
   });
 
   const moveCubeToStartingPosition = (x) => {
@@ -104,67 +105,93 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
     if (!isPlaying) {
       state.playerMesh.visible = introDone;
       scene1.nodes["Tutorial"].visible = introDone;
-      // camera.lookAt(0, 0, 0);
-      // camera.up.set(0, 1, 0);
-      camera.zoom = 4;
-      // console.log(scene1.nodes['CameraSolver'].position);
+      camera.zoom = 1;
+      state.controls.autoRotate = true;
+      state.controls.update();
+      camera.rotation.x = 0;
+      camera.rotation.y = 0;
+      camera.rotation.z = 0;
 
       if (moveToStart) {
         // console.log(currentRoute);
         if (cameraRoutes[currentRoute] !== undefined) {
-          if (movement && Math.floor(scene1.nodes['CameraSolver'].position.x) !== Math.floor(cameraRoutes[currentRoute][0])
-            && Math.floor(scene1.nodes['CameraSolver'].position.z) !== Math.floor(cameraRoutes[currentRoute][1])) {
+          let position = cameraRoutes[currentRoute].pos;
+          let rotation = cameraRoutes[currentRoute].rotation;
+          let cubePos = scene1.nodes['CameraSolver'].position;
+
+          if (movement && Math.ceil(cubePos.x) !== Math.ceil(position[0])
+            && Math.ceil(cubePos.z) !== Math.ceil(position[2])) {
             camera.up.set(0, 1, 0);
+            // console.log(cubeSpring);
             let newPosition = movement.move();
             // console.log(movement);
+
             scene1.nodes['CameraSolver'].position.copy(newPosition);
 
-            camera.lookAt(scene1.nodes['CameraSolver'].position);
+            camera.position.x = newPosition.x;
+            camera.position.z = newPosition.z;
+            // camera.position.y = newPosition.y;
+            // let lastControl = scene1.nodes['CameraSolver'].position;
+            // camera.position.sub(lastControl);
+            // state.controls.target.copy(scene1.nodes['CameraSolver'].position);
+            // camera.position.add(scene1.nodes['CameraSolver'].position);
+            // camera.position.y = scene1.nodes['CameraSolver'].position.y;
+
+            // camera.lookAt(new Vector3(rotation[0], rotation[1], rotation[2]));
+            camera.lookAt(cubePos);
           } else {
+            // camera.lookAt(cubePos);
+            // console.log(scene1.nodes['CameraSolver'].position);
+            // console.log(camera.rotation);
             let r = currentRoute;
             if (movement) { // if the movement if already initialized, increment current route
               r = currentRoute + 1;
               setCurrentRoute(r);
             }
             // console.log(scene1.nodes['CameraSolver'].position);
-            let route = new Vector3(cameraRoutes[r][0], state.playerMesh.position.y, cameraRoutes[r][1]);
-            let m = new LinearMovement(scene1.nodes['CameraSolver'].position, route);
-            setMovement(m);
+
+            if (cameraRoutes[r]) {
+              let position = cameraRoutes[r].pos;
+              let route = new Vector3(position[0], cubePos.y, position[2]);
+              let m = new LinearMovement(cubePos, route);
+              setMovement(m);
+            }
+            api.start({x: position[0], z: position[2]});
+            // camera.rotation.x = 0;
+            // camera.rotation.y = 0;
+            // camera.rotation.z = 0;
+
           }
         } else {
           // console.log("intro done.");
-          if (camera.zoom < 12) {
-            if (introZoomAnim.zoomProp.animation.values[0]) {
-              camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-            }
-          } else {
-            scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
-            camera.up.set(0, 1, 0);
-            camera.lookAt(state.playerMesh.position);
-            setZoomCamera(false);
-          }
-          setIntroDone(true);
-          state.playerMesh.visible = true;
-          setIsplaying(true);
-          scene1.nodes["Tutorial"].visible = true;
-          scene1.nodes["Tutorial"].opactiy = 1;
-          CheckCookieCollection();
-          
-          if(scene1.nodes["Tutorial"].material.opacity < 1){
-            scene1.nodes["Tutorial"].material.opacity += 0.005;
-          }
-        }
-      } else {
-        // console.log(scene1.nodes['CameraSolver'].position);
-        // scene1.nodes['CameraSolver'].position.set(-5.569166206899996, 29.026802671296153, 35.25802338861752);
-      }
+          setZoomCamera(true);
+          camera.zoom = 12;
+          scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
+          camera.up.set(0, 1, 0);
+          camera.lookAt(state.playerMesh.position);
+          let lastControl = scene1.nodes['CameraSolver'].position;
+          camera.position.sub(lastControl);
+          state.controls.target.copy(scene1.nodes['CameraSolver'].position);
+          camera.position.add(scene1.nodes['CameraSolver'].position);
+          camera.position.y = 175;
+          // camera.quaternion.rotateTowards(state.playerMesh.quaternion, 0.1);
 
-      let lastControl = state.controls.target;
-      // state.controls.enabled = false;
-      camera.position.sub(lastControl);
-      state.controls.target.copy(scene1.nodes['CameraSolver'].position);
-      camera.position.add(scene1.nodes['CameraSolver'].position);
-      dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+          setIntroDone(true);
+          if (scene1.nodes["Tutorial"].material.opacity < 1)
+            scene1.nodes["Tutorial"].material.opacity += 0.05;
+
+          if (scene1.nodes["Tutorial"].material.opacity >= 1)
+            setIsplaying(true);
+        }
+      }
+      // console.log(camera);
+      // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    } else {
+
+      // if (introZoomAnim.zoomProp.animation.values[0] && camera.zoom < 12) {
+      //   camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
+      // }
+      // camera.zoom = 12;
     }
 
     if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {

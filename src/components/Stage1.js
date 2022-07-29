@@ -19,12 +19,13 @@ import GlobalVars from 'src/components/globalVar';
 
 const addSoundListener = (isSound, setIsSound) => {
   var dom = document.getElementById("sound-button");
-  dom.addEventListener("click", () => {
-    setIsSound(!isSound);
-  })
+  if(dom)
+    dom.addEventListener("click", () => {
+      setIsSound(!isSound);
+    })
 }
 
-const Loader = ({ setHasLoaded }) => {
+const Loader = ({ setHasLoaded, setMoveToStart }) => {
   const { active, progress, errors, item, loaded, total } = useProgress();
   const [style, setStyle] = useState({});
 
@@ -48,23 +49,26 @@ const Loader = ({ setHasLoaded }) => {
     //lottie1.playSegments([progress, progress + 1], true)
     console.log(progress + "is current progress frame")
 
-    if(loaded === 30){
-      console.log('loaded is 30!')
-      lottie2.addEventListener('complete', function() {
-      //Scene(setMoveToStart(true))
-        console.log('complete!');
-        document.getElementById('preload-wrapper').classList.add('gc-hide');
-      }) 
-      lottie1.wrapper.classList.add('gc-hide')
-      lottie2.play();
-    } 
+    // if(loaded === 30){
+    //   console.log('loaded is 30!')
+    //   lottie2.addEventListener('complete', function() {
+    //   //Scene(setMoveToStart(true))
+    //     console.log('complete!');
+    //     document.getElementById('preload-wrapper').classList.add('gc-hide');
+    //   }) 
+    //   lottie1.wrapper.classList.add('gc-hide')
+    //   lottie2.play();
+    // } 
     // console.log(total);
-    if (progress === 100)
+    if (progress === 100) {
       setHasLoaded(true);
      /*  console.log('totally loaded')
       console.log("item = "+item);
       console.log("total = "+total);
       console.log("loaded = "+loaded); */
+      setMoveToStart(true);
+    }
+
     setStyle(newStyle);
   }, [progress])
 
@@ -93,6 +97,7 @@ export const Stage1 = () => {
   const [track, setTrack] = useState('');
   const [isPlaying, setIsplaying] = useState(false);
   const [introDone, setIntroDone] = useState(false);
+  const [moveToStart, setMoveToStart] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   
 
@@ -140,7 +145,7 @@ export const Stage1 = () => {
   return (
     <>
       {isHome && <Home setIsHome={() => setIsHome(false)} />}
-      {!isPlaying && hasLoaded && introDone && <Intro setIsplaying={setIsplaying} />}
+      {/* {!isPlaying && hasLoaded && introDone && <Intro setIsplaying={setIsplaying} />} */}
       <Finish
         isFinished={isFinished}
         setIsFinished={() => setIsFinished(false)}
@@ -177,7 +182,7 @@ export const Stage1 = () => {
           position={[300, 300, 4000]}
           castShadow={false}
         />
-        <Suspense fallback={<Loader setHasLoaded={setHasLoaded} />}>
+        <Suspense fallback={<Loader setHasLoaded={setHasLoaded} setMoveToStart={setMoveToStart} />}>
           <AppProvider>
             <Camera zoom={zoom} />
             <Player
@@ -205,6 +210,7 @@ export const Stage1 = () => {
             <Scene checkpoint={checkpoint} isModal={isPopup} 
               isPlaying={isPlaying}
               setIsplaying={setIsplaying}
+              moveToStart={moveToStart}
               introDone={introDone}
               setIntroDone={setIntroDone}
               setZoom={setZoom} 
