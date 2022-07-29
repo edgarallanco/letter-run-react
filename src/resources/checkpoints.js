@@ -1,6 +1,6 @@
 const checkpoint = [
   {
-    url: 'https://uselessfacts.jsph.pl/random.json',
+    url: 'https://uselessfacts.jsph.pl/random.json',  
     item_name: 'Laptop',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_01.png',
     number: 0,
@@ -8,6 +8,7 @@ const checkpoint = [
     stair: '1_E_Stairs',
     collected: false,
     object: '1_E_Object',
+    item_id: 'laptop',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -18,6 +19,7 @@ const checkpoint = [
     stair: '2_D_Stairs',
     collected: false,
     object: '2_D_Object',
+    item_id: 'sock',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -28,6 +30,7 @@ const checkpoint = [
     stair: '3_G_Stairs',
     collected: false,
     object: '3_G_Object',
+    item_id: 'soccerBall',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -38,16 +41,18 @@ const checkpoint = [
     stair: '4_A_Stairs',
     collected: false,
     object: '4_A_Object',
+    item_id: 'globe',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
-    item_name: 'Vynil',
+    item_name: 'Vinyl',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_05.png',
     number: 4,
     position: [33, 1, -3],
     stair: '5_R_Stairs',
     collected: false,
     object: '5_R_Object',
+    item_id: 'record',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -58,6 +63,7 @@ const checkpoint = [
     stair: '6_A_Stairs',
     collected: false,
     object: '6_A_Object',
+    item_id: 'mug',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -68,6 +74,7 @@ const checkpoint = [
     stair: '7_L_Stairs',
     collected: false,
     object: '7_L_Object',
+    item_id: 'rocket',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -78,6 +85,7 @@ const checkpoint = [
     stair: '8_L_Stairs',
     collected: false,
     object: '8_L_Object',
+    item_id: 'board',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -88,6 +96,7 @@ const checkpoint = [
     stair: '9_A_Stairs',
     collected: false,
     object: '9_A_Object',
+    item_id: 'rabbit',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -98,6 +107,7 @@ const checkpoint = [
     stair: '10_N_Stairs',
     collected: false,
     object: '10_N_Object',
+    item_id: 'beachBall',
   },
 ];
 

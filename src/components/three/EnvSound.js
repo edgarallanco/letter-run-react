@@ -14,7 +14,7 @@ function EnvSound({isSound, isInLetter}) {
 
   return (
     <ReactHowler
-      src='./../resources/Nature.mp3'
+      src='https://fargamot.s3.amazonaws.com/resources/Nature.mp3'
       playing={isSound}
       ref={envSound}
       autoPlay={false}

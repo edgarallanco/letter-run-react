@@ -10,8 +10,9 @@ import { useAnimations, useGLTF } from '@react-three/drei';
 import { Vector3 } from 'three';
 import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
+import Intro from 'components/UI/Intro';
 
-const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, introDone, setIntroDone }) => {
+const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   let environment;
@@ -143,8 +144,15 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, introDone, s
             setZoomCamera(false);
           }
           setIntroDone(true);
-          if (scene1.nodes["Tutorial"].material.opacity < 1)
+          state.playerMesh.visible = true;
+          setIsplaying(true);
+          scene1.nodes["Tutorial"].visible = true;
+          scene1.nodes["Tutorial"].opactiy = 1;
+          CheckCookieCollection();
+          
+          if(scene1.nodes["Tutorial"].material.opacity < 1){
             scene1.nodes["Tutorial"].material.opacity += 0.005;
+          }
         }
       } else {
         // console.log(scene1.nodes['CameraSolver'].position);

@@ -17,6 +17,15 @@ import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
 import GlobalVars from 'src/components/globalVar';
 
+
+
+const addSoundListener = (isSound, setIsSound) => {
+  var dom = document.getElementById("sound-button");
+  dom.addEventListener("click", () => {
+    setIsSound(!isSound);
+  })
+}
+
 const Loader = ({ setHasLoaded }) => {
   const { active, progress, errors, item, loaded, total } = useProgress();
   const [style, setStyle] = useState({});
@@ -69,6 +78,7 @@ export const Stage1 = () => {
   const [isPlaying, setIsplaying] = useState(false);
   const [introDone, setIntroDone] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -87,7 +97,11 @@ export const Stage1 = () => {
     } else {
       localStorage.setItem('EA_checkpoints', JSON.stringify([checkpoint]));
     }
+    UpdateItems(checkpoint.item_id);
+    menuOpen.click();
   }, [checkpoint]);
+
+  addSoundListener(isSound, setIsSound)
 
   useEffect(() => {
     const gameProgress = JSON.parse(localStorage.getItem('EA_checkpoints'));
@@ -174,6 +188,7 @@ export const Stage1 = () => {
             ))}
             <Scene checkpoint={checkpoint} isModal={isPopup} 
               isPlaying={isPlaying}
+              setIsplaying={setIsplaying}
               introDone={introDone}
               setIntroDone={setIntroDone}
               setZoom={setZoom} 
