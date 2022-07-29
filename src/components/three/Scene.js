@@ -71,7 +71,7 @@ const Scene = ({ checkpoint, isModal, setZoom, setModal, isPlaying, setIsplaying
 
     setTimeout(() => {
       setZoomCamera(true);
-      setMoveToStart(true);
+      //setMoveToStart(true);
     }, 100);
 
     // console.log(actions["Anim_CameraSolver"]);

@@ -17,8 +17,6 @@ import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
 import GlobalVars from 'src/components/globalVar';
 
-
-
 const addSoundListener = (isSound, setIsSound) => {
   var dom = document.getElementById("sound-button");
   dom.addEventListener("click", () => {
@@ -41,18 +39,36 @@ const Loader = ({ setHasLoaded }) => {
 
   // setStyle(newStyle);
   // }, 200);
-
   useEffect(() => {
     const newStyle = {
       opacity: 1,
       width: `100%`,
     };
+    // test lottie playback
+    //lottie1.playSegments([progress, progress + 1], true)
+    console.log(progress + "is current progress frame")
+
+    if(loaded === 30){
+      console.log('loaded is 30!')
+      lottie2.addEventListener('complete', function() {
+      //Scene(setMoveToStart(true))
+        console.log('complete!');
+        document.getElementById('preload-wrapper').classList.add('gc-hide');
+      }) 
+      lottie1.wrapper.classList.add('gc-hide')
+      lottie2.play();
+    } 
     // console.log(total);
     if (progress === 100)
       setHasLoaded(true);
-
+     /*  console.log('totally loaded')
+      console.log("item = "+item);
+      console.log("total = "+total);
+      console.log("loaded = "+loaded); */
     setStyle(newStyle);
   }, [progress])
+
+  
 
   return (
     <Html center>
