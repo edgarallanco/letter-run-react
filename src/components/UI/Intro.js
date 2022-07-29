@@ -14,7 +14,7 @@ const Intro = ({setIsplaying}) => {
         <p>Welcome to Edgar Allan’s magical clubhouse studio built with Three.js in Webflow. Explore our world and collect some of our favorite things!</p>
       </div>
       <div className="start">
-        <a href="#" className="button" onClick={play}>
+        <a href="#" className="button" id="startButton" onClick={play}>
           <span>Start Playing</span>
           <img src={Arrow}/>
         </a>
@@ -22,5 +22,4 @@ const Intro = ({setIsplaying}) => {
     </div>
   )
 }
-
 export default Intro;
