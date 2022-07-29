@@ -16,6 +16,7 @@ import EnvSound from './three/EnvSound';
 import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
 import GlobalVars from 'src/components/globalVar';
+import { findRenderedDOMComponentWithClass } from 'react-dom/test-utils';
 
 const addSoundListener = (isSound, setIsSound) => {
   var dom = document.getElementById("sound-button");
@@ -51,13 +52,17 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
 
     if(loaded === 30){
         console.log('loaded is 30!')
+        var newEvent = new Event('completed');
+              window.dispatchEvent(newEvent);
         lottie2.addEventListener('complete', function() {
          console.log('complete!');
          document.getElementById('preload-wrapper').classList.add('gc-hide');
          setMoveToStart(true)
       }) 
+        /* lottie1.stop();
        lottie1.wrapper.classList.add('gc-hide')
-       lottie2.play();
+       lottie2.wrapper.classList.remove('gc-hide')
+       lottie2.play();  */
      } 
     // console.log(total);
     if (progress === 100) {
@@ -108,6 +113,7 @@ export const Stage1 = () => {
     if (collectedCheckpoints.length === 10) {
       setIsFinished(true);
       setIsPopup(false);
+      formOpen.click();
     }
     const gameProgress = localStorage.getItem('EA_checkpoints');
     if (gameProgress) {
@@ -119,6 +125,7 @@ export const Stage1 = () => {
     }
     UpdateItems(checkpoint.item_id);
     menuOpen.click();
+    collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
   }, [checkpoint]);
 
   addSoundListener(isSound, setIsSound)

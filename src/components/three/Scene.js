@@ -26,19 +26,16 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   let collider;
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v26.glb');
   const animations = [];
-  // const cameraRoutes = [
-  //   { pos: [0, 347.59, -3], rotation: [0, 0, 0] },
-  //   { pos: [1.6839, 181.23, -50.205], rotation: [34.6, 18.3, 0] },
-  //   { pos: [8.2254, 95.891, -70.757], rotation: [34.6, 18.3, 0] },
-  //   { pos: [-57.53, 10.79, -8], rotation: [60.6, 0, 36] },
-  // ]
-
-  const cameraRoutes = [
-    { pos: [31.38445573844476, 181.23, -19.678934669579434], rotation: [13, 6.57, 0] },
+ 
+ /*  const cameraRoutes = [
+    { pos: [31.38445573844476, 2000, 19.678934669579434], rotation: [13, 6.57, 0] },
     { pos: [32.74560728012071, 95.891, 32.09665054408821], rotation: [34.6, 18.3, 0] },
     { pos: [-45.99342762761975, 95.891, 12.280006304812702], rotation: [34.6, 18.3, 0] },
-    { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
-  ]
+    { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] }, 
+  ] */
+
+
+  const cameraRoutes = []
 
   scene1.animations.forEach((ani) => {
     let exists = animations.find((a) => {
@@ -51,7 +48,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
-    config: { duration: 1000, easing: easings.easeCubic },
+    config: { duration: 10, easing: easings.easeCubic },
     zoomProp: zoomCamera ? 6 : 12,
   });
 
@@ -78,7 +75,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     });
     // }, 1000);
 
-    scene1.nodes['CameraSolver'].visible = false;
+    scene1.nodes['CameraSolver'].visible = true;
     // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
     scene1.nodes['CameraSolver'].position.set(0, state.playerMesh.position.y, 0);
     scene1.nodes['CameraSolver'].rotation.set(0, 0, 0);
@@ -130,7 +127,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
             camera.position.x = newPosition.x;
             camera.position.z = newPosition.z;
-            // camera.position.y = newPosition.y;
+            //camera.position.y = newPosition.y;
             // let lastControl = scene1.nodes['CameraSolver'].position;
             // camera.position.sub(lastControl);
             // state.controls.target.copy(scene1.nodes['CameraSolver'].position);
@@ -156,7 +153,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               let m = new LinearMovement(cubePos, route);
               setMovement(m);
             }
-            api.start({x: position[0], z: position[2]});
+            api.start({x: position[0], y:position[1], z: position[2]});
             // camera.rotation.x = 0;
             // camera.rotation.y = 0;
             // camera.rotation.z = 0;
@@ -182,6 +179,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
           if (scene1.nodes["Tutorial"].material.opacity >= 1)
             setIsplaying(true);
+            intro_trigger.click();
         }
       }
       // console.log(camera);
