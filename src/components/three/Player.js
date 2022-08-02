@@ -52,7 +52,7 @@ const Player = ({
     meshRef.current.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
     velocity.set(0, 0, 0);
     setVelocity(velocity);
-    // camera.position.sub(state.controls.target);
+    camera.position.sub(state.controls.target);
     state.controls.target.copy(meshRef.current.position);
     camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);

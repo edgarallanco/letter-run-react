@@ -23,7 +23,7 @@ class LinearMovement {
     var newZ = this.lerp(this.start.z, this.end.z, this.ease(this.t));
     var newY = this.lerp(this.start.y, this.end.y, this.ease(this.t));
 
-    var position = new Vector3(newX, this.end.y, newZ);
+    var position = new Vector3(newX, this.start.y, newZ);
 
     this.t += this.dt;
 
