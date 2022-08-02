@@ -35,8 +35,8 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
   //   width: `${progress}%`,
   // };
   // console.log(progress)¸
-  // if (progress === 100)
-  //   setHasLoaded(true);
+  if (progress === 100)
+    setHasLoaded(true);
 
   // setStyle(newStyle);
   // }, 200);
@@ -49,16 +49,16 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     //lottie1.playSegments([progress, progress + 1], true)
     console.log(progress + "is current progress frame")
 
-    // if(loaded === 30){
-    //   console.log('loaded is 30!')
-    //   lottie2.addEventListener('complete', function() {
-    //   //Scene(setMoveToStart(true))
-    //     console.log('complete!');
-    //     document.getElementById('preload-wrapper').classList.add('gc-hide');
-    //   }) 
-    //   lottie1.wrapper.classList.add('gc-hide')
-    //   lottie2.play();
-    // } 
+    if(loaded === 30){
+      console.log('loaded is 30!')
+      lottie2.addEventListener('complete', function() {
+      //Scene(setMoveToStart(true))
+        console.log('complete!');
+        document.getElementById('preload-wrapper').classList.add('gc-hide');
+      }) 
+      lottie1.wrapper.classList.add('gc-hide')
+      lottie2.play();
+    } 
     // console.log(total);
     if (progress === 100) {
       setHasLoaded(true);
