@@ -39,7 +39,7 @@ const Camera = ({ zoom }) => {
   });
 
   const cameraPos = useSpring({
-    config: { duration: 2000, easing: easings.easeCubic },
+    config: { duration: 1000, easing: easings.linear },
     zoomProp: zoom ? new Vector3(10, 15, 10) : 12,
   });
 

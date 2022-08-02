@@ -70,7 +70,7 @@ canvas{
   display: none !important;
 }
 
-.menu-button {
+/* .menu-button {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -93,7 +93,7 @@ canvas{
   border-radius: 2rem;
   background-color: #fff;
   cursor: pointer;
-}
+} */
 
 .sound-button {
   display: -webkit-box;

@@ -21,5 +21,5 @@ const Intro = ({setIsplaying}) => {
       </div>
     </div>
   )
-}
+} 
 export default Intro;

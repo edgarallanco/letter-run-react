@@ -52,7 +52,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
-    config: { duration: 1000, easing: easings.easeCubic },
+    config: { duration: 10, easing: easings.easeCubic },
     zoomProp: zoomCamera ? 6 : 12,
   });
 
@@ -149,7 +149,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
             camera.position.x = newPosition.x;
             camera.position.z = newPosition.z;
-            // camera.position.y = newPosition.y;
+            //camera.position.y = newPosition.y;
             // let lastControl = scene1.nodes['CameraSolver'].position;
             // camera.position.sub(lastControl);
             // state.controls.target.copy(scene1.nodes['CameraSolver'].position);
