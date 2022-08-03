@@ -59,7 +59,7 @@ export const lettersCoordinates = [
       [-32.717093644096636, 32.05754276750276],
       [-46.24941078079945, 31.958654321461392],
     ],
-    track: 'https://fargamot.s3.amazonaws.com/resources/stronger-thongs.mp3',
+    track: 'https://fargamot.s3.amazonaws.com/resources/stronger_thongs.mp3',
   },
   {
     letter: 'l1',
@@ -69,7 +69,7 @@ export const lettersCoordinates = [
       [-13.332756322290017, 32.251009232137775],
       [-26.612265035906702, 31.85109374401324],
     ],
-    track: 'https://fargamot.s3.amazonaws.com/resources/beat-loop.mp3',
+    track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
   },
   {
     letter: 'l2',
@@ -79,7 +79,7 @@ export const lettersCoordinates = [
       [6.104168931426318, 31.833320717053763],
       [-7.447756418298111, 31.893800338756822],
     ],
-    track: 'https://fargamot.s3.amazonaws.com/resources/beat-loop.mp3',
+    track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
   },
   {
     letter: 'a3',
@@ -89,7 +89,7 @@ export const lettersCoordinates = [
       [25.66119525202824, 31.77003204267048],
       [12.302197753919057, 31.893800338756822],
     ],
-    track: 'https://fargamot.s3.amazonaws.com/resources/beat-loop.mp3',
+    track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
   },
   {
     letter: 'n1',
@@ -99,6 +99,6 @@ export const lettersCoordinates = [
       [46.24659648477758, 31.882299382479204],
       [31.74560728012071, 32.09665054408821],
     ],
-    track: 'https://fargamot.s3.amazonaws.com/resources/beat-loop.mp3',
+    track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
   },
 ];
