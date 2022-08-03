@@ -114,13 +114,15 @@ export const Stage1 = () => {
       setIsFinished(true);
       setIsPopup(false);
       formOpen.click();
+      standardIcon.classList.add('gc-hide');
+      partyPopper.classList.remove('gc-hide');
     }
     const gameProgress = localStorage.getItem('EA_checkpoints');
     if (gameProgress) {
       const parsedData = JSON.parse(gameProgress);
       const updatedData = [...parsedData, checkpoint];
       localStorage.setItem('EA_checkpoints', JSON.stringify(updatedData));
-    } else {
+    } else {  
       localStorage.setItem('EA_checkpoints', JSON.stringify([checkpoint]));
     }
     UpdateItems(checkpoint.item_id);
