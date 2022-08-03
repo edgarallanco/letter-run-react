@@ -36,8 +36,8 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
   //   width: `${progress}%`,
   // };
   // console.log(progress)¸
-  // if (progress === 100)
-  //   setHasLoaded(true);
+  if (progress === 100)
+    setHasLoaded(true);
 
   // setStyle(newStyle);
   // }, 200);

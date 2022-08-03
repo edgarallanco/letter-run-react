@@ -72,6 +72,7 @@ const Camera = ({ zoom }) => {
         maxAzimuthAngle={Math.PI / 2.8}
         minAzimuthAngle={-Math.PI / 0.52}
         enableZoom={false}
+        enablePan={false}
       />
 
       <PerspectiveCamera
@@ -83,7 +84,7 @@ const Camera = ({ zoom }) => {
         // up={[0, 10000, 0]}
         castShadow={true}
         receiveShadow={true}
-        position={[0, 124.37, 0]}
+        position={[0, 150, 0]}
       />
     </>
   );
