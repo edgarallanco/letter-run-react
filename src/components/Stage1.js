@@ -19,9 +19,12 @@ import GlobalVars from 'src/components/globalVar';
 import { findRenderedDOMComponentWithClass } from 'react-dom/test-utils';
 
 const addSoundListener = (isSound, setIsSound) => {
-  var dom = document.getElementById("sound-button");
+  //console.log("adding sound listener")
+  var dom = document.getElementById("snd_btn");
   if(dom)
     dom.addEventListener("click", () => {
+      //console.log("adding click listener")
+      //
       setIsSound(!isSound);
     })
 }
@@ -48,7 +51,7 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     };
     // test lottie playback
     //lottie1.playSegments([progress, progress + 1], true)
-    console.log(progress + "is current progress frame")
+    //console.log(progress + "is current progress frame")
 
     if(loaded === 30){
         console.log('loaded is 30!')
@@ -125,7 +128,7 @@ export const Stage1 = () => {
     } else {  
       localStorage.setItem('EA_checkpoints', JSON.stringify([checkpoint]));
     }
-    UpdateItems(checkpoint.item_id);
+    UpdateItems(checkpoint.item_id, true);
     menuOpen.click();
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
   }, [checkpoint]);

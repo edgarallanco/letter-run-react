@@ -240,6 +240,9 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           if (state.camera.zoom >= 12) {
             setIsplaying(true);
             camera.position.y = 175;
+
+            // open intro text
+            intro_trigger.click();
           }
         }
       }
