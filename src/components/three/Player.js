@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Vector3, Box3, Matrix4, Line3, Quaternion, Mesh } from 'three';
+import { Vector3, Box3, Matrix4, Line3, Quaternion, Mesh, WireframeGeometry, MeshBasicMaterial, BoxGeometry } from 'three';
 import { AppStateContext, AppDispatchContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import equal from 'fast-deep-equal';
@@ -8,6 +8,7 @@ import stateValtio from 'context/store';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { getDirectionOffset } from 'src/utils/directionalOffset';
 import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
+import checkpoints from 'src/resources/checkpoints';
 
 const Player = ({
   setIsModal,
@@ -35,6 +36,7 @@ const Player = ({
   const [upVector, setUpVector] = useState(new Vector3(0, 0, 0));
   const [velocity, setVelocity] = useState(new Vector3());
   const [player, setPlayer] = useState();
+  const [checkpointsMesh, setCheckpointMesh] = useState([]);
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const { nodes, materials, animations } = useGLTF(
@@ -59,7 +61,29 @@ const Player = ({
     state.controls.update();
     dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current });
     setPlayer(meshRef.current);
+
+    // let wireframe = new WireframeGeometry(nodes.Plane022.geometry);
+
+    // let mesh = new Mesh(wireframe, new MeshBasicMaterial({ color: 0xff0000 }));
+    // mesh.position.copy(meshRef.current.position);
+    // setPlayerFrame(mesh);
+
+    // scene.add(mesh);
   }, [state.controls]);
+
+  // add the hit points
+  useEffect(() => {
+    checkpoints.forEach((checkpoint) => {
+      let boxGeo = new BoxGeometry(checkpoint.size[0], checkpoint.size[1], checkpoint.size[2],);
+      let boxFrame = new WireframeGeometry(boxGeo);
+      let boxMesh = new Mesh(boxGeo, new MeshBasicMaterial({ color: 0x00ff00 }));
+      boxMesh.visible = false;
+      boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
+      scene.add(boxMesh);
+      checkpointsMesh.push(boxMesh);
+      setCheckpoint([...checkpointsMesh]);
+    });
+  }, []);
 
   useEffect(() => {
     if (isPlaying)
@@ -90,15 +114,33 @@ const Player = ({
       setPlayer(meshRef.current);
     }
 
-    stateValtio.checkpoints.find((checkpoint) => {
-      if (
-        equal(state.playerPosition, {
-          x: checkpoint.position[0],
-          y: checkpoint.position[1],
-          z: checkpoint.position[2],
-        }) &&
-        !checkpoint.collected
-      ) {
+    // playerFrame.position.copy(meshRef.current.position);
+
+    // stateValtio.checkpoints.find((checkpoint) => {
+    //   if (
+    //     equal(state.playerPosition, {
+    //       x: checkpoint.position[0],
+    //       y: checkpoint.position[1],
+    //       z: checkpoint.position[2],
+    //     }) &&
+    //     !checkpoint.collected
+    //   ) {
+    //     setCheckpoint(checkpoint);
+    //     checkpoint.collected = true;
+    //     checkpoint.last = true;
+    //     if (checkpoint.item_name !== "Spaceship") {
+    //       stateValtio.action = "Anim_Idle";
+    //       setIsModal(true);
+    //     }
+    //   }
+    // });
+
+    checkpointsMesh.forEach((hitPoint, index) => {
+      let box = new Box3();
+      box.setFromObject(hitPoint);
+      let checkpoint = stateValtio.checkpoints[index];
+      if (!checkpoint.collected && box.containsPoint(player.position)) {
+        // console.log(index, checkpoints[index]);
         setCheckpoint(checkpoint);
         checkpoint.collected = true;
         checkpoint.last = true;
@@ -106,8 +148,11 @@ const Player = ({
           stateValtio.action = "Anim_Idle";
           setIsModal(true);
         }
+        console.log(stateValtio.checkpoints);
       }
     });
+
+
     const angleYCameraDirection = -2.55555;
     const directionOffset = getDirectionOffset(
       fwdPressed,
@@ -146,7 +191,7 @@ const Player = ({
     if (!state.controls && !state.collider) return;
     let player = meshRef.current;
     let angle = state.controls.getAzimuthalAngle();
-    // console.log(player);
+    // console.log(player.position);
 
     if (!isModal) {
       if (fwdPressed) {
@@ -301,7 +346,7 @@ const Player = ({
   };
 
   const closeModal = () => {
-      setIsModal(false);
+    setIsModal(false);
   }
 
   const registerEvents = () => {
