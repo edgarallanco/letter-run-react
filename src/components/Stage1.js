@@ -119,9 +119,6 @@ export const Stage1 = () => {
     console.log("isSound = ", isSound);
   },[isSound])
 
-  useEffect(() => {
-    console.log("isSound = ", isSound);
-  },[isSound])
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -217,9 +214,6 @@ export const Stage1 = () => {
             <Player
               isModal={isPopup}
               setIsModal={updateCollection}
-              isSound={isSound}
-              envSound={envSound}
-              setEnvSound={setEnvSound}
               setCheckpoint={setCheckpoint}
               action={stateValtio.action}
               zoom={zoom}

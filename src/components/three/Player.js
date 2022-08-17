@@ -255,7 +255,7 @@ const Player = ({
     );
     if (insideLetter) {
       setIsInLetter(true);
-      setTrack(insideLetter.track);
+      // setTrack(insideLetter.track);
     } else {
       setIsInLetter(false);
     }
