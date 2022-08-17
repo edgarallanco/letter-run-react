@@ -42,33 +42,33 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     //lottie1.playSegments([progress, progress + 1], true)
     //console.log(progress + "is current progress frame")
 
-    if(loaded === 30){
-        console.log('loaded is 30!')
-        var newEvent = new Event('completed');
-              window.dispatchEvent(newEvent);
-        lottie2.addEventListener('complete', function() {
-         console.log('complete!');
-         document.getElementById('preload-wrapper').classList.add('gc-hide');
-         setMoveToStart(true)
-      }) 
-        /* lottie1.stop();
-       lottie1.wrapper.classList.add('gc-hide')
-       lottie2.wrapper.classList.remove('gc-hide')
-       lottie2.play();  */
-     } 
+    if (loaded === 30) {
+      // console.log('loaded is 30!')
+      var newEvent = new Event('completed');
+      window.dispatchEvent(newEvent);
+      lottie2.addEventListener('complete', function () {
+        console.log('complete!');
+        document.getElementById('preload-wrapper').classList.add('gc-hide');
+        setMoveToStart(true)
+      })
+      /* lottie1.stop();
+     lottie1.wrapper.classList.add('gc-hide')
+     lottie2.wrapper.classList.remove('gc-hide')
+     lottie2.play();  */
+    }
     // console.log(total);
     if (progress === 100) {
       setHasLoaded(true);
-     /*  console.log('totally loaded')
-      console.log("item = "+item);
-      console.log("total = "+total);
-      console.log("loaded = "+loaded); */
+      /*  console.log('totally loaded')
+       console.log("item = "+item);
+       console.log("total = "+total);
+       console.log("loaded = "+loaded); */
     }
 
     setStyle(newStyle);
   }, [progress])
 
-  
+
 
   return (
     <Html center>
@@ -120,6 +120,13 @@ export const Stage1 = () => {
   },[isSound])
 
   useEffect(() => {
+    console.log("isSound = ", isSound);
+  },[isSound])
+=======
+
+>>>>>>> d4edc1cee0a6f2a371abf1a4353ffb76e335ebb3
+
+  useEffect(() => {
     if (!checkpoint) return;
     const collectedCheckpoints = stateValtio.checkpoints.filter(
       (check) => check.collected
@@ -136,9 +143,10 @@ export const Stage1 = () => {
       const parsedData = JSON.parse(gameProgress);
       const updatedData = [...parsedData, checkpoint];
       localStorage.setItem('EA_checkpoints', JSON.stringify(updatedData));
-    } else {  
+    } else {
       localStorage.setItem('EA_checkpoints', JSON.stringify([checkpoint]));
     }
+    // console.log("Checkpoint is:", checkpoint);
     UpdateItems(checkpoint.item_id, true);
     menuOpen.click();
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
@@ -231,13 +239,13 @@ export const Stage1 = () => {
                 collected={collected}
               />
             ))}
-            <Scene checkpoint={checkpoint} isModal={isPopup} 
+            <Scene checkpoint={checkpoint} isModal={isPopup}
               isPlaying={isPlaying}
               setIsplaying={setIsplaying}
               moveToStart={moveToStart}
               introDone={introDone}
               setIntroDone={setIntroDone}
-              setZoom={setZoom} 
+              setZoom={setZoom}
               setModal={updateCollection} />
           </AppProvider>
         </Suspense>
