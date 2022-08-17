@@ -122,9 +122,6 @@ export const Stage1 = () => {
   useEffect(() => {
     console.log("isSound = ", isSound);
   },[isSound])
-=======
-
->>>>>>> d4edc1cee0a6f2a371abf1a4353ffb76e335ebb3
 
   useEffect(() => {
     if (!checkpoint) return;
