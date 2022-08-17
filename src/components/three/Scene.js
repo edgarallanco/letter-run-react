@@ -32,7 +32,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const [poolItems, setPoolItems] = useState([]);
   const [cameraMesh, setCameraMesh] = useState();
   let collider;
-  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v26.glb');
+  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v28.glb');
   const [world, setWorld] = useState();
   const timeStep = 1 / 60;
   const animations = [];

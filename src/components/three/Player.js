@@ -81,7 +81,7 @@ const Player = ({
       boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
       scene.add(boxMesh);
       checkpointsMesh.push(boxMesh);
-      setCheckpoint([...checkpointsMesh]);
+      setCheckpointMesh([...checkpointsMesh]);
     });
   }, []);
 
