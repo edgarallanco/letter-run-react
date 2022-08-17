@@ -18,17 +18,6 @@ import { Html, Stars, useProgress } from '@react-three/drei';
 import GlobalVars from 'src/components/globalVar';
 import { findRenderedDOMComponentWithClass } from 'react-dom/test-utils';
 
-const addSoundListener = (isSound, setIsSound) => {
-  //console.log("adding sound listener")
-  var dom = document.getElementById("snd_btn");
-  if(dom)
-    dom.addEventListener("click", () => {
-      //console.log("adding click listener")
-      //
-      setIsSound(!isSound);
-    })
-}
-
 const Loader = ({ setHasLoaded, setMoveToStart }) => {
   const { active, progress, errors, item, loaded, total } = useProgress();
   const [style, setStyle] = useState({});
@@ -107,6 +96,28 @@ export const Stage1 = () => {
   const [moveToStart, setMoveToStart] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   
+  const addSoundListener = (isSound, setIsSound) => {
+    //console.log("adding sound listener")
+    var dom = document.getElementById("snd_btn");
+    var offBtn = document.getElementById('trigger_6');
+    if(dom)
+      dom.addEventListener("click", () => {
+        //console.log("isSound = ", isSound);
+        //
+        setIsSound(true);
+      })
+    if(offBtn)
+    offBtn.addEventListener("click", () => {
+      //console.log("isSound = ", isSound);
+        //
+        setIsSound(false);
+    })
+  }
+  
+  
+  useEffect(() => {
+    console.log("isSound = ", isSound);
+  },[isSound])
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -133,9 +144,11 @@ export const Stage1 = () => {
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
   }, [checkpoint]);
 
-  addSoundListener(isSound, setIsSound)
+  
 
   useEffect(() => {
+    addSoundListener(isSound, setIsSound);
+    console.log('listener instantiated')
     const gameProgress = JSON.parse(localStorage.getItem('EA_checkpoints'));
     if (gameProgress) {
       const ids = new Set(gameProgress.map(({ number }) => number));
