@@ -16,6 +16,7 @@ const Player = ({
   setCheckpoint,
   setZoom,
   setTrack,
+  track,
   setIsInLetter,
   isPlaying
 }) => {
@@ -255,7 +256,8 @@ const Player = ({
     );
     if (insideLetter) {
       setIsInLetter(true);
-      // setTrack(insideLetter.track);
+      if (track !== insideLetter.track)
+        setTrack(insideLetter.track);
     } else {
       setIsInLetter(false);
     }
