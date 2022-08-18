@@ -10,6 +10,8 @@ export const lettersCoordinates = [
       [-46.0987101660111, -0.22577479502217465],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/beat-loop.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'd1',
@@ -20,6 +22,8 @@ export const lettersCoordinates = [
       [-26.917204167036054, 0.2676802162319544],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/dance.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'g1',
@@ -30,6 +34,8 @@ export const lettersCoordinates = [
       [-6.7212513851735345, 0.4056954175027236],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/grungy.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'a1',
@@ -40,6 +46,8 @@ export const lettersCoordinates = [
       [12.593476004792226, -0.08373529236522473],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'r1',
@@ -50,6 +58,8 @@ export const lettersCoordinates = [
       [31.263652764258627, 0.8350332582407988],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/satman.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'a2',
@@ -60,6 +70,8 @@ export const lettersCoordinates = [
       [-46.24941078079945, 31.958654321461392],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/stronger_thongs.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'l1',
@@ -70,6 +82,8 @@ export const lettersCoordinates = [
       [-26.612265035906702, 31.85109374401324],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'l2',
@@ -80,6 +94,8 @@ export const lettersCoordinates = [
       [-7.447756418298111, 31.893800338756822],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'a3',
@@ -90,6 +106,8 @@ export const lettersCoordinates = [
       [12.302197753919057, 31.893800338756822],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
   {
     letter: 'n1',
@@ -100,5 +118,7 @@ export const lettersCoordinates = [
       [31.74560728012071, 32.09665054408821],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/new.mp3',
+    nudge_text: '',
+    cta_text: '',
   },
 ];

@@ -6,7 +6,7 @@ const Intro = ({setIsplaying}) => {
     setIsplaying(true);
   }
   return (
-    <div className="intro-wrapper">
+    {/* <div className="intro-wrapper">
       <div className="hello-world">
         <h1>Hello World</h1>
       </div>
@@ -19,7 +19,7 @@ const Intro = ({setIsplaying}) => {
           <img src={Arrow}/>
         </a>
       </div>
-    </div>
+    </div> */}
   )
 } 
 export default Intro;

@@ -2,7 +2,7 @@ import React from 'react';
 
 function Home({setIsHome}) {
   return (
-    <div className='gc-page-wrapper'>
+    {/* <div className='gc-page-wrapper'>
       <div className='gc-main-wrapper'>
         <div className='intro-page-main-section'>
           <div className='gc-page-padding'>
@@ -28,7 +28,7 @@ function Home({setIsHome}) {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
   );
 }
 

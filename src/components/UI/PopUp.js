@@ -32,7 +32,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
   });
   return (
     <>
-      <animated.div className='menu-popup-wrapper' style={transition}>
+      {/* <animated.div className='menu-popup-wrapper' style={transition}>
         <a
           data-w-id='88810c3a-a1f4-45cc-bc4f-6ecaec1bafb6'
           href='#'
@@ -227,7 +227,7 @@ function PopUp({isPopup, setIsPopup, isCollection, setIsCollection}) {
             </div>
           </div>
         </div>
-      </animated.div>
+      </animated.div> */}
     </>
   );
 }
