@@ -10,6 +10,8 @@ const checkpoint = [
     collected: false,
     object: '1_E_Object',
     item_id: 'laptop',
+    item_headline: 'Take Note: You Found It!',
+    item_body_copy: 'The EA Team has all kinds of learners - auditory, kinesthetic, visual - but the readers and writers here collect wobbly towers of EA blue notebooks full of scribbles in their home offices.',
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -22,6 +24,9 @@ const checkpoint = [
     collected: false,
     object: '2_D_Object',
     item_id: 'sock',
+    item_headline: 'Ok, Where Can I Get a Pair of Those?',
+    item_body_copy: 'Our iconic Edgar-emblazoned socks are the hottest piece of schwag we\'ve ever had.'
+    ,
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -34,6 +39,8 @@ const checkpoint = [
     collected: false,
     object: '3_G_Object',
     item_id: 'soccerBall',
+    item_headline: '¡Vamos al juego!',
+    item_body_copy: 'Pre-pandemic, the US-based EA crew was World Cup crazy, but then we went global and whoo...our Buenos Aires team makes our Atlanta United fans look like amateurs.'
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -46,6 +53,8 @@ const checkpoint = [
     collected: false,
     object: '4_A_Object',
     item_id: 'globe',
+    item_headline: 'Like Moths to a Flame - You Made It',
+    item_body_copy: 'Between October and end of April, EA\'s first office was made toasty and homey by a wood-burning stove. It was Mason\'s pride and joy, so we had to give it a nod here.'
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -58,6 +67,8 @@ const checkpoint = [
     collected: false,
     object: '5_R_Object',
     item_id: 'record',
+    item_headline: 'The Club Is Open. Welcome!',
+    item_body_copy: 'We think of brand as a club you join rather than a foundation you build at EA. In that spirit, if your brand was a literal club, what records would you spin there? '
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -70,6 +81,8 @@ const checkpoint = [
     collected: false,
     object: '6_A_Object',
     item_id: 'mug',
+    item_headline: 'You Found Our Favorite Beverage!',
+    item_body_copy: 'Whether it\'s coffee, tea, or maté we are in love with pouring it into an insulated EA camp mug every morning or afternoon.'
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -82,6 +95,9 @@ const checkpoint = [
     collected: false,
     object: '7_L_Object',
     item_id: 'rocket',
+    item_headline: 'Time for Launch! Let\'s Go!',
+    item_body_copy: 'There\'s nothing more exciting that pushing a project out into the world. Rocket ship exciting? Depends on the project...'
+    ,
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -94,6 +110,8 @@ const checkpoint = [
     collected: false,
     object: '8_L_Object',
     item_id: 'board',
+    item_headline: 'Nobody goes to the gallery to see the frames.',
+    item_body_copy: 'That\'s our philosophy on content in a nutshell: Once building sites got easier, content quality got even more important, and became a huge focus for EA.'
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -106,6 +124,8 @@ const checkpoint = [
     collected: false,
     object: '9_A_Object',
     item_id: 'rabbit',
+    item_headline: 'Hoppy Accidents Happen',
+    item_body_copy: 'EA\'s pet family is mostly dogs and cats, but two team members have bunny friends to snuggle between meetings: Leo and Velvet live with Mason, and Nicholas keeps Katrina busy in Wisconsin.'
   },
   {
     url: 'https://uselessfacts.jsph.pl/random.json',
@@ -118,6 +138,8 @@ const checkpoint = [
     collected: false,
     object: '10_N_Object',
     item_id: 'beachBall',
+    item_headline: 'Everybody in the Pool!',
+    item_body_copy: 'Our Director of Design, Chesley\'s concept, we treat collaboration like a big, figma-focused pool party where designers, writers, UX, developers and even clients get in the work together and contribute collectively.'
   },
 ];
 
