@@ -8,10 +8,8 @@ import { AppProvider } from 'context/AppContext';
 import Checkpoint from './three/Checkpoint';
 import { AppStateContext } from 'context/AppContext';
 import stateValtio from 'context/store';
-import PopUp from './UI/PopUp';
 import Finish from './UI/Finish';
 import Home from './UI/Home';
-import Intro from './UI/Intro';
 import EnvSound from './three/EnvSound';
 import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
@@ -177,12 +175,12 @@ export const Stage1 = () => {
         setIsFinished={() => setIsFinished(false)}
         isCollection={isCollection}
       />
-      <PopUp
+      {/* <PopUp
         isPopup={isPopup}
         setIsPopup={() => setIsPopup(false)}
         isCollection={isCollection}
         setIsCollection={() => setIsCollection(false)}
-      />
+      /> */}
       <EnvSound isSound={isSound} track={track} isInLetter={isInLetter} />
       <LetterSound isSound={isSound} track={track} isInLetter={isInLetter} />
       <Canvas flat shadows gl={{ logarithmicDepthBuffer: true }} dpr={[1, 2]}>
@@ -218,6 +216,7 @@ export const Stage1 = () => {
               action={stateValtio.action}
               zoom={zoom}
               setZoom={setZoom}
+              track={track}
               setTrack={setTrack}
               setIsInLetter={setIsInLetter}
               isPlaying={isPlaying}
@@ -241,7 +240,7 @@ export const Stage1 = () => {
           </AppProvider>
         </Suspense>
       </Canvas>
-      <div className='action-wrapper'>
+      {/* <div className='action-wrapper'>
         <div
           data-w-id='87254fef-9926-84f7-c31f-da8b1d44c269'
           className='menu-button'
@@ -286,7 +285,7 @@ export const Stage1 = () => {
             alt=''
           />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
