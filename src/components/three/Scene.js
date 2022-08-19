@@ -213,9 +213,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       scene1.nodes[poolItemNames[index]].quaternion.copy(item.quaternion);
     });
     // camera.position.y = 175;
+    state.playerMesh.visible = introDone;
+    scene1.nodes["Tutorial"].visible = introDone;
     if (!isPlaying) {
-      state.playerMesh.visible = introDone;
-      scene1.nodes["Tutorial"].visible = introDone;
+
       if (!zoomCamera)
         camera.zoom = 1;
       // camera.rotation.x = 0;
@@ -343,19 +344,21 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           camera.lookAt(state.playerMesh.position);
 
           setIntroDone(true);
-          if (scene1.nodes["Tutorial"].material.opacity < 1)
-            scene1.nodes["Tutorial"].material.opacity += 0.05;
+          setIsplaying(true);
 
-          if (state.camera.zoom >= 12) {
-            setIsplaying(true);
-            // camera.position.y = 175;
-          }
+
+          // if (state.camera.zoom >= 12) {
+
+          //   // camera.position.y = 175;
+          // }
         }
       }
       // console.log(camera);
       dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
     } else {
 
+      if (scene1.nodes["Tutorial"].material.opacity < 1)
+        scene1.nodes["Tutorial"].material.opacity += 0.05;
       // if (introZoomAnim.zoomProp.animation.values[0] && camera.zoom < 12) {
       //   camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
       // }
