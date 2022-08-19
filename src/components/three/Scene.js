@@ -25,6 +25,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const [zoomCamera, setZoomCamera] = useState(false);
   // const [moveToStart, setMoveToStart] = useState(false);
   const [movement, setMovement] = useState();
+  const [camereaMovment, setCameraMovement] = useState();
   const [currentRoute, setCurrentRoute] = useState(0);
   const [playerBody, setPlayerBody] = useState();
   const [frameBody, setFrameBody] = useState();
@@ -74,7 +75,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   });
 
   const introZoomAnim = useSpring({
-    config: { duration: 4000, easing: easings.easeCubic },
+    config: { duration: 5000, easing: easings.easeCubic },
     zoomProp: !zoomCamera ? 1 : 12,
   });
 
@@ -88,8 +89,13 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
     cm.position.set(0, 50, 0);
+    cm.visible = false;
     scene.add(cm);
     setCameraMesh(cm);
+
+    let cmMovment = new LinearMovement(new Vector3(1.6839, 84.69169943749475, 20.205),
+      new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 0.01);
+    setCameraMovement(cmMovment);
 
     scene1.nodes['CameraSolver'].visible = false;
     // scene1.nodes['CameraSolver'].position.set(cameraRoutes[0].pos[0], cameraRoutes[0].pos[1], cameraRoutes[0].pos[2]);
@@ -223,9 +229,6 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
       if (!zoomCamera)
         camera.zoom = 1;
-      // camera.rotation.x = 0;
-      // camera.rotation.y = 0;
-      // camera.rotation.z = 0;
 
       if (moveToStart) {
         // console.log(currentRoute);
@@ -273,28 +276,19 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
             // camera.position.add(scene1.nodes['CameraSolver'].position);
             // camera.lookAt(scene1.nodes['CameraSolver'].position);
             // camera.position.y = scene1.nodes['CameraSolver'].position.y;
-
             if (camera.rotation.y < 1) {
               // camera.rotation.y = camera.rotation.y + 0.3;
               // camera.rotation.z = camera.rotation.z + 0.3;
 
               state.controls.update();
               if (currentRoute === (cameraRoutes.length - 1)) {
-                camera.position.x = newPosition.x;
-                camera.position.z = newPosition.z;
-                // console.log("Last route");
+                state.controls.target.copy(cameraMesh.position)
+                if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
+                  let cmPosition = camereaMovment.move();
+                  camera.position.copy(cmPosition);
+                }
                 // console.log(camera.position);
                 camera.lookAt(cameraMesh.position);
-                // camera.up.set(0, 1, 0);
-                // camera.lookAt(0, 0, 0);
-                // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
-                // let tempCamera = camera.clone();
-                // tempCamera.up.set(0, 1, 0);
-                // tempCamera.lookAt(0, 0, 0);
-                // let q1 = new Quaternion().copy(tempCamera.quaternion);
-                // tempCamera.lookAt(cameraMesh.position);
-                // let q2 = new Quaternion().copy(tempCamera.quaternion);
-                // camera.quaternion.slerpQuaternions(q1, q2, delta);
                 setZoomCamera(true);
                 // camera.zoom = 12;
                 if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
@@ -320,42 +314,26 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
 
         } else {
-          // camera.position.y = 175;
-          // camera.position.x = -57.53;
-          // camera.position.z = 28;
           // console.log("intro done.");
-          // setZoomCamera(true);
-          // // camera.zoom = 12;
-          // if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
-          //   // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
-          //   state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-          // }
           // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
           // camera.up.set(0, 1, 0);
           // camera.lookAt(state.playerMesh.position);
-          let lastControl = state.playerMesh.position;
-          camera.position.sub(lastControl);
-          state.controls.target.copy(state.playerMesh.position);
-          camera.position.add(state.playerMesh.position);
+          // let lastControl = state.playerMesh.position;
+          // camera.position.sub(lastControl);
+          // state.controls.target.copy(state.playerMesh.position);
+          // camera.position.add(state.playerMesh.position);
           // camera.position.y = 175;
           // camera.quaternion.rotateTowards(state.playerMesh.quaternion, 0.1);
 
           // let route = new Vector3(-57.53, state.playerMesh.position.y, 8);
           // let m = new LinearMovement(cameraMesh.position, route);
           // let pos = m.move();
-          camera.position.x = 5.78651222602025;
-          camera.position.y = 72.32470228479104;
-          camera.position.z = 60.826936793399625;
+          // camera.position.x = 5.78651222602025;
+          // camera.position.y = 72.32470228479104;
+          // camera.position.z = 60.826936793399625;
 
-          // let tempCamera = camera.clone();
-          // tempCamera.up.set(0, 1, 0);
-          // tempCamera.lookAt(cameraMesh.position);
-          // let q1 = new Quaternion().copy(tempCamera.quaternion);
-          // tempCamera.lookAt(state.playerMesh.position);
-          // let q2 = new Quaternion().copy(tempCamera.quaternion);
-          // camera.quaternion.slerpQuaternions(q2, q1, delta);
-          camera.lookAt(state.playerMesh.position);
-          state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
+          // camera.lookAt(state.playerMesh.position);
+          // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
 
           setIntroDone(true);
           setIsplaying(true);
@@ -364,6 +342,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       }
       // console.log(camera);
       dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+      dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
 
       if (scene1.nodes["Tutorial"].material.opacity < 1)

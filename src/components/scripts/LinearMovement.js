@@ -5,9 +5,11 @@ class LinearMovement {
   t = 0;
   dt = 0.001;
 
-  constructor(start, end) {
+  constructor(start, end, step) {
     this.start = start;
     this.end = end;
+    if(step)
+      this.dt = step;
   }
 
   ease = (t) => {
@@ -23,7 +25,7 @@ class LinearMovement {
     var newZ = this.lerp(this.start.z, this.end.z, this.ease(this.t));
     var newY = this.lerp(this.start.y, this.end.y, this.ease(this.t));
 
-    var position = new Vector3(newX, this.start.y, newZ);
+    var position = new Vector3(newX, newY, newZ);
 
     this.t += this.dt;
 
