@@ -13,6 +13,7 @@ import LinearMovement from 'components/scripts/LinearMovement';
 import Intro from 'components/UI/Intro';
 import * as CANNON from 'cannon-es';
 import CannonUtils from 'src/utils/CannonUtils';
+import { loadPoolNoodles } from 'src/utils/LoadPoolNoodles';
 
 const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
@@ -82,6 +83,8 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     let w = new CANNON.World({
       gravity: new CANNON.Vec3(0, -9.81, 0)
     });
+
+    // loadPoolNoodles(scene1);
 
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
     cm.position.set(0, 50, 0);
@@ -278,9 +281,9 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               state.controls.update();
               if (currentRoute === (cameraRoutes.length - 1)) {
                 camera.position.x = newPosition.x;
-                // camera.position.z = newPosition.z;
+                camera.position.z = newPosition.z;
                 // console.log("Last route");
-                // console.log(camera.quaternion);
+                // console.log(camera.position);
                 camera.lookAt(cameraMesh.position);
                 // camera.up.set(0, 1, 0);
                 // camera.lookAt(0, 0, 0);
@@ -340,8 +343,9 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           // let route = new Vector3(-57.53, state.playerMesh.position.y, 8);
           // let m = new LinearMovement(cameraMesh.position, route);
           // let pos = m.move();
-          // camera.position.x = pos.x;
-          // camera.position.z = pos.z;
+          camera.position.x = 5.78651222602025;
+          camera.position.y = 72.32470228479104;
+          camera.position.z = 60.826936793399625;
 
           // let tempCamera = camera.clone();
           // tempCamera.up.set(0, 1, 0);
@@ -351,6 +355,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           // let q2 = new Quaternion().copy(tempCamera.quaternion);
           // camera.quaternion.slerpQuaternions(q2, q1, delta);
           camera.lookAt(state.playerMesh.position);
+          state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
 
           setIntroDone(true);
           setIsplaying(true);
@@ -367,6 +372,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       //   camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
       // }
       // camera.zoom = 12;
+      // console.log(camera.position);
     }
 
     if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {
