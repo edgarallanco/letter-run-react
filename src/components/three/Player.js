@@ -256,10 +256,17 @@ const Player = ({
     );
     if (insideLetter) {
       setIsInLetter(true);
+      inLetter = true;
+      letterNudge.bodyText = insideLetter.nudge_text;
+      letterNudge.ctaText = insideLetter.cta_text;
+      //console.log (letterNudge.bodyText);
       if (track !== insideLetter.track)
         setTrack(insideLetter.track);
     } else {
       setIsInLetter(false);
+      inLetter = false;
+      letterNudge.bodyText = "";
+      letterNudge.ctaText = "";
     }
 
     let tempVector = new Vector3();
