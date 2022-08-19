@@ -11,6 +11,8 @@ function LetterSound({isSound, track, isInLetter}) {
       var nudgeEvent = new Event('inLetterNow');
       window.dispatchEvent(nudgeEvent);
     } else {
+      var clearEvent = new Event('outLetterNow');
+      window.dispatchEvent(clearEvent);
       letterSound.current.howler.fade(1.0, 0.0, 2000);
     }
   }, [isInLetter]);
