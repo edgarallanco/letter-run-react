@@ -266,16 +266,6 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
             scene1.nodes['CameraSolver'].position.copy(newPosition);
             cameraMesh.position.copy(newPosition);
-
-            camera.position.x = newPosition.x;
-            camera.position.z = newPosition.z;
-            //camera.position.y = newPosition.y;
-            // let lastControl = scene1.nodes['CameraSolver'].position;
-            // camera.position.sub(lastControl);
-            // state.controls.target.copy(scene1.nodes['CameraSolver'].position);
-            // camera.position.add(scene1.nodes['CameraSolver'].position);
-            // camera.lookAt(scene1.nodes['CameraSolver'].position);
-            // camera.position.y = scene1.nodes['CameraSolver'].position.y;
             if (camera.rotation.y < 1) {
               // camera.rotation.y = camera.rotation.y + 0.3;
               // camera.rotation.z = camera.rotation.z + 0.3;
