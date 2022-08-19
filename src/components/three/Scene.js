@@ -38,10 +38,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const animations = [];
   const cameraRoutes = [
     { pos: [0, 150, 0], rotation: [0, 0, 0] },
-    { pos: [1.6839, 120, 70.205], rotation: [34.6, 18.3, 0] },
+    { pos: [1.6839, 120, 20.205], rotation: [34.6, 18.3, 0] },
     // // { pos: [-8.2254, 95.891, 10.757], rotation: [34.6, 18.3, 0] },
-    { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
-    // { pos: [-57.53, 3.79, 28], rotation: [60.6, 0, 36] },
+    // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
+    { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
   const poolItemNames = [
@@ -73,7 +73,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   });
 
   const introZoomAnim = useSpring({
-    config: { duration: 1000, easing: easings.easeCubic },
+    config: { duration: 4000, easing: easings.easeCubic },
     zoomProp: !zoomCamera ? 1 : 12,
   });
 
@@ -118,38 +118,38 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     // scene.add(pMesh);
     setPlayerBox(pMesh);
 
-    poolItemNames.forEach((item) => {
-      let poolBody = new CANNON.Body({
-        mass: 1,
-        position: scene1.nodes[item].position,
-        shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1))
-      });
+    // poolItemNames.forEach((item) => {
+    //   let poolBody = new CANNON.Body({
+    //     mass: 1,
+    //     position: scene1.nodes[item].position,
+    //     shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1))
+    //   });
 
-      // scene1.nodes[item].visible = false;
-      let poolShape = CannonUtils.CreateTrimesh(scene1.nodes[item].geometry);
-      // poolBody.addShape(poolShape);
-      w.addBody(poolBody);
-      poolItems.push(poolBody);
-      setPoolItems([...poolItems]);
+    //   // scene1.nodes[item].visible = false;
+    //   let poolShape = CannonUtils.CreateTrimesh(scene1.nodes[item].geometry);
+    //   // poolBody.addShape(poolShape);
+    //   w.addBody(poolBody);
+    //   poolItems.push(poolBody);
+    //   setPoolItems([...poolItems]);
 
-      let wireframe = new WireframeGeometry(scene1.nodes[item].geometry);
-      let line = new LineSegments(wireframe);
-      line.material.depthTest = false;
-      line.material.opacity = 1;
-      // line.material.transparent = true;
-      line.position.copy(scene1.nodes[item].position);
+    //   let wireframe = new WireframeGeometry(scene1.nodes[item].geometry);
+    //   let line = new LineSegments(wireframe);
+    //   line.material.depthTest = false;
+    //   line.material.opacity = 1;
+    //   // line.material.transparent = true;
+    //   line.position.copy(scene1.nodes[item].position);
 
-      let mesh = new Mesh(wireframe, new MeshBasicMaterial({ color: 0xff0000 }));
-      mesh.position.copy(poolBody.position);
-      // mesh.position.x = mesh.position.x + 11;
-      // mesh.position.y = mesh.position.y + 2;
-      // mesh.position.z = mesh.position.z + 9;
-      // console.log(mesh.position);
+    //   let mesh = new Mesh(wireframe, new MeshBasicMaterial({ color: 0xff0000 }));
+    //   mesh.position.copy(poolBody.position);
+    //   // mesh.position.x = mesh.position.x + 11;
+    //   // mesh.position.y = mesh.position.y + 2;
+    //   // mesh.position.z = mesh.position.z + 9;
+    //   // console.log(mesh.position);
 
-      scene.add(mesh);
-      console.log(scene1.nodes[item]);
+    //   scene.add(mesh);
+    //   console.log(scene1.nodes[item]);
 
-    });
+    // });
 
     let box = new BoxGeometry(2, 2, 2);
 
@@ -276,22 +276,32 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
               state.controls.update();
               if (currentRoute === (cameraRoutes.length - 1)) {
+                camera.position.x = newPosition.x;
+                // camera.position.z = newPosition.z;
                 // console.log("Last route");
                 // console.log(camera.quaternion);
-                // camera.lookAt(cameraMesh.position);
-                camera.up.set(0, 1, 0);
+                camera.lookAt(cameraMesh.position);
+                // camera.up.set(0, 1, 0);
                 // camera.lookAt(0, 0, 0);
                 // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
-                let tempCamera = camera.clone();
-                tempCamera.up.set(0, 1, 0);
-                tempCamera.lookAt(0, 0, 0);
-                let q1 = new Quaternion().copy(tempCamera.quaternion);
-                tempCamera.lookAt(state.playerMesh.position);
-                let q2 = new Quaternion().copy(tempCamera.quaternion);
-                camera.quaternion.slerpQuaternions(q1, q2, delta);
+                // let tempCamera = camera.clone();
+                // tempCamera.up.set(0, 1, 0);
+                // tempCamera.lookAt(0, 0, 0);
+                // let q1 = new Quaternion().copy(tempCamera.quaternion);
+                // tempCamera.lookAt(cameraMesh.position);
+                // let q2 = new Quaternion().copy(tempCamera.quaternion);
+                // camera.quaternion.slerpQuaternions(q1, q2, delta);
+                setZoomCamera(true);
+                // camera.zoom = 12;
+                if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
+                  // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
+                  state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
+                }
               } else {
+                camera.position.x = newPosition.x;
+                camera.position.z = newPosition.z;
                 camera.up.set(0, 1, 0);
-                camera.lookAt(0, 0, 0);
+                camera.lookAt(cameraMesh.position);
               }
             } else {
               // camera.lookAt(scene1.nodes['CameraSolver'].position);
@@ -306,16 +316,16 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
 
         } else {
-          camera.position.y = 175;
-          camera.position.x = -57.53;
+          // camera.position.y = 175;
+          // camera.position.x = -57.53;
           // camera.position.z = 28;
           // console.log("intro done.");
-          setZoomCamera(true);
-          // camera.zoom = 12;
-          if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
-            // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
-            state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-          }
+          // setZoomCamera(true);
+          // // camera.zoom = 12;
+          // if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
+          //   // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
+          //   state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
+          // }
           // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
           // camera.up.set(0, 1, 0);
           // camera.lookAt(state.playerMesh.position);
