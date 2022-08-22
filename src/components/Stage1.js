@@ -57,10 +57,12 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     // console.log(total);
     if (progress === 100) {
       setHasLoaded(true);
+      // setMoveToStart(true);
       /*  console.log('totally loaded')
        console.log("item = "+item);
        console.log("total = "+total);
        console.log("loaded = "+loaded); */
+        
     }
 
     setStyle(newStyle);
