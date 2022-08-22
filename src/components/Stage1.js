@@ -38,7 +38,10 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     // console.log(total);
     if (progress === 100) {
       setHasLoaded(true);
-      setMoveToStart(true);
+      setTimeout(() => {
+        setMoveToStart(true);
+      }, 1000)
+
     }
 
     setStyle(newStyle);
@@ -173,13 +176,13 @@ export const Stage1 = () => {
                 collected={collected}
               />
             ))}
-            <Scene checkpoint={checkpoint} isModal={isPopup} 
+            <Scene checkpoint={checkpoint} isModal={isPopup}
               isPlaying={isPlaying}
               setIsplaying={setIsplaying}
               moveToStart={moveToStart}
               introDone={introDone}
               setIntroDone={setIntroDone}
-              setZoom={setZoom} 
+              setZoom={setZoom}
               setModal={updateCollection} />
           </AppProvider>
         </Suspense>

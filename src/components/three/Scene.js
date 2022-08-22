@@ -39,7 +39,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const animations = [];
   const cameraRoutes = [
     { pos: [0, 150, 0], rotation: [0, 0, 0] },
-    { pos: [1.6839, 120, 20.205], rotation: [34.6, 18.3, 0] },
+    // { pos: [1.6839, 120, 20.205], rotation: [34.6, 18.3, 0] },
     // // { pos: [-8.2254, 95.891, 10.757], rotation: [34.6, 18.3, 0] },
     // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
@@ -330,7 +330,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           // }
         }
       } else {
-        camera.position.set(0, 84.69169943749475, 0);
+        camera.position.set(0, 110, 0);
         camera.up.set(0, 1, 0);
         camera.lookAt(0, 0, 0);
       }

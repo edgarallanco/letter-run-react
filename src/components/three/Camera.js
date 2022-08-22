@@ -31,6 +31,23 @@ const Camera = ({ zoom }) => {
     const controls = controlsRef.current;
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+
+    // update camera and render on window resize
+    window.addEventListener('resize', () => {
+      // console.log(window.screen.width);
+      if (window.screen.width >= 1920) {
+        camera.fov = 75;
+        camera.position.y = camera.position.y - 20;
+      } else {
+        camera.fov = 50;
+        camera.position.y = camera.position.y + 20;
+      }
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      console.log(camera.fov);
+      gl.setSize(window.innerWidth, window.innerHeight);
+      dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    });
   }, [gl]);
 
   const zoomAnim = useSpring({
@@ -82,6 +99,7 @@ const Camera = ({ zoom }) => {
         // far={100}
         // near={-100}
         // up={[0, 10000, 0]}
+        fov={window.screen.width >= 1920 ? 75 : 50}
         castShadow={true}
         receiveShadow={true}
         position={[0, 84.69169943749475, 0]}
