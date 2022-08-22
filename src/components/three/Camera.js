@@ -52,7 +52,7 @@ const Camera = ({ zoom }) => {
 
   const zoomAnim = useSpring({
     config: { duration: 1000, easing: easings.easeCubic },
-    zoomProp: zoom ? 4 : 12,
+    zoomProp: zoom ? 1 : 4.5,
   });
 
   const cameraPos = useSpring({
@@ -68,7 +68,7 @@ const Camera = ({ zoom }) => {
       if (zoom) {
         camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
       } else if (zoomPressed) {
-        if (camera.zoom !== 12)
+        if (camera.zoom <= 4.5)
           camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
         else
           setZoomPressed(false);
