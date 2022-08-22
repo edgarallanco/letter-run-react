@@ -149,7 +149,7 @@ const Player = ({
           stateValtio.action = "Anim_Idle";
           setIsModal(true);
         }
-        console.log(stateValtio.checkpoints);
+        // console.log(stateValtio.checkpoints);
       }
     });
 

@@ -70,8 +70,8 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
-    config: { duration: 10, easing: easings.easeCubic },
-    zoomProp: zoomCamera ? 6 : 12,
+    config: { duration: 1000, easing: easings.easeCubic },
+    zoomProp: zoomCamera ? 2 : 4.5,
   });
 
   const introZoomAnim = useSpring({
@@ -285,6 +285,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
                 // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
                 state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
+                // console.log(state.camera.zoom);
               }
             } else {
               camera.position.x = newPosition.x;
@@ -320,6 +321,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           // camera.lookAt(state.playerMesh.position);
           // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
 
+          setZoomCamera(false);
           setIntroDone(true);
           setIsplaying(true);
           intro_trigger.click();
@@ -351,7 +353,8 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       scene1.nodes["7_L_Button"].position.addScaledVector(vector, 30 * Math.min(delta, 0.1));
       setZoomCamera(true);
     } else if (launchRocket && zoomCamera) {
-      if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 6) {
+      // console.log(zoomAnim.zoomProp.animation.values[0]._value)
+      if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 2) {
         state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
       }
     }
@@ -503,7 +506,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
                 stateValtio.action = 'Anim_Idle';
                 setModal(true);
                 setLaunchRocket(false);
-                state.camera.zoom = 12;
+                state.camera.zoom = 4.5;
                 dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
                 actions["Anim_Rocket"].stop();
               }, 2000)
