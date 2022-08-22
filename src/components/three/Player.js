@@ -57,7 +57,7 @@ const Player = ({
     setVelocity(velocity);
     camera.position.sub(state.controls.target);
     state.controls.target.copy(meshRef.current.position);
-    camera.position.add(meshRef.current.position);
+    // camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);
     state.controls.update();
     dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current });
