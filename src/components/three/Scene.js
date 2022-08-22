@@ -196,7 +196,12 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     let position = cameraRoutes[0].pos;
     let route = new Vector3(position[0], scene1.nodes['CameraSolver'].position.y, position[2]);
     let m = new LinearMovement(scene1.nodes['CameraSolver'].position, route);
-    state.camera.lookAt(scene1.nodes['CameraSolver'].position);
+    // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
+    // state.camera.position.set(0, 150, 0);
+    // // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
+    // state.camera.up.set(0, 1, 0);
+    // state.camera.lookAt(0, 150, 0);
+    dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
     // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
     setMovement(m);
   }, [state.playerMesh]);
@@ -266,38 +271,28 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
             scene1.nodes['CameraSolver'].position.copy(newPosition);
             cameraMesh.position.copy(newPosition);
-            if (camera.rotation.y < 1) {
-              // camera.rotation.y = camera.rotation.y + 0.3;
-              // camera.rotation.z = camera.rotation.z + 0.3;
-
-              state.controls.update();
-              if (currentRoute === (cameraRoutes.length - 1)) {
-                state.controls.target.copy(cameraMesh.position)
-                if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
-                  let cmPosition = camereaMovment.move();
-                  camera.position.copy(cmPosition);
-                }
-                // console.log(camera.position);
-                camera.lookAt(cameraMesh.position);
-                setZoomCamera(true);
-                // camera.zoom = 12;
-                if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
-                  // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
-                  state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-                }
-              } else {
-                camera.position.x = newPosition.x;
-                camera.position.z = newPosition.z;
-                camera.up.set(0, 1, 0);
-                camera.lookAt(cameraMesh.position);
+            state.controls.update();
+            if (currentRoute === (cameraRoutes.length - 1)) {
+              state.controls.target.copy(cameraMesh.position)
+              if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
+                let cmPosition = camereaMovment.move();
+                camera.position.copy(cmPosition);
+              }
+              // console.log(camera.position);
+              camera.lookAt(cameraMesh.position);
+              setZoomCamera(true);
+              // camera.zoom = 12;
+              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
+                // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
+                state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
               }
             } else {
-              // camera.lookAt(scene1.nodes['CameraSolver'].position);
+              camera.position.x = newPosition.x;
+              camera.position.z = newPosition.z;
+              camera.up.set(0, 1, 0);
+              camera.lookAt(cameraMesh.position);
+              // console.log(camera.position.y);
             }
-
-            // state.controls.setPolarAngle(90);
-            // state.controls.setAzimuthalAngle(90);
-            // state.controls.update();
 
             // camera.lookAt(new Vector3(rotation[0], rotation[1], rotation[2]));
           }
@@ -329,6 +324,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           setIsplaying(true);
           intro_trigger.click();
         }
+      } else {
+        camera.position.set(0, 84.69169943749475, 0);
+        camera.up.set(0, 1, 0);
+        camera.lookAt(0, 0, 0);
       }
       // console.log(camera);
       dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });

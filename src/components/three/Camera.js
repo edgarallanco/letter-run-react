@@ -78,13 +78,13 @@ const Camera = ({ zoom }) => {
       <PerspectiveCamera
         name='Personal Camera'
         makeDefault={true}
-        zoom={12}
+        zoom={1}
         // far={100}
         // near={-100}
         // up={[0, 10000, 0]}
         castShadow={true}
         receiveShadow={true}
-        position={[0, 150, 0]}
+        position={[0, 84.69169943749475, 0]}
       />
     </>
   );
