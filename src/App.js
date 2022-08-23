@@ -4,7 +4,7 @@ import Stage1 from 'components/Stage1';
 function App() {
 
   return (
-    <div className='App' style={{height: window.innerHeight}}>
+    <div className='App'>
 
         <Stage1 />
     </div>
