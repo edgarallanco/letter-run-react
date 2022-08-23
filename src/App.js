@@ -7,7 +7,7 @@ import './assets/css/normalize.css';
 
 function App() {
   return (
-    <div className='app' style={{height: window.innerHeight}}>
+    <div className='app'>
 
         <Stage1 />
     </div>
