@@ -64,13 +64,13 @@ const Camera = ({ zoom }) => {
     // camera.aspect = window.innerWidth / window.innerHeight;
     window.addEventListener('resize', () => {
       // console.log(window.screen.width);
-      if (window.screen.width >= 1920) {
+      /* if (window.screen.width >= 1920) {
         camera.fov = 75;
         // camera.position.y = camera.position.y - 20;
       } else {
         camera.fov = 50;
         // camera.position.y = camera.position.y + 20;
-      }
+      } */
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       // console.log(camera.fov);

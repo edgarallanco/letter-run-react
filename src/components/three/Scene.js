@@ -236,7 +236,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
         camera.zoom = 1;
 
       if (moveToStart) {
-        camera.fov = window.screen.width === 1920 ? 80 : 50;
+        //camera.fov = window.screen.width === 1920 ? 80 : 50;
         // console.log(currentRoute);
         if (cameraRoutes[currentRoute] !== undefined) {
           let position = cameraRoutes[currentRoute].pos;
