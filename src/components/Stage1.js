@@ -47,9 +47,9 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
       lottie2.addEventListener('complete', function () {
         console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
-        setTimeout(() => {
+        // setTimeout(() => {
           setMoveToStart(true)
-        }, 1000)
+        // }, 1000)
         
       })
       /* lottie1.stop();
