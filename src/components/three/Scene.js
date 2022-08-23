@@ -79,7 +79,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   });
 
   useEffect(() => {
-    console.log(scene1);
+    // console.log(scene1);
     let w = new CANNON.World({
       gravity: new CANNON.Vec3(0, -9.81, 0)
     });
@@ -235,6 +235,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
         camera.zoom = 1;
 
       if (moveToStart) {
+        camera.fov = window.screen.width === 1920 ? 80 : 50;
         // console.log(currentRoute);
         if (cameraRoutes[currentRoute] !== undefined) {
           let position = cameraRoutes[currentRoute].pos;
@@ -275,7 +276,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
             if (currentRoute === (cameraRoutes.length - 1)) {
               state.controls.target.copy(cameraMesh.position)
               if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
-                console.log("Setting camera pos");
+                // console.log("Setting camera pos");
                 let cmPosition = camereaMovment.move();
                 camera.position.copy(cmPosition);
               }
@@ -375,7 +376,8 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     const geoms = [];
     environment = scene1.scene;
     dispatch({ type: Actions.UPDATE_ENVIROMENT, payload: environment });
-    environment.scale.setScalar(1.5);
+    environment.scale.set(1.5, 1.5, 1.5);
+    // environment.matrix.makeScale(1.5, 1.5, 1.5)
     environment.updateMatrixWorld(true);
     scene1.nodes["Tutorial"].material.transparent = true;
     scene1.nodes["Tutorial"].material.opacity = 0.01;
