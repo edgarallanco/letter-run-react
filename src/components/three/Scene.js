@@ -329,9 +329,9 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           intro_trigger.click();
         }
       } else {
-        camera.position.set(0, 90, 0);
+        camera.position.set(0, 90, initialCamZ);
         camera.up.set(0, 1, 0);
-        camera.lookAt(0, 0, 0);
+        camera.lookAt(0, 0, initialCamZ);
       }
       // console.log(camera);
       dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });

@@ -7,7 +7,7 @@ import './assets/css/normalize.css';
 
 function App() {
   return (
-    <div className='App' style={{height: window.innerHeight}}>
+    <div className='app' style={{height: window.innerHeight}}>
 
         <Stage1 />
     </div>
@@ -15,9 +15,10 @@ function App() {
 }
 
 window.onresize = function() {
-  document.querySelector('div.App').classList.height = window.innerHeight;
+  document.querySelector('.app').classList.height = window.innerHeight;
   console.log('resized!')
   console.log(window.innerHeight)
+  console.log(document.querySelector('.app').classList.height)
 }
 
 export default App;
