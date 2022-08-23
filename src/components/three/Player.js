@@ -189,6 +189,8 @@ const Player = ({
     if (!isPlaying)
       return;
 
+    state.camera.fov = window.screen.width >= 1920 ? 75: 50;
+
     if (!state.controls && !state.collider) return;
     let player = meshRef.current;
     let angle = state.controls.getAzimuthalAngle();

@@ -10,6 +10,7 @@ import { useAnimations, useGLTF } from '@react-three/drei';
 import { BoxGeometry, Clock, LineSegments, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
 import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
+import Intro from 'components/UI/Intro';
 import * as CANNON from 'cannon-es';
 import CannonUtils from 'src/utils/CannonUtils';
 import { loadPoolNoodles } from 'src/utils/LoadPoolNoodles';
@@ -33,7 +34,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const [poolItems, setPoolItems] = useState([]);
   const [cameraMesh, setCameraMesh] = useState();
   let collider;
-  const scene1 = useGLTF('./../resources/EA_Baking_AllLetters_v28.glb');
+  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v28.glb');
   const [world, setWorld] = useState();
   const timeStep = 1 / 60;
   const animations = [];
@@ -183,7 +184,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     if (!state.playerMesh)
       return;
 
-    // console.log(scene1.animations);
+    console.log(scene1.animations);
     // setInterval(() => {
 
     scene1.animations.forEach((a) => {
@@ -235,7 +236,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
         camera.zoom = 1;
 
       if (moveToStart) {
-        // camera.fov = window.screen.width === 1920 ? 80 : 50;
+        //camera.fov = window.screen.width === 1920 ? 80 : 50;
         // console.log(currentRoute);
         if (cameraRoutes[currentRoute] !== undefined) {
           let position = cameraRoutes[currentRoute].pos;
@@ -271,7 +272,6 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
             scene1.nodes['CameraSolver'].position.copy(newPosition);
             cameraMesh.position.copy(newPosition);
-
             state.controls.update();
             if (currentRoute === (cameraRoutes.length - 1)) {
               state.controls.target.copy(cameraMesh.position)
@@ -326,16 +326,11 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           setZoomCamera(false);
           setIntroDone(true);
           setIsplaying(true);
-
-
-          // if (state.camera.zoom >= 12) {
-
-          //   // camera.position.y = 175;
-          // }
         }
       } else {
-        camera.position.set(0, 110, 0);
+        camera.position.set(0, 90, 0);
         camera.up.set(0, 1, 0);
+        camera.lookAt(0, 0, 0);
         camera.lookAt(cameraMesh.position);
       }
       // console.log(camera);
@@ -360,7 +355,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       scene1.nodes["7_L_Button"].position.addScaledVector(vector, 30 * Math.min(delta, 0.1));
       setZoomCamera(true);
     } else if (launchRocket && zoomCamera) {
-      console.log(zoomAnim.zoomProp.animation.values[0]._value)
+      // console.log(zoomAnim.zoomProp.animation.values[0]._value)
       if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 2) {
         state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
       }
