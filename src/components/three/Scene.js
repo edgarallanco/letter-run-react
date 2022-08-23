@@ -328,7 +328,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           intro_trigger.click();
         }
       } else {
-        camera.position.set(0, 110, 0);
+        camera.position.set(0, 90, 0);
         camera.up.set(0, 1, 0);
         camera.lookAt(0, 0, 0);
       }
