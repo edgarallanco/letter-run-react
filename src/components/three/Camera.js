@@ -128,7 +128,7 @@ const Camera = ({ zoom }) => {
         // far={100}
         // near={-100}
         // up={[0, 10000, 0]}
-        fov={50}
+        fov={window.screen.width >= 1920 ? 75: 50}
         castShadow={true}
         receiveShadow={true}
         position={[0, 84.69169943749475, 0]}

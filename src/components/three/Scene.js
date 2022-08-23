@@ -236,7 +236,11 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
         camera.zoom = 1;
 
       if (moveToStart) {
+<<<<<<< HEAD
         //camera.fov = window.screen.width === 1920 ? 80 : 50;
+=======
+        // camera.fov = window.screen.width === 1920 ? 80 : 50;
+>>>>>>> b8ced3c24a131bd29a2634cef8916f6e5145cca9
         // console.log(currentRoute);
         if (cameraRoutes[currentRoute] !== undefined) {
           let position = cameraRoutes[currentRoute].pos;
@@ -329,9 +333,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           intro_trigger.click();
         }
       } else {
-        camera.position.set(0, 90, initialCamZ);
+        camera.position.set(0, 90, 0);
         camera.up.set(0, 1, 0);
-        camera.lookAt(0, 0, initialCamZ);
+        camera.lookAt(0, 0, 0);
+        camera.lookAt(cameraMesh.position);
       }
       // console.log(camera);
       dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
