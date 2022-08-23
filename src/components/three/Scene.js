@@ -242,8 +242,8 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           let rotation = cameraRoutes[currentRoute].rotation;
           let cubePos = scene1.nodes['CameraSolver'].position;
 
-          if (Math.floor(cubePos.x) === Math.floor(position[0])
-            && Math.floor(cubePos.z) === Math.floor(position[2])) {
+          if (cubePos.x <= (position[0] + 0.02)
+            && cubePos.z <= (position[2] + 0.02)) {
             // camera.lookAt(cubePos);
             // console.log(scene1.nodes['CameraSolver'].position);
             // console.log(camera.rotation);
@@ -275,10 +275,11 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
             if (currentRoute === (cameraRoutes.length - 1)) {
               state.controls.target.copy(cameraMesh.position)
               if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
+                console.log("Setting camera pos");
                 let cmPosition = camereaMovment.move();
                 camera.position.copy(cmPosition);
               }
-              // console.log(camera.position);
+              // console.log(cameraMesh.position);
               camera.lookAt(cameraMesh.position);
               setZoomCamera(true);
               // camera.zoom = 12;
