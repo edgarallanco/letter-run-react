@@ -53,7 +53,7 @@ const Camera = ({ zoom }) => {
     //     console.log(camera.fov);
     //   }
     // })
-    // console.log(window.screen.width);
+    console.log(window.screen.availWidth);
     // if (window.screen.width >= 1920) {
     //   camera.fov = 75;
     //   camera.position.y = camera.position.y - 20;
@@ -128,6 +128,7 @@ const Camera = ({ zoom }) => {
         // far={100}
         // near={-100}
         // up={[0, 10000, 0]}
+        aspect={window.screen.width / window.screen.height}
         fov={50}
         castShadow={true}
         receiveShadow={true}

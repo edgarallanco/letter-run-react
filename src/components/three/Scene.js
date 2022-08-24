@@ -201,6 +201,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     // // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
     // state.camera.up.set(0, 1, 0);
     // state.camera.lookAt(0, 150, 0);
+    state.camera.zoom = 1;
     dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
     // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
     setMovement(m);
@@ -231,9 +232,6 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     state.playerMesh.visible = introDone;
     scene1.nodes["Tutorial"].visible = introDone;
     if (!isPlaying) {
-
-      if (!zoomCamera)
-        camera.zoom = 1;
 
       if (moveToStart) {
         //camera.fov = window.screen.width === 1920 ? 80 : 50;
@@ -284,7 +282,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               camera.lookAt(cameraMesh.position);
               setZoomCamera(true);
               // camera.zoom = 12;
-              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
+              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 4.5) {
                 // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
                 state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
                 // console.log(state.camera.zoom);
@@ -330,7 +328,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       } else {
         camera.position.set(0, 90, 0);
         camera.up.set(0, 1, 0);
-        camera.lookAt(0, 0, 0);
+        // camera.lookAt(0, 0, 0);
         camera.lookAt(cameraMesh.position);
       }
       // console.log(camera);
