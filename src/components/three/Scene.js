@@ -322,10 +322,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           // camera.lookAt(state.playerMesh.position);
           // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
           // camera.zoom = 4.5;
-          setIsplaying(true);
+          // setIsplaying(true);
           setIntroDone(true);
           setZoomCamera(false);
-          intro_trigger.click();
+          // intro_trigger.click();
           //setIsplaying(false);
         }
       } else {

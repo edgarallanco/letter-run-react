@@ -137,9 +137,7 @@ export const Stage1 = () => {
 
   useEffect(() => {
     if(introDone) {
-      let button = document.getElementById('trigger_4');
-      if(button)
-        button.trigger('click');
+      intro_trigger.click();
     }
   }, [introDone]);
 
