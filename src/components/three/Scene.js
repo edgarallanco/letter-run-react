@@ -325,7 +325,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
           setZoomCamera(false);
           setIntroDone(true);
-          setIsplaying(true);
+          /* setIsplaying(true); */
           intro_trigger.click();
         }
       } else {

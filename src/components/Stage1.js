@@ -116,6 +116,19 @@ export const Stage1 = () => {
         setIsSound(false);
     })
   }
+
+  soundButtonStart.addEventListener('click', function () {
+    setIsplaying(true);
+    intro_closer.click();
+    soundButton.click();
+    intro_closer.click();
+  })
+
+  startBtn.addEventListener('click', function () {
+    setIsplaying(true);
+    intro_closer.click();
+  })
+  
   
   
   useEffect(() => {
