@@ -43,7 +43,7 @@ const checkpoint = [
     object: '3_G_Object',
     item_id: 'soccerBall',
     item_headline: '¡Vamos al juego!',
-    item_body_copy: 'Pre-pandemic, the US-based EA crew was World Cup crazy, but then we went global and whoo...our Buenos Aires team takes it to a whole other level!'
+    item_body_copy: 'Pre-pandemic, the US-based EA crew was obvs Team USA World Cup crazy, but since we\'ve gone global...let\'s goooooo Serbia and Argentina as well! Sorry Peru and South Africa!'
   },
   {
     origin: 'a1',
