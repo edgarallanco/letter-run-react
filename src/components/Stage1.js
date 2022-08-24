@@ -48,9 +48,9 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
         console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
         // setTimeout(() => {
-          setMoveToStart(true)
+        setMoveToStart(true)
         // }, 1000)
-        
+
       })
       /* lottie1.stop();
      lottie1.wrapper.classList.add('gc-hide')
@@ -65,7 +65,7 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
        console.log("item = "+item);
        console.log("total = "+total);
        console.log("loaded = "+loaded); */
-        
+
     }
 
     setStyle(newStyle);
@@ -98,42 +98,50 @@ export const Stage1 = () => {
   const [introDone, setIntroDone] = useState(false);
   const [moveToStart, setMoveToStart] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
-  
+
   const addSoundListener = (isSound, setIsSound) => {
     //console.log("adding sound listener")
     var dom = document.getElementById("snd_btn");
     var offBtn = document.getElementById('trigger_6');
-    if(dom)
+    if (dom)
       dom.addEventListener("click", () => {
         //console.log("isSound = ", isSound);
         //
         setIsSound(true);
       })
-    if(offBtn)
-    offBtn.addEventListener("click", () => {
-      //console.log("isSound = ", isSound);
+    if (offBtn)
+      offBtn.addEventListener("click", () => {
+        //console.log("isSound = ", isSound);
         //
         setIsSound(false);
+      })
+  }
+
+  const registerClickListener = () => {
+    soundButtonStart.addEventListener('click', function () {
+      setIsplaying(true);
+      intro_closer.click();
+      soundButton.click();
+      intro_closer.click();
+    })
+
+    startBtn.addEventListener('click', function () {
+      setIsplaying(true);
+      intro_closer.click();
     })
   }
 
-  soundButtonStart.addEventListener('click', function () {
-    setIsplaying(true);
-    intro_closer.click();
-    soundButton.click();
-    intro_closer.click();
-  })
-
-  startBtn.addEventListener('click', function () {
-    setIsplaying(true);
-    intro_closer.click();
-  })
-  
-  
-  
   useEffect(() => {
     console.log("isSound = ", isSound);
-  },[isSound])
+  }, [isSound])
+
+  useEffect(() => {
+    if(introDone) {
+      let button = document.getElementById('trigger_4');
+      if(button)
+        button.trigger('click');
+    }
+  }, [introDone]);
 
 
   useEffect(() => {
@@ -164,10 +172,9 @@ export const Stage1 = () => {
     itemLabel.innerText = checkpoint.item_body_copy;
   }, [checkpoint]);
 
-  
-
   useEffect(() => {
     addSoundListener(isSound, setIsSound);
+    registerClickListener();
     console.log('listener instantiated')
     const gameProgress = JSON.parse(localStorage.getItem('EA_checkpoints'));
     if (gameProgress) {
