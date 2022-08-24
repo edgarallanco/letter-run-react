@@ -39,7 +39,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   const timeStep = 1 / 60;
   const animations = [];
   const cameraRoutes = [
-    { pos: [0, 150, 0], rotation: [0, 0, 0] },
+    { pos: [0, 150, 6], rotation: [0, 0, 0] },
     // { pos: [1.6839, 120, 20.205], rotation: [34.6, 18.3, 0] },
     // // { pos: [-8.2254, 95.891, 10.757], rotation: [34.6, 18.3, 0] },
     // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
@@ -88,18 +88,18 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     // loadPoolNoodles(scene1);
 
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
-    cm.position.set(0, 50, 0);
+    cm.position.set(0, 50, 6);
     cm.visible = false;
     scene.add(cm);
     setCameraMesh(cm);
 
-    let cmMovment = new LinearMovement(new Vector3(1.6839, 84.69169943749475, 20.205),
+    let cmMovment = new LinearMovement(new Vector3(0, 90, 6),
       new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 0.01);
     setCameraMovement(cmMovment);
 
     scene1.nodes['CameraSolver'].visible = false;
     // scene1.nodes['CameraSolver'].position.set(cameraRoutes[0].pos[0], cameraRoutes[0].pos[1], cameraRoutes[0].pos[2]);
-    scene1.nodes['CameraSolver'].position.set(0, 0, 0);
+    scene1.nodes['CameraSolver'].position.set(0, 0, 6);
     scene1.nodes['CameraSolver'].rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
     setZoomCamera(false);
     // console.log(state.camera.position);
@@ -277,6 +277,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
                 // console.log("Setting camera pos");
                 let cmPosition = camereaMovment.move();
                 camera.position.copy(cmPosition);
+                console.log(cmPosition.z +  " is cmPosition Z")
               }
               // console.log(cameraMesh.position);
               camera.lookAt(cameraMesh.position);
@@ -292,7 +293,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               camera.position.z = newPosition.z;
               camera.up.set(0, 1, 0);
               camera.lookAt(cameraMesh.position);
-              // console.log(camera.position.y);
+              console.log(newPosition.z + " is the current z");
             }
 
             // camera.lookAt(new Vector3(rotation[0], rotation[1], rotation[2]));
@@ -329,10 +330,12 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           intro_trigger.click();
         }
       } else {
-        camera.position.set(0, 90, 0);
+        camera.position.set(0, 90, 6);
         camera.up.set(0, 1, 0);
-        // camera.lookAt(0, 0, 0);
         camera.lookAt(cameraMesh.position);
+        // camera.lookAt(0, 0, 0);
+        //camera.lookAt(cameraMesh.position.x, cameraMesh.position.y, (cameraMesh.position.z + 6));
+        //console.log(cameraMesh.position + " is the camera mesh position")
       }
 
       // console.log(camera);
