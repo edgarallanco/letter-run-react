@@ -283,7 +283,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               camera.lookAt(cameraMesh.position);
               setZoomCamera(true);
               // camera.zoom = 12;
-              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 12) {
+              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 4.5) {
                 // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
                 state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
                 // console.log(state.camera.zoom);
@@ -332,6 +332,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       } else {
         camera.position.set(0, 90, 6);
         camera.up.set(0, 1, 0);
+        // camera.lookAt(0, 0, 0);
         camera.lookAt(cameraMesh.position);
         // camera.lookAt(0, 0, 0);
         //camera.lookAt(cameraMesh.position.x, cameraMesh.position.y, (cameraMesh.position.z + 6));
