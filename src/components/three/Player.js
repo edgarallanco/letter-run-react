@@ -82,7 +82,7 @@ const Player = ({
       boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
       scene.add(boxMesh);
       checkpointsMesh.push(boxMesh);
-      setCheckpoint([...checkpointsMesh]);
+      setCheckpointMesh([...checkpointsMesh]);
     });
   }, []);
 
@@ -186,17 +186,19 @@ const Player = ({
   });
 
   const movePlayer = (delta, collider) => {
-    if (!isPlaying)
-      return;
+    if (!isPlaying) {
+      stateValtio.action = 'Anim_Idle';
+      actions['Anim_Idle'].play(); // stop any action of the character
+      // return;
+    } else {
+      // state.camera.fov = window.screen.width >= 1920 ? 75: 50;
 
-    // state.camera.fov = window.screen.width >= 1920 ? 75: 50;
+      if (!state.controls && !state.collider) return;
+      let player = meshRef.current;
+      let angle = state.controls.getAzimuthalAngle();
+      // console.log(player.position);
 
-    if (!state.controls && !state.collider) return;
-    let player = meshRef.current;
-    let angle = state.controls.getAzimuthalAngle();
-    // console.log(player.position);
-
-    if (!isModal) {
+      // if (!isModal) {
       if (fwdPressed) {
         stateValtio.action = 'Anim_Walk';
         speed <= 7 && setSpeed(speed + 0.2);
@@ -246,6 +248,7 @@ const Player = ({
         setSpeed(1);
         stateValtio.action = 'Anim_Idle';
       }
+      // }
     }
 
     velocity.y += isOnGround ? 0 : delta * gravity;
@@ -336,11 +339,14 @@ const Player = ({
       velocity.set(0, 0, 0);
     }
 
-    let lastControl = state.controls.target;
-    // state.controls.enabled = false;
-    camera.position.sub(lastControl);
-    state.controls.target.copy(player.position);
-    camera.position.add(player.position);
+    if (isPlaying) {
+      let lastControl = state.controls.target;
+      // state.controls.enabled = false;
+      camera.position.sub(lastControl);
+      state.controls.target.copy(player.position);
+      camera.position.add(player.position);
+    }
+
     setVelocity(velocity);
 
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
