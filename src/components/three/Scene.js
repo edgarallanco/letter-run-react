@@ -422,6 +422,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
             )
             : undefined;
           c.visible = found ? false : true;
+          if (!found) {
+            cloned.name = c.userData.name;
+            geoms.push(cloned);
+          }
         } else if (
           !c.name.includes('Grass') &&
           !c.name.includes('10_N_Water')
