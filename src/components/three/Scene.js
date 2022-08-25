@@ -321,12 +321,10 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
 
           // camera.lookAt(state.playerMesh.position);
           // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
-          // camera.zoom = 4.5;
-          // setIsplaying(true);
+          if (!introDone)
+            setZoomCamera(false);
           setIntroDone(true);
-          setZoomCamera(false);
-          // intro_trigger.click();
-          //setIsplaying(false);
+          // setIsplaying(true);
         }
       } else {
         camera.position.set(0, 90, 6);
@@ -363,6 +361,17 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       // console.log(zoomAnim.zoomProp.animation.values[0]._value)
       if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 2) {
         state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+      }
+    } else if (!zoomCamera && launchRocket) {
+      if (zoomAnim.zoomProp.animation.values[0]) {
+        console.log(zoomAnim.zoomProp.animation.values[0]._value)
+        if (zoomAnim.zoomProp.animation.values[0]._value >= 4.5) {
+          setLaunchRocket(false);
+          setIsplaying(true);
+        } else {
+          setModal(false);
+          state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+        }
       }
     }
 
@@ -506,19 +515,21 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       if (c.userData.name === checkpoint.object) {
         if (checkpoint.item_name === 'Spaceship') {
           // console.log("Spaceship.");
+          stateValtio.action = 'Anim_Idle';
           setLaunchRocket(true);
+          setIsplaying(false);
           setTimeout(() => {
             // state.camera.zoom = 6;
             dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
             setTimeout(() => {
               actions["Anim_Rocket"].play();
-              setZoomCamera(false);
               setTimeout(() => {
                 c.visible = false;
-                stateValtio.action = 'Anim_Idle';
                 setModal(true);
-                setLaunchRocket(false);
-                state.camera.zoom = 4.5;
+                // setLaunchRocket(false);
+                setZoomCamera(false);
+                // setIsplaying(true);
+                // state.camera.zoom = 4.5;
                 dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
                 actions["Anim_Rocket"].stop();
               }, 2000)
