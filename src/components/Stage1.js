@@ -108,12 +108,14 @@ export const Stage1 = () => {
         //console.log("isSound = ", isSound);
         //
         setIsSound(true);
+        soundToggle = true;
       })
     if (offBtn)
       offBtn.addEventListener("click", () => {
         //console.log("isSound = ", isSound);
         //
         setIsSound(false);
+        soundToggle = false;
       })
   }
 
