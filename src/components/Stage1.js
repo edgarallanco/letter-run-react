@@ -45,7 +45,7 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
       var newEvent = new Event('completed');
       window.dispatchEvent(newEvent);
       lottie2.addEventListener('complete', function () {
-        console.log('complete!');
+        //console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
         // setTimeout(() => {
         setMoveToStart(true)
@@ -155,6 +155,7 @@ export const Stage1 = () => {
       formOpen.click();
       standardIcon.classList.add('gc-hide');
       partyPopper.classList.remove('gc-hide');
+      startConfetti();
     }
     const gameProgress = localStorage.getItem('EA_checkpoints');
     if (gameProgress) {
@@ -175,7 +176,7 @@ export const Stage1 = () => {
   useEffect(() => {
     addSoundListener(isSound, setIsSound);
     registerClickListener();
-    console.log('listener instantiated')
+    //console.log('listener instantiated')
     const gameProgress = JSON.parse(localStorage.getItem('EA_checkpoints'));
     if (gameProgress) {
       const ids = new Set(gameProgress.map(({ number }) => number));

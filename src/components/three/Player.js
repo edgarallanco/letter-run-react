@@ -186,6 +186,11 @@ const Player = ({
   });
 
   const movePlayer = (delta, collider) => {
+    setTimeout(() => {
+      if (scene1.nodes["Tutorial"].material.opacity > 0)
+        scene1.nodes["Tutorial"].material.opacity -= 0.05;
+    }, "2000")
+
     if (!isPlaying) {
       stateValtio.action = 'Anim_Idle';
       actions['Anim_Idle'].play(); // stop any action of the character
