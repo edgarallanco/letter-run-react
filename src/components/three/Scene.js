@@ -45,6 +45,20 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
+  let tutorialVis = true;
+  const hideTutorial = () => {
+    if (tutorialVis) {
+      console.log('vis is true');
+      setTimeout(() => {
+        tutorialVis = false;
+        if (scene1.nodes["Tutorial"].material.opacity > 0)
+          scene1.nodes["Tutorial"].material.opacity -= 0.05;
+      }, "2000")
+    }
+    
+  }
+  
+  document.addEventListener("keydown", hideTutorial);
 
   const poolItemNames = [
     'Pool_Item_1', 'Pool_Item_2'
