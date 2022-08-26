@@ -184,7 +184,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     if (!state.playerMesh)
       return;
 
-    console.log(scene1.animations);
+    //console.log(scene1.animations);
     // setInterval(() => {
 
     scene1.animations.forEach((a) => {
@@ -277,7 +277,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
                 // console.log("Setting camera pos");
                 let cmPosition = camereaMovment.move();
                 camera.position.copy(cmPosition);
-                console.log(cmPosition.z +  " is cmPosition Z")
+                //console.log(cmPosition.z +  " is cmPosition Z")
               }
               // console.log(cameraMesh.position);
               camera.lookAt(cameraMesh.position);
@@ -293,7 +293,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
               camera.position.z = newPosition.z;
               camera.up.set(0, 1, 0);
               camera.lookAt(cameraMesh.position);
-              console.log(newPosition.z + " is the current z");
+              //console.log(newPosition.z + " is the current z");
             }
 
             // camera.lookAt(new Vector3(rotation[0], rotation[1], rotation[2]));
@@ -364,7 +364,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       }
     } else if (!zoomCamera && launchRocket) {
       if (zoomAnim.zoomProp.animation.values[0]) {
-        console.log(zoomAnim.zoomProp.animation.values[0]._value)
+        //console.log(zoomAnim.zoomProp.animation.values[0]._value)
         if (zoomAnim.zoomProp.animation.values[0]._value >= 4.5) {
           setLaunchRocket(false);
           setIsplaying(true);
