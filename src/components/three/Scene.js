@@ -47,13 +47,15 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
   ]
   let tutorialVis = true;
   const hideTutorial = () => {
-    if (tutorialVis) {
+    if (tutorialVis === true) {
+      tutorialVis = false;
       console.log('vis is true');
       setTimeout(() => {
-        tutorialVis = false;
         if (scene1.nodes["Tutorial"].material.opacity > 0)
           scene1.nodes["Tutorial"].material.opacity -= 0.05;
       }, "2000")
+    } else {
+      console.log('vis is false')
     }
     
   }
