@@ -45,22 +45,6 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
-  let tutorialVis = true;
-  const hideTutorial = () => {
-    if (tutorialVis === true) {
-      tutorialVis = false;
-      console.log('vis is true');
-      setTimeout(() => {
-        if (scene1.nodes["Tutorial"].material.opacity > 0)
-          scene1.nodes["Tutorial"].material.opacity -= 0.05;
-      }, "2000")
-    } else {
-      console.log('vis is false')
-    }
-    
-  }
-  
-  document.addEventListener("keydown", hideTutorial);
 
   const poolItemNames = [
     'Pool_Item_1', 'Pool_Item_2'
@@ -364,6 +348,20 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       // }
       // camera.zoom = 12;
       // console.log(camera.position);
+      
+     /*  document.addEventListener('keydown', (e) => {
+        if (tutorialVis === true) {
+          console.log('vis is true');
+          setTimeout(() => {
+            if (scene1.nodes["Tutorial"].material.opacity > 0)
+              scene1.nodes["Tutorial"].material.opacity -= 0.05;
+              tutorialVis = false;
+              console.log(tutorialVis)
+          }, "2000")
+          
+        } 
+        console.log(e.key);
+      }, {once: true}); */
     }
 
     if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {
