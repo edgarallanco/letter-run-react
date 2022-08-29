@@ -333,7 +333,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           if (!introDone)
             setZoomCamera(false);
           setIntroDone(true);
-          setIsplaying(true);
+          // setIsplaying(true);
         }
       } else {
         camera.position.set(0, 90, 6);
