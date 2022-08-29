@@ -72,6 +72,7 @@ export const Stage1 = () => {
   const [introDone, setIntroDone] = useState(false);
   const [moveToStart, setMoveToStart] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [hideTutorial, setHideTutorial] = useState(false);
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -167,6 +168,7 @@ export const Stage1 = () => {
               setTrack={setTrack}
               setIsInLetter={setIsInLetter}
               isPlaying={isPlaying}
+              setHideTutorial={setHideTutorial}
             />
 
             {stateValtio.checkpoints.map(({ position, number, collected }) => (
@@ -177,6 +179,7 @@ export const Stage1 = () => {
               />
             ))}
             <Scene checkpoint={checkpoint} isModal={isPopup}
+              hideTutorial={hideTutorial}
               isPlaying={isPlaying}
               setIsplaying={setIsplaying}
               moveToStart={moveToStart}

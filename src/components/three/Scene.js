@@ -15,7 +15,7 @@ import * as CANNON from 'cannon-es';
 import CannonUtils from 'src/utils/CannonUtils';
 import { loadPoolNoodles } from 'src/utils/LoadPoolNoodles';
 
-const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
+const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   let environment;
@@ -78,6 +78,15 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
     config: { duration: 5000, easing: easings.easeCubic },
     zoomProp: !zoomCamera ? 1 : 12,
   });
+
+  useEffect(() => {
+    if (hideTutorial) {
+      // console.log(scene);
+      setTimeout(() => {
+        scene1.nodes["Tutorial"].material.opacity = 0;
+      }, 5000)
+    }
+  }, [hideTutorial])
 
   useEffect(() => {
     // console.log(scene1);
@@ -324,7 +333,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
           if (!introDone)
             setZoomCamera(false);
           setIntroDone(true);
-          // setIsplaying(true);
+          setIsplaying(true);
         }
       } else {
         camera.position.set(0, 90, 0);
@@ -337,7 +346,7 @@ const Scene = ({ checkpoint, isModal, setZoom, moveToStart, setModal, isPlaying,
       dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
 
-      if (scene1.nodes["Tutorial"].material.opacity < 1)
+      if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
         scene1.nodes["Tutorial"].material.opacity += 0.05;
       // if (introZoomAnim.zoomProp.animation.values[0] && camera.zoom < 12) {
       //   camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;

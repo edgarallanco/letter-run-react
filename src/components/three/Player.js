@@ -18,7 +18,8 @@ const Player = ({
   setTrack,
   track,
   setIsInLetter,
-  isPlaying
+  isPlaying,
+  setHideTutorial
 }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
@@ -363,6 +364,7 @@ const Player = ({
     window.addEventListener(
       'keydown',
       (e) => {
+        setHideTutorial(true);
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(true);
