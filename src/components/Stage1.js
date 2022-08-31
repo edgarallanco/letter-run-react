@@ -39,13 +39,6 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     // test lottie playback
     //lottie1.playSegments([progress, progress + 1], true)
     //console.log(progress + "is current progress frame")
-
-    lottie2.addEventListener('enterFrame', function() {
-      console.log('lottie 2 playing')
-      if (lottie2.currentFrame >= (lottie2.totalFrames - 5)){
-        console.log('threshold hit, start now')
-        setMoveToStart(true)
-    }})
     
     if (loaded === 30) {
       // console.log('loaded is 30!')
@@ -55,6 +48,16 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
         console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
       })
+      var lottieToggle = false;
+      
+      lottie2.addEventListener('enterFrame', function() {
+        console.log('lottie 2 playing')
+        if ((lottie2.currentFrame >= (lottie2.totalFrames - 5) && !lottieToggle)){
+          lottieToggle = true;
+          console.log('threshold hit, start now')
+          setMoveToStart(true)
+      }})
+      
     }
     // console.log(total);
     if (progress === 100) {
@@ -322,5 +325,6 @@ export const Stage1 = () => {
     </>
   );
 };
+
 
 export default Stage1;
