@@ -40,22 +40,21 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     //lottie1.playSegments([progress, progress + 1], true)
     //console.log(progress + "is current progress frame")
 
+    lottie2.addEventListener('enterFrame', function() {
+      console.log('lottie 2 playing')
+      if (lottie2.currentFrame >= (lottie2.totalFrames - 5)){
+        console.log('threshold hit, start now')
+        setMoveToStart(true)
+    }})
+    
     if (loaded === 30) {
       // console.log('loaded is 30!')
       var newEvent = new Event('completed');
       window.dispatchEvent(newEvent);
       lottie2.addEventListener('complete', function () {
-        //console.log('complete!');
+        console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
-        // setTimeout(() => {
-        setMoveToStart(true)
-        // }, 1000)
-
       })
-      /* lottie1.stop();
-     lottie1.wrapper.classList.add('gc-hide')
-     lottie2.wrapper.classList.remove('gc-hide')
-     lottie2.play();  */
     }
     // console.log(total);
     if (progress === 100) {
@@ -157,6 +156,9 @@ export const Stage1 = () => {
       standardIcon.classList.add('gc-hide');
       partyPopper.classList.remove('gc-hide');
       startConfetti();
+      setTimeout(function() {
+        stopConfetti();
+      },5000)
     }
     const gameProgress = localStorage.getItem('EA_checkpoints');
     if (gameProgress) {
