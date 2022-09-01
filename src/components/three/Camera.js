@@ -97,7 +97,7 @@ const Camera = ({ zoom }) => {
       if (zoom) {
         camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
       } else if (zoomPressed) {
-        if (camera.zoom <= 4.5)
+        if (camera.zoom <= 20)
           camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
         else
           setZoomPressed(false);
