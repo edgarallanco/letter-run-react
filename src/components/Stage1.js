@@ -127,7 +127,6 @@ export const Stage1 = () => {
       setIsplaying(true);
       intro_closer.click();
       soundButton.click();
-      intro_closer.click();
     })
 
     startBtn.addEventListener('click', function () {
