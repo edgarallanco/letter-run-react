@@ -79,7 +79,7 @@ const Player = ({
       let boxGeo = new BoxGeometry(checkpoint.size[0], checkpoint.size[1], checkpoint.size[2],);
       //let boxFrame = new WireframeGeometry(boxGeo);
       let boxMesh = new Mesh(boxGeo, new MeshBasicMaterial({ color: 0x00ff00 }));
-      boxMesh.visible = false;
+      boxMesh.visible = true;
       boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
       scene.add(boxMesh);
       checkpointsMesh.push(boxMesh);
