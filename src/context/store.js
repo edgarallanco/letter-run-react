@@ -8,7 +8,7 @@ const stateValtio = proxy({
   geometries: [],
   isModal: false,
   collection: [],
-  track: './resources/Nature.mp3',
+  track: './resources/base.mp3',
   gameProgress: JSON.parse(localStorage.getItem('EA_checkpoints')),
 });
 

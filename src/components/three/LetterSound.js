@@ -7,7 +7,7 @@ function LetterSound({isSound, track, isInLetter}) {
 
   useEffect(() => {
     if (isInLetter) {
-      letterSound.current.howler.fade(0.0, 1.0, 2000);
+      letterSound.current.howler.fade(0.0, 1.0, 3000);
       console.log(lettersCoordinates.current)
       var nudgeEvent = new Event('inLetterNow');
       window.dispatchEvent(nudgeEvent);

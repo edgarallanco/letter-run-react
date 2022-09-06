@@ -117,8 +117,8 @@ const Camera = ({ zoom }) => {
         maxPolarAngle={Math.PI / 2.5}
         maxAzimuthAngle={Math.PI / 2.8}
         minAzimuthAngle={-Math.PI / 0.52}
-        enableZoom={false}
-        enablePan={false}
+        enableZoom={true}
+        enablePan={true}
       />
 
       <PerspectiveCamera

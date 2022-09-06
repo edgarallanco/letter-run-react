@@ -75,7 +75,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   });
 
   const introZoomAnim = useSpring({
-    config: { duration: 5000, easing: easings.easeCubic },
+    config: { duration: 5000, easing: easings.easeInOutQuad},
     zoomProp: !zoomCamera ? 1 : 12,
   });
 
