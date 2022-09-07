@@ -1316,7 +1316,7 @@ blockquote {
   cursor: pointer;
 }
 
-.sound-button {
+/* .sound-button {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1339,7 +1339,7 @@ blockquote {
   border-radius: 2rem;
   background-color: #fff;
   cursor: pointer;
-}
+} */
 
 .menu-popup-wrapper {
   position: absolute;

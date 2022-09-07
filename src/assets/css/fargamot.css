@@ -84,7 +84,7 @@ canvas{
   cursor: pointer;
 } */
 
-.sound-button {
+/* .sound-button {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -123,7 +123,7 @@ canvas{
   z-index: 99;
   margin-left: 2.5rem;
   display:none !important;
-}
+} */
 
 .tab-button {
   display: -webkit-box;
