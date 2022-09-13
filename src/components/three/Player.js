@@ -231,7 +231,7 @@ const Player = ({
 
       if (jumpPressed) {
         stateValtio.action = 'Anim_Jump';
-        console.log(player.position);
+        //console.log(player.position);
         if (!jump) {
           setJump(true);
           stateValtio.action = 'Anim_Jump';

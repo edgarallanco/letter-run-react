@@ -41,20 +41,21 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     //console.log(progress + "is current progress frame")
     
     if (loaded === 30) {
-      // console.log('loaded is 30!')
+      completedTrigger = true;
+      //console.log('loaded is 30!')
       var newEvent = new Event('completed');
       window.dispatchEvent(newEvent);
       lottie2.addEventListener('complete', function () {
-        console.log('complete!');
+        //console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
       })
       var lottieToggle = false;
       
       lottie2.addEventListener('enterFrame', function() {
-        console.log('lottie 2 playing')
+        //console.log('lottie 2 playing')
         if ((lottie2.currentFrame >= (lottie2.totalFrames - 5) && !lottieToggle)){
           lottieToggle = true;
-          console.log('threshold hit, start now')
+          //console.log('threshold hit, start now')
           setMoveToStart(true)
       }})
       
@@ -136,7 +137,7 @@ export const Stage1 = () => {
   }
 
   useEffect(() => {
-    console.log("isSound = ", isSound);
+    //console.log("isSound = ", isSound);
   }, [isSound])
 
   useEffect(() => {
@@ -157,6 +158,9 @@ export const Stage1 = () => {
       formOpen.click();
       standardIcon.classList.add('gc-hide');
       partyPopper.classList.remove('gc-hide');
+      finalContent.classList.remove('gc-hide');
+      aboutContent.classList.add('gc-hide');
+      innerExpander.click();
       startConfetti();
       setTimeout(function() {
         stopConfetti();

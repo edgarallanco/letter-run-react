@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {animated, useSpring, flip, set} from 'react-spring';
 
 function Finish({isFinished, setIsFinished}) {
-  const [tab, setTab] = useState(true);
+  /* const [tab, setTab] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const transition = useSpring({
     opacity: isFinished ? 1 : 0,
@@ -223,7 +223,7 @@ function Finish({isFinished, setIsFinished}) {
         />
       </a>
     </animated.div>
-  );
+  ); */
 }
 
 export default Finish;
