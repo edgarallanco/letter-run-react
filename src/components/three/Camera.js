@@ -53,7 +53,7 @@ const Camera = ({ zoom }) => {
     //     console.log(camera.fov);
     //   }
     // })
-    console.log(window.screen.availWidth);
+    //console.log(window.screen.availWidth);
     // if (window.screen.width >= 1920) {
     //   camera.fov = 75;
     //   camera.position.y = camera.position.y - 20;
