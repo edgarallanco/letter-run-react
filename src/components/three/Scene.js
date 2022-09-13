@@ -7,13 +7,15 @@ import { AppDispatchContext, AppStateContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import stateValtio from 'context/store';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { BoxGeometry, Clock, LineSegments, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
+import { BoxGeometry, Clock, CylinderGeometry, LineSegments, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
 import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
 import Intro from 'components/UI/Intro';
 import * as CANNON from 'cannon-es';
 import CannonUtils from 'src/utils/CannonUtils';
-import { loadPoolNoodles } from 'src/utils/LoadPoolNoodles';
+import { loadPoolNoodles, noodles, updatePosition } from 'src/utils/LoadPoolNoodles';
+import { loadPlanes } from 'src/utils/LoadPoolPlanes';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
@@ -34,6 +36,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [poolItems, setPoolItems] = useState([]);
   const [cameraMesh, setCameraMesh] = useState();
   let collider;
+  const loader = new GLTFLoader();
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v28.glb');
   const [world, setWorld] = useState();
   const timeStep = 1 / 60;
@@ -46,9 +49,30 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
-  const poolItemNames = [
-    'Pool_Item_1', 'Pool_Item_2'
-  ]
+  // const poolItemNames = [
+  //   'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6'
+  // ]
+
+  const poolItemNames = []
+
+  // noodles.forEach(function(noodle) {
+  //   // console.log(world)
+  //   // const { scene } = useGLTF(noodle.filename);
+  //   // console.log(scene);
+  //   // scene.position(noodle.position);
+  //   // scene1.scene.add(scene);
+  //   loader.load(noodle.filename, function(gltf) {
+  //     gltf.position.set(noodle.position);
+  //     scene.add(gltf.scene);
+  //   })
+  // });
+
+  // for(let x = 0; x < noodles.length; x++) {
+  //   const { scene } = useGLTF(noodles[x].filename);
+  //   console.log(scene);
+  //   scene.position(noodles[x].position);
+  //   scene1.scene.add(scene);
+  // }
 
   // const cameraRoutes = [
   //   { pos: [31.38445573844476, 181.23, -19.678934669579434], rotation: [13, 6.57, 0] },
@@ -94,8 +118,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       gravity: new CANNON.Vec3(0, -9.81, 0)
     });
 
-    // loadPoolNoodles(scene1);
-
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
     cm.position.set(0, 50, 6);
     cm.visible = false;
@@ -117,13 +139,16 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       shape: new CANNON.Plane(),
       type: CANNON.Body.STATIC
     });
-    groundBody.position.set(0, 3, 0);
+    groundBody.position.set(0, 2.8, 0);
     groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     w.addBody(groundBody);
 
+    // loadPlanes(scene, w);
+    // loadPoolNoodles(scene, w, groundBody);
+
     let pBody = new CANNON.Body({
       mass: 1,
-      shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1))
+      shape: new CANNON.Cylinder(0.5, 0.5, 2)
     });
     // console.log(state.playerMesh);
     // let playerShape = new CANNON.Vec3(1, 1, 1);
@@ -131,10 +156,13 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     w.addBody(pBody);
     setPlayerBody(pBody);
 
-    let pBox = new BoxGeometry(1, 1, 1);
+    let pBox = new CylinderGeometry(0.5, 0.5, 2);
     let pMesh = new Mesh(pBox, new MeshBasicMaterial({ color: 0x00ff00 }));
     // scene.add(pMesh);
     setPlayerBox(pMesh);
+    poolItemNames.forEach((item) => {
+      scene1.nodes[item].visible = false;
+    })
 
     // poolItemNames.forEach((item) => {
     //   let poolBody = new CANNON.Body({
@@ -217,21 +245,46 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   }, [state.playerMesh]);
 
   useFrame(({ controls }) => {
-    controls.target = state?.playerMesh.position
+    if (state?.playerMesh)
+      controls.target = state?.playerMesh.position
   });
 
   useFrame(({ camera }, delta) => {
-    world.step(timeStep);
+    if (!state?.playerMesh)
+      return;
+
+    if (world)
+      world.step(timeStep);
 
     playerBody.position.copy(state.playerMesh.position);
     playerBody.quaternion.copy(state.playerMesh.quaternion);
+    playerBody.position.y = 3.5;
     setPlayerBody(playerBody);
 
     playerFrame.position.copy(frameBody.position);
     playerFrame.quaternion.copy(frameBody.quaternion);
     playerBox.position.copy(state.playerMesh.position);
     playerBox.quaternion.copy(state.playerMesh.quaternion);
+    playerBox.position.y = 3.5;
     setPlayerBox(playerBox);
+
+    // let geoms = updatePosition(state.playerMesh.position);
+    // let colliders = [];
+    // geoms.forEach((obj) => {
+    //   let clone = obj.clone();
+    //   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
+    //     [clone.geometry],
+    //     false
+    //   );
+    //   mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
+    //     maxDepth: 200,
+    //   });
+    //   clone.geometry = mergedGeometry;
+    //   colliders.push(clone);
+    // });
+    // dispatch({ type: Actions.UPDATE_MOVABLE_COLLIDERS, payload: colliders });
+    // console.log(!collide)
+    // dispatch({type: Actions.UPDATE_MOVEMENT, payload: !collide});
 
     poolItems.map((item, index) => {
       scene1.nodes[poolItemNames[index]].position.copy(item.position);
@@ -423,6 +476,13 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     environment.traverse((c) => {
       // console.log(c);
       if (c.geometry) {
+        // console.log(c.name);
+        // console.log(poolItemNames[c.name]);
+        if (poolItemNames.indexOf(c.name) >= 0) {
+          // console.log("Skip Pool item");
+          return;
+        }
+
         const cloned = c.geometry.clone();
         cloned.applyMatrix4(c.matrixWorld);
         for (const key in cloned.attributes) {
