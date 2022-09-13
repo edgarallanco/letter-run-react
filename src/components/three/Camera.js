@@ -89,7 +89,10 @@ const Camera = ({ zoom }) => {
     zoomProp: zoom ? new Vector3(10, 15, 10) : 12,
   });
 
-  useFrame(({ controls }) => (controls.target = state?.playerMesh.position));
+  useFrame(({ controls }) => {
+    if (state?.playerMesh)
+      controls.target = state?.playerMesh.position;
+  });
 
   useFrame(({ camera }) => {
     // console.log(zoomAnim.zoomProp.animation.values);

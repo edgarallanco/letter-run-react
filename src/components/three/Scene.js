@@ -49,9 +49,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
-  const poolItemNames = [
-    'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6'
-  ]
+  // const poolItemNames = [
+  //   'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6'
+  // ]
+
+  const poolItemNames = []
 
   // noodles.forEach(function(noodle) {
   //   // console.log(world)
@@ -141,8 +143,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     w.addBody(groundBody);
 
-    loadPlanes(scene, w);
-    loadPoolNoodles(scene, w, groundBody);
+    // loadPlanes(scene, w);
+    // loadPoolNoodles(scene, w, groundBody);
 
     let pBody = new CANNON.Body({
       mass: 1,
@@ -156,7 +158,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     let pBox = new CylinderGeometry(0.5, 0.5, 2);
     let pMesh = new Mesh(pBox, new MeshBasicMaterial({ color: 0x00ff00 }));
-    scene.add(pMesh);
+    // scene.add(pMesh);
     setPlayerBox(pMesh);
     poolItemNames.forEach((item) => {
       scene1.nodes[item].visible = false;
@@ -243,11 +245,16 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   }, [state.playerMesh]);
 
   useFrame(({ controls }) => {
-    controls.target = state?.playerMesh.position
+    if (state?.playerMesh)
+      controls.target = state?.playerMesh.position
   });
 
   useFrame(({ camera }, delta) => {
-    world.step(timeStep);
+    if (!state?.playerMesh)
+      return;
+
+    if (world)
+      world.step(timeStep);
 
     playerBody.position.copy(state.playerMesh.position);
     playerBody.quaternion.copy(state.playerMesh.quaternion);
@@ -261,31 +268,21 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     playerBox.position.y = 3.5;
     setPlayerBox(playerBox);
 
-    let geoms = updatePosition(state.playerMesh.position);
-    // const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
-    //   geoms,
-    //   false
-    // );
-    // mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
-    //   maxDepth: 200,
+    // let geoms = updatePosition(state.playerMesh.position);
+    // let colliders = [];
+    // geoms.forEach((obj) => {
+    //   let clone = obj.clone();
+    //   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
+    //     [clone.geometry],
+    //     false
+    //   );
+    //   mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
+    //     maxDepth: 200,
+    //   });
+    //   clone.geometry = mergedGeometry;
+    //   colliders.push(clone);
     // });
-    // const collider = new THREE.Mesh(mergedGeometry);
-    // collider.material.opacity = 0;
-    // collider.material.transparent = true;
-    let colliders = [];
-    geoms.forEach((obj) => {
-      let clone = obj.clone();
-      const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
-        [clone.geometry],
-          false
-        );
-        mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
-          maxDepth: 200,
-        });
-        clone.geometry = mergedGeometry;
-        colliders.push(clone);
-    });
-    dispatch({type: Actions.UPDATE_MOVABLE_COLLIDERS, payload: colliders});
+    // dispatch({ type: Actions.UPDATE_MOVABLE_COLLIDERS, payload: colliders });
     // console.log(!collide)
     // dispatch({type: Actions.UPDATE_MOVEMENT, payload: !collide});
 
