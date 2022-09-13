@@ -124,7 +124,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     scene.add(cm);
     setCameraMesh(cm);
 
-    let cmMovment = new LinearMovement(new Vector3(1.6839, 84.69169943749475, 20.205),
+    let cmMovment = new LinearMovement(new Vector3(0, 90, 0),
       new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 0.01);
     setCameraMovement(cmMovment);
 
