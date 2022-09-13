@@ -53,7 +53,7 @@ const Camera = ({ zoom }) => {
     //     console.log(camera.fov);
     //   }
     // })
-    console.log(window.screen.availWidth);
+    // console.log(window.screen.availWidth);
     // if (window.screen.width >= 1920) {
     //   camera.fov = 75;
     //   camera.position.y = camera.position.y - 20;
@@ -114,9 +114,9 @@ const Camera = ({ zoom }) => {
         args={[camera, gl.domElement]}
         ref={controlsRef}
         makeDefault={true}
-        maxPolarAngle={Math.PI / 2.5}
-        maxAzimuthAngle={Math.PI / 2.8}
-        minAzimuthAngle={-Math.PI / 0.52}
+        // maxPolarAngle={Math.PI / 2.5}
+        // maxAzimuthAngle={Math.PI / 2.8}
+        // minAzimuthAngle={-Math.PI / 0.52}
         enableZoom={false}
         enablePan={false}
       />

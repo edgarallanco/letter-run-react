@@ -193,6 +193,11 @@ const Player = ({
       // return;
     } else {
       // state.camera.fov = window.screen.width >= 1920 ? 75: 50;
+      // if (!state.move) {
+      //   stateValtio.action = 'Anim_Idle';
+      //   actions['Anim_Idle'].play(); // stop any action of the character
+      //   return;
+      // }
 
       if (!state.controls && !state.collider) return;
       let player = meshRef.current;
@@ -316,6 +321,36 @@ const Player = ({
       },
     });
 
+    if (state.movableColliders) {
+      // console.log(state.movableColliders);
+      state.movableColliders.forEach((collideObj) => {
+        // console.log(collideObj);
+        collideObj?.geometry?.boundsTree.shapecast({
+          intersectsBounds: (box) => box.intersectsBox(tempBox),
+
+          intersectsTriangle: (tri) => {
+            // check if the triangle is intersecting the capsule and adjust the
+            // capsule position if it is.
+            const triPoint = tempVector;
+            const capsulePoint = tempVector2;
+
+            const distance = tri.closestPointToSegment(
+              tempSegment,
+              triPoint,
+              capsulePoint
+            );
+            if (distance < capsuleInfo.radius) {
+              const depth = capsuleInfo.radius - distance;
+              const direction = capsulePoint.sub(triPoint).normalize();
+
+              tempSegment.start.addScaledVector(direction, depth);
+              tempSegment.end.addScaledVector(direction, depth);
+            }
+          },
+        });
+      });
+    }
+
     // get the adjusted position of the capsule collider in world space after checking
     // triangle collisions and moving it. capsuleInfo.segment.start is assumed to be
     // the origin of the player model.
@@ -431,6 +466,7 @@ const Player = ({
       <mesh
         ref={meshRef}
         position={player ? player.position : [-57.53, 3.79, -8]}
+        // position={player ? player.position : [31.383106006630963, 2.774262009854787, 21.67757484053361]}
         scale={1.3}
         castShadow={true}
         receiveShadow

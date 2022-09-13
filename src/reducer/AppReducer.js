@@ -18,6 +18,8 @@ export const Actions = {
   DELETE_CHECKPOINT: 'delete_checkpoint',
   UPDATE_PLAYER_MESH: 'update_player_mesh',
   UPDATE_ENVIROMENT: 'update_enviroment',
+  UPDATE_MOVEMENT: 'update_movement',
+  UPDATE_MOVABLE_COLLIDERS: 'update_movable_colliders',
 };
 
 export const reducer = (state, action) => {
@@ -73,5 +75,15 @@ export const reducer = (state, action) => {
           z: Math.floor(action.payload.z),
         },
       };
+    case Actions.UPDATE_MOVEMENT:
+      return {
+        ...state,
+        move: action.payload
+      };
+    case Actions.UPDATE_MOVABLE_COLLIDERS:
+      return {
+        ...state,
+        movableColliders: action.payload
+      }
   }
 };

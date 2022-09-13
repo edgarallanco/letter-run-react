@@ -11,6 +11,8 @@ const initialState = {
   environment: null,
   sound: false,
   isModal: false,
+  move: true,
+  movableColliders: null,
   checkpoints: checkpoint,
 };
 
