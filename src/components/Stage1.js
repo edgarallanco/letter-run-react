@@ -45,17 +45,18 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
       //console.log('loaded is 30!')
       var newEvent = new Event('completed');
       window.dispatchEvent(newEvent);
-      lottie2.addEventListener('complete', function () {
-        //console.log('complete!');
+      lottie2.onComplete = function () {
+        console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
-      })
+        console.log('hide fired')
+      }
       var lottieToggle = false;
       
       lottie2.addEventListener('enterFrame', function() {
-        //console.log('lottie 2 playing')
+        console.log('lottie 2 playing')
         if ((lottie2.currentFrame >= (lottie2.totalFrames - 5) && !lottieToggle)){
           lottieToggle = true;
-          //console.log('threshold hit, start now')
+          console.log('threshold hit, start now')
           setMoveToStart(true)
       }})
       
