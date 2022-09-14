@@ -49,11 +49,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
-  // const poolItemNames = [
-  //   'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6'
-  // ]
+  const poolItemNames = [
+    'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6'
+  ]
 
-  const poolItemNames = []
+  // const poolItemNames = []
 
   // noodles.forEach(function(noodle) {
   //   // console.log(world)
@@ -103,6 +103,29 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     zoomProp: !zoomCamera ? 1 : 12,
   });
 
+  // useEffect(() => {
+  //   if(playerBody) {
+  //     playerBody.addEventListener('collide', (e) => {
+  //       console.log("Collide");
+  //       console.log(e.contact);
+  //     })
+  //   }
+  // }, [playerBody])
+
+  useEffect(() => {
+    if (world) {
+      world.addEventListener("beginContact", (e) => {
+        // console.log("Start Contact");
+        if (e.bodyA !== null && e.bodyB !== null)
+          console.log(e);
+      });
+
+      world.addEventListener("endContact", () => {
+        // console.log("End contact");
+      })
+    }
+  }, [world]);
+
   useEffect(() => {
     if (hideTutorial) {
       // console.log(scene);
@@ -143,8 +166,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     w.addBody(groundBody);
 
-    // loadPlanes(scene, w);
-    // loadPoolNoodles(scene, w, groundBody);
+    loadPlanes(scene, w);
+    loadPoolNoodles(scene, w, groundBody);
 
     let pBody = new CANNON.Body({
       mass: 1,
@@ -156,9 +179,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     w.addBody(pBody);
     setPlayerBody(pBody);
 
-    let pBox = new CylinderGeometry(0.5, 0.5, 2);
+    let pBox = new CylinderGeometry(0.5, 0.5, 4);
     let pMesh = new Mesh(pBox, new MeshBasicMaterial({ color: 0x00ff00 }));
-    // scene.add(pMesh);
+    scene.add(pMesh);
     setPlayerBox(pMesh);
     poolItemNames.forEach((item) => {
       scene1.nodes[item].visible = false;
@@ -258,31 +281,31 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     playerBody.position.copy(state.playerMesh.position);
     playerBody.quaternion.copy(state.playerMesh.quaternion);
-    playerBody.position.y = 3.5;
+    // playerBody.position.y = 3.5;
     setPlayerBody(playerBody);
 
     playerFrame.position.copy(frameBody.position);
     playerFrame.quaternion.copy(frameBody.quaternion);
     playerBox.position.copy(state.playerMesh.position);
     playerBox.quaternion.copy(state.playerMesh.quaternion);
-    playerBox.position.y = 3.5;
+    // playerBox.position.y = 3.5;
     setPlayerBox(playerBox);
 
-    // let geoms = updatePosition(state.playerMesh.position);
-    // let colliders = [];
-    // geoms.forEach((obj) => {
-    //   let clone = obj.clone();
-    //   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
-    //     [clone.geometry],
-    //     false
-    //   );
-    //   mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
-    //     maxDepth: 200,
-    //   });
-    //   clone.geometry = mergedGeometry;
-    //   colliders.push(clone);
-    // });
-    // dispatch({ type: Actions.UPDATE_MOVABLE_COLLIDERS, payload: colliders });
+    let geoms = updatePosition(state.playerMesh.position);
+    let colliders = [];
+    geoms.forEach((obj) => {
+      let clone = obj.clone();
+      const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
+        [clone.geometry],
+        false
+      );
+      mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
+        maxDepth: 200,
+      });
+      clone.geometry = mergedGeometry;
+      colliders.push(clone);
+    });
+    dispatch({ type: Actions.UPDATE_MOVABLE_COLLIDERS, payload: colliders });
     // console.log(!collide)
     // dispatch({type: Actions.UPDATE_MOVEMENT, payload: !collide});
 
@@ -383,6 +406,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           // camera.lookAt(state.playerMesh.position);
           // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
 
+          state.playerMesh.position.set(32, 3.79, 15);
           if (!introDone)
             setZoomCamera(false);
           setIntroDone(true);

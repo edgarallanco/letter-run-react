@@ -357,17 +357,36 @@ const Player = ({
     //   // console.log(state.movableColliders);
     //   state.movableColliders.forEach((collideObj) => {
     //     // console.log(collideObj);
+    //     let tmpBox = new Box3();
+    //     let tmpSegment = new Line3();
+    //     let tmpMat = new Matrix4();
+    //     let tmpVector = new Vector3();
+    //     let tmpVector2 = new Vector3();
+    //     tmpBox.makeEmpty();
+    //     tmpMat.copy(collideObj?.matrixWorld).invert();
+    //     tmpSegment.copy(new Line3(new Vector3(0, 0, 0), new Vector3(0, 5, 0.0)));
+
+    //     // get the position of the capsule in the local space of the collider
+    //     tmpSegment.start.applyMatrix4(player.matrixWorld).applyMatrix4(tmpMat);
+    //     tmpSegment.end.applyMatrix4(player.matrixWorld).applyMatrix4(tmpMat);
+
+    //     // get the axis aligned bounding box of the capsule
+    //     tmpBox.expandByPoint(tmpSegment.start);
+    //     tmpBox.expandByPoint(tmpSegment.end);
+
+    //     tmpBox.min.addScalar(-capsuleInfo.radius);
+    //     tmpBox.max.addScalar(capsuleInfo.radius);
     //     collideObj?.geometry?.boundsTree.shapecast({
-    //       intersectsBounds: (box) => box.intersectsBox(tempBox),
+    //       intersectsBounds: (box) => box.intersectsBox(tmpBox),
 
     //       intersectsTriangle: (tri) => {
     //         // check if the triangle is intersecting the capsule and adjust the
     //         // capsule position if it is.
-    //         const triPoint = tempVector;
-    //         const capsulePoint = tempVector2;
+    //         const triPoint = tmpVector;
+    //         const capsulePoint = tmpVector2;
 
     //         const distance = tri.closestPointToSegment(
-    //           tempSegment,
+    //           tmpSegment,
     //           triPoint,
     //           capsulePoint
     //         );
@@ -375,11 +394,25 @@ const Player = ({
     //           const depth = capsuleInfo.radius - distance;
     //           const direction = capsulePoint.sub(triPoint).normalize();
 
-    //           tempSegment.start.addScaledVector(direction, depth);
-    //           tempSegment.end.addScaledVector(direction, depth);
+    //           tmpSegment.start.addScaledVector(direction, depth);
+    //           tmpSegment.end.addScaledVector(direction, depth);
     //         }
     //       },
     //     });
+
+    //     // get the adjusted position of the capsule collider in world space after checking
+    //     // triangle collisions and moving it. capsuleInfo.segment.start is assumed to be
+    //     // the origin of the player model.
+    //     const newPosition = tmpVector;
+    //     newPosition.copy(tmpSegment.start).applyMatrix4(collideObj?.matrixWorld);
+
+    //     // check how much the collider was moved
+    //     deltaVector.subVectors(newPosition, player.position);
+
+    //     const offset = Math.max(0.0, deltaVector.length() - 1e-5);
+    //     deltaVector.normalize().multiplyScalar(offset);
+    //     // adjust the player model
+    //     player.position.add(deltaVector);
     //   });
     // }
 

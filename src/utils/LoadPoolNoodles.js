@@ -12,7 +12,7 @@ export const noodles = [
   // },
   {
     name: "ring_1",
-    filename: "./../resources/models/ring_1.glb",
+    filename: "./../resources/models/pink_ring.glb",
     position: new Vector3(35.51932849514347, 3.0149306909942626, 15.341705365864758),
     // geometry: new SphereGeometry(1, 20, 10),
     geometry: new CylinderGeometry(1, 1, 0.5, 100),
@@ -21,7 +21,7 @@ export const noodles = [
   },
   {
     name: "ring_2",
-    filename: "./../resources/models/ring_2.glb",
+    filename: "./../resources/models/yellow_ring.glb",
     position: new Vector3(43.70883094989104, 3.0149306909942626, 20.540877822233906),
     // geometry: new TorusGeometry(0.8, 0.2, 20, 100),
     // geometry: new SphereGeometry(1, 20, 10),
@@ -31,10 +31,10 @@ export const noodles = [
   },
   {
     name: "noodle",
-    filename: "./../resources/models/noodle.glb",
+    filename: "./../resources/models/purple_noodle.glb",
     position: new Vector3(33.5110924256302, 3.0149306909942626, 27.12094054470053),
     geometry: new CylinderGeometry(0.3, 0.3, 3),
-    rotation: new Euler(Math.PI / 2, 0, Math.PI / 4),
+    rotation: new Euler(Math.PI / 2, 0, 0),
     physics: new CANNON.Cylinder(0.3, 0.3, 3)
   },
   // {
@@ -86,10 +86,14 @@ export const loadPoolNoodles = (scene, world, ground) => {
         // linearDamping: new CANNON.Vec3(1, 0, 1)
         force: new CANNON.Vec3(1, 0, 1)
       });
-      pBody.linearDamping = 0.5;
-      pBody.linearFactor = new CANNON.Vec3(1, 0.4, 1);
+      pBody.linearDamping = 0.2;
+      pBody.linearFactor = new CANNON.Vec3(1, 0.1, 1);
       pBody.quaternion.copy(mesh.quaternion);
       world.addBody(pBody);
+
+      // pBody.addEventListener("collide", (e) => {
+      //   console.log("Player collide with: " + noodle.name);
+      // });
 
       // let lockConstraint = new CANNON.LockConstraint(pBody, ground);
       // world.addConstraint(lockConstraint);
@@ -110,10 +114,10 @@ export const updatePosition = (playerPosition) => {
   // console.log(poolItems);
   let geoms = [];
   poolItems.forEach((item) => {
-    // item.mesh.position.copy(item.pBody.position);
+    item.mesh.position.copy(item.pBody.position);
     // item.mesh.quaternion.copy(item.pBody.quaternion);
-    item.mesh.position.x = item.pBody.position.x;
-    item.mesh.position.z = item.pBody.position.z;
+    // item.mesh.position.x = item.pBody.position.x;
+    // item.mesh.position.z = item.pBody.position.z;
 
     // let geometry = item.mesh.geometry.clone();
     
@@ -121,10 +125,10 @@ export const updatePosition = (playerPosition) => {
     // console.log(item.mesh.position);
     // playerCollidesMesh = Math.abs(playerPosition.x - item.mesh.position.x) < 1 || Math.abs(playerPosition.z - item.mesh.position.z) < 1;
     
-    // item.helper.position.copy(item.pBody.position);
+    item.helper.position.copy(item.pBody.position);
     // item.helper.quaternion.copy(item.pBody.quaternion);
-    item.helper.position.x = item.pBody.position.x;
-    item.helper.position.z = item.pBody.position.z;
+    // item.helper.position.x = item.pBody.position.x;
+    // item.helper.position.z = item.pBody.position.z;
     geoms.push(item.helper);
   });
 
