@@ -404,7 +404,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     } else {
 
       if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
-        scene1.nodes["Tutorial"].material.opacity += 0.05;
+        scene1.nodes["Tutorial"].material.opacity = 0;
       // if (introZoomAnim.zoomProp.animation.values[0] && camera.zoom < 12) {
       //   camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
       // }
