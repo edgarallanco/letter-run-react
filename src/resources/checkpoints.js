@@ -1,6 +1,6 @@
 const checkpoint = [
   {
-    origin: 'e1',
+    origin: 'E1',
     url: 'https://uselessfacts.jsph.pl/random.json',  
     item_name: 'Laptop',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_01.png',
@@ -15,7 +15,7 @@ const checkpoint = [
     item_body_copy: 'The EA Team has all kinds of learners - auditory, kinesthetic, visual - but the readers and writers here collect wobbly towers of EA blue notebooks full of scribbles in their home offices.',
   },
   {
-    origin: 'd1',
+    origin: 'D1',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'EA Socks',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_02.png',
@@ -31,7 +31,7 @@ const checkpoint = [
     ,
   },
   {
-    origin: 'g1',
+    origin: 'G1',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'Soccer Ball',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_03.png',
@@ -46,7 +46,7 @@ const checkpoint = [
     item_body_copy: 'Pre-pandemic, the US-based EA crew was obvs Team USA World Cup crazy, but since we\'ve gone global...let\'s goooooo Serbia and Argentina as well! Sorry Peru and South Africa!'
   },
   {
-    origin: 'a1',
+    origin: 'A1',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'World Map',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_04.png',
@@ -61,7 +61,7 @@ const checkpoint = [
     item_body_copy: 'Between October and end of April, EA\'s first office was made toasty and homey by a wood-burning stove. It was Mason\'s pride and joy, so we had to give it a nod here.'
   },
   {
-    origin: 'r1',
+    origin: 'R1',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'Vinyl',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_05.png',
@@ -76,7 +76,7 @@ const checkpoint = [
     item_body_copy: 'We think of brand as a club you join rather than a foundation you build at EA. In that spirit, if your brand was a literal club, what records would you spin there? '
   },
   {
-    origin: 'a2',
+    origin: 'A2',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'EA mug',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_06.png',
@@ -91,7 +91,7 @@ const checkpoint = [
     item_body_copy: 'Whether it\'s coffee, tea, or maté we are in love with pouring it into an insulated EA camp mug every morning or afternoon.'
   },
   {
-    origin: 'l1',
+    origin: 'L1',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'Spaceship',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_07.png',
@@ -107,7 +107,7 @@ const checkpoint = [
     ,
   },
   {
-    origin: 'l2',
+    origin: 'L2',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'Frame',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_08.png',
@@ -122,7 +122,7 @@ const checkpoint = [
     item_body_copy: 'That\'s our philosophy on content in a nutshell: Once building sites got easier, content quality got even more important, and became a huge focus for EA.'
   },
   {
-    origin: 'a3',
+    origin: 'A3',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'Kitty',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_09.png',
@@ -137,7 +137,7 @@ const checkpoint = [
     item_body_copy: 'EA\'s pet family is mostly dogs and cats, but two team members have bunny friends to snuggle between meetings: Leo and Velvet live with Mason, and Nicholas keeps Katrina busy in Wisconsin.'
   },
   {
-    origin: 'n1',
+    origin: 'N1',
     url: 'https://uselessfacts.jsph.pl/random.json',
     item_name: 'Beach Ball',
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_10.png',
