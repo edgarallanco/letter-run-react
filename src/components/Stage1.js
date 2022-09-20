@@ -126,6 +126,7 @@ export const Stage1 = () => {
 
   const registerClickListener = () => {
     soundButtonStart.addEventListener('click', function () {
+      currentlyPlaying = true;
       setIsplaying(true);
       intro_closer.click();
       soundButton.click();
