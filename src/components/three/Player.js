@@ -276,8 +276,8 @@ const Player = ({
       setIsInLetter(true);
       inLetter = true;
       currentLetter = insideLetter.letter;
-      letterNudge.bodyText = insideLetter.nudge_text;
-      letterNudge.ctaText = insideLetter.cta_text;
+      //letterNudge.bodyText = insideLetter.nudge_text;
+      //letterNudge.ctaText = insideLetter.cta_text;
       //console.log (letterNudge.bodyText);
       if (track !== insideLetter.track)
         setTrack(insideLetter.track);

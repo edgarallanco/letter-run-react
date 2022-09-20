@@ -2,7 +2,7 @@
 
 export const lettersCoordinates = [
   {
-    letter: 'e1',
+    letter: 'E1',
     coordinates: [
       [-46.2324811066855, -19.418987978818695],
       [-32.55204277817621, -19.7341272678418],
@@ -11,10 +11,10 @@ export const lettersCoordinates = [
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/room.mp3',
     nudge_text: 'Stuck? Here\'s a hint: You can open and close me, but I am not a door.',
-    cta_text: 'Oooh, I Know!',
+    
   },
   {
-    letter: 'd1',
+    letter: 'D1',
     coordinates: [
       [-27.25728605655633, -19.59946805730162],
       [-13.660053481046756, -19.10876451492376],
@@ -26,7 +26,7 @@ export const lettersCoordinates = [
     cta_text: 'Got it!',
   },
   {
-    letter: 'g1',
+    letter: 'G1',
     coordinates: [
       [-6.520315597567002, -18.082471703382446],
       [6.050550416637711, -19.381423971323184],
@@ -38,7 +38,7 @@ export const lettersCoordinates = [
     cta_text: 'Get it.',
   },
   {
-    letter: 'a1',
+    letter: 'A1',
     coordinates: [
       [12.595109651646249, -18.804190756218663],
       [25.56746198058489, -18.294252060247782],
@@ -46,11 +46,11 @@ export const lettersCoordinates = [
       [12.593476004792226, -0.08373529236522473],
     ],
     track: 'https://fargamot.s3.amazonaws.com/resources/room.mp3',
-    nudge_text: 'Stuck? It\'s a little drafty in here. Warm up with us?',
+    nudge_text: 'Stuck? We\'re all over the world, come find us!',
     cta_text: 'Got it!',
   },
   {
-    letter: 'r1',
+    letter: 'R1',
     coordinates: [
       [31.38445573844476, -19.678934669579434],
       [45.67357277354533, -18.786644634510257],
@@ -62,7 +62,7 @@ export const lettersCoordinates = [
     cta_text: 'I hear it!',
   },
   {
-    letter: 'a2',
+    letter: 'A2',
     coordinates: [
       [-45.99342762761975, 12.280006304812702],
       [-33.09357284350507, 12.706805232366403],
@@ -74,7 +74,7 @@ export const lettersCoordinates = [
     cta_text: 'I know!',
   },
   {
-    letter: 'l1',
+    letter: 'L1',
     coordinates: [
       [-26.95717777612672, 11.697487819757235],
       [-14.631214047091289, 12.828160709407172],
@@ -86,7 +86,7 @@ export const lettersCoordinates = [
     cta_text: 'On it!',
   },
   {
-    letter: 'l2',
+    letter: 'L2',
     coordinates: [
       [-7.669524432626993, 11.555366108642538],
       [4.417167997701864, 12.021351072855968],
@@ -98,7 +98,7 @@ export const lettersCoordinates = [
     cta_text: 'Makes Sense',
   },
   {
-    letter: 'a3',
+    letter: 'A3',
     coordinates: [
       [12.407231464244072, 12.185322123366214],
       [25.84147300853119, 12.245645812715871],
@@ -110,7 +110,7 @@ export const lettersCoordinates = [
     cta_text: 'Got it!',
   },
   {
-    letter: 'n1',
+    letter: 'N1',
     coordinates: [
       [31.389253161710393, 11.433249808146252],
       [46.043199103888256, 11.704152125909266],

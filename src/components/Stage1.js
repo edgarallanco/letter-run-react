@@ -129,11 +129,18 @@ export const Stage1 = () => {
       setIsplaying(true);
       intro_closer.click();
       soundButton.click();
+      setTimeout(function(){
+        inst_trigger.click();
+      },1000)
+      
     })
 
     startBtn.addEventListener('click', function () {
       setIsplaying(true);
       intro_closer.click();
+      setTimeout(function(){
+        inst_trigger.click();
+      },1000)
     })
   }
 
@@ -179,8 +186,8 @@ export const Stage1 = () => {
     UpdateItems(checkpoint.item_id, true);
     menuOpen.click();
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
-    itemHeader.innerText = checkpoint.item_headline;
-    itemLabel.innerText = checkpoint.item_body_copy;
+    //itemHeader.innerText = checkpoint.item_headline;
+    //itemLabel.innerText = checkpoint.item_body_copy;
   }, [checkpoint]);
 
   useEffect(() => {
