@@ -137,6 +137,7 @@ export const Stage1 = () => {
     })
 
     startBtn.addEventListener('click', function () {
+      currentlyPlaying = true;
       setIsplaying(true);
       intro_closer.click();
       setTimeout(function(){
