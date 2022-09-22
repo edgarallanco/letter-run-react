@@ -5,6 +5,7 @@ import { AppStateContext, AppDispatchContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
+import * as CANNON from 'cannon-es';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { getDirectionOffset } from 'src/utils/directionalOffset';
 import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
@@ -206,6 +207,7 @@ const Player = ({
       let player = meshRef.current;
       let angle = state.controls.getAzimuthalAngle();
       // console.log(player.position);
+      state.playerPhysics.velocity.set(0, 0, 0);
 
       // if (!isModal) {
       if (fwdPressed) {
@@ -213,6 +215,7 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        state.playerPhysics.velocity.set(0, 0, -2);
       }
 
       if (bkdPressed) {
@@ -220,6 +223,7 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        state.playerPhysics.velocity.set(0, 0, 2);
       }
 
       if (lftPressed) {
@@ -227,6 +231,7 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        state.playerPhysics.velocity.set(-2, 0, 0);
       }
 
       if (rgtPressed) {
@@ -234,7 +239,10 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        state.playerPhysics.velocity.set(2, 0, 0);
       }
+
+      dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: state.playerPhysics});
 
       if (jumpPressed) {
         stateValtio.action = 'Anim_Jump';

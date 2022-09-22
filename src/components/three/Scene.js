@@ -16,6 +16,7 @@ import CannonUtils from 'src/utils/CannonUtils';
 import { loadPoolNoodles, noodles, updatePosition } from 'src/utils/LoadPoolNoodles';
 import { loadPlanes } from 'src/utils/LoadPoolPlanes';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Plane } from 'cannon-es';
 
 const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
@@ -50,7 +51,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   ]
 
   const poolItemNames = [
-    'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6'
+    'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
   ]
 
   // const poolItemNames = []
@@ -103,29 +104,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     zoomProp: !zoomCamera ? 1 : 12,
   });
 
-  // useEffect(() => {
-  //   if(playerBody) {
-  //     playerBody.addEventListener('collide', (e) => {
-  //       console.log("Collide");
-  //       console.log(e.contact);
-  //     })
-  //   }
-  // }, [playerBody])
-
-  useEffect(() => {
-    if (world) {
-      world.addEventListener("beginContact", (e) => {
-        // console.log("Start Contact");
-        if (e.bodyA !== null && e.bodyB !== null)
-          console.log(e);
-      });
-
-      world.addEventListener("endContact", () => {
-        // console.log("End contact");
-      })
-    }
-  }, [world]);
-
   useEffect(() => {
     if (hideTutorial) {
       // console.log(scene);
@@ -166,22 +144,46 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     w.addBody(groundBody);
 
+    let noodleMaterial = new CANNON.Material('noodle');
+    noodleMaterial.friction = 0.5;
+    noodleMaterial.restitution = 0.2;
+
     loadPlanes(scene, w);
-    loadPoolNoodles(scene, w, groundBody);
+    loadPoolNoodles(scene, w, noodleMaterial);
+
+    let playerMaterial = new CANNON.Material('player');
+    playerMaterial.friction = 0.5;
+    playerMaterial.restitution = 0.2;
+    let playerShape = new CANNON.Cylinder(0.5, 0.5, 2);
 
     let pBody = new CANNON.Body({
       mass: 1,
-      shape: new CANNON.Cylinder(0.5, 0.5, 2)
+      shape: playerShape,
+      type: CANNON.Body.KINEMATIC,
+      material: playerMaterial,
+      // position: new CANNON.Vec3(state.playerMesh.position.x, state.playerMesh.position.y, state.playerMesh.position.z)
+      velocity: new CANNON.Vec3(2, 0, 2)
     });
     // console.log(state.playerMesh);
     // let playerShape = new CANNON.Vec3(1, 1, 1);
     // pBody.addShape(playerShape);
+
+    let contactMaterial = new CANNON.ContactMaterial(playerMaterial, noodleMaterial, {
+      friction: 0.5,
+      restitution: 0.1
+    });
+    // contactMaterial.friction = 0.5;
+    // contactMaterial.restitution = 0.2;
+
+    w.addContactMaterial(contactMaterial);
+
+    dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: pBody});
     w.addBody(pBody);
     setPlayerBody(pBody);
 
     let pBox = new CylinderGeometry(0.5, 0.5, 4);
     let pMesh = new Mesh(pBox, new MeshBasicMaterial({ color: 0x00ff00 }));
-    scene.add(pMesh);
+    // scene.add(pMesh);
     setPlayerBox(pMesh);
     poolItemNames.forEach((item) => {
       scene1.nodes[item].visible = false;
@@ -281,8 +283,24 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     playerBody.position.copy(state.playerMesh.position);
     playerBody.quaternion.copy(state.playerMesh.quaternion);
+    playerBody.velocity.set(2, 0, 2);
     // playerBody.position.y = 3.5;
     setPlayerBody(playerBody);
+    // state.playerPhysics.position.copy(state.playerMesh.position);
+    // state.playerPhysics.quaternion.copy(state.playerMesh.quaternion);
+    // state.playerPhysics.velocity.set(2, 0, 2);
+    // dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: state.playerPhysics});
+    // // console.log(state.playerPhysics.velocity.x);
+
+    // let direction = new CANNON.Vec3();
+    // let endPosition = new CANNON.Vec3(state.playerMesh.position.x, state.playerMesh.position.y, state.playerMesh.position.z);
+    // endPosition.vsub(playerBody.position, direction);
+    // let totalLenght = direction.length();
+    // direction.normalize();
+    // let speed = totalLenght / 0.5;
+    // direction.scale(speed, playerBody.velocity);
+    // playerBody.position.vadd(endPosition, playerBody.position);
+
 
     playerFrame.position.copy(frameBody.position);
     playerFrame.quaternion.copy(frameBody.quaternion);
@@ -405,7 +423,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
           // camera.lookAt(state.playerMesh.position);
           // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
-
           state.playerMesh.position.set(32, 3.79, 15);
           if (!introDone)
             setZoomCamera(false);

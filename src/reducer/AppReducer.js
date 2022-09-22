@@ -20,6 +20,7 @@ export const Actions = {
   UPDATE_ENVIROMENT: 'update_enviroment',
   UPDATE_MOVEMENT: 'update_movement',
   UPDATE_MOVABLE_COLLIDERS: 'update_movable_colliders',
+  UPDATE_PLAYER_PHYSICS: 'update_player_physics'
 };
 
 export const reducer = (state, action) => {
@@ -84,6 +85,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         movableColliders: action.payload
+      }
+    case Actions.UPDATE_PLAYER_PHYSICS:
+      return {
+        ...state,
+        playerPhysics: action.payload
       }
   }
 };

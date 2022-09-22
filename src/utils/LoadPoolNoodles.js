@@ -18,24 +18,36 @@ export const noodles = [
     geometry: new CylinderGeometry(1, 1, 0.5, 100),
     rotation: new Euler(0, 0, 0),
     physics: new CANNON.Cylinder(1, 1, 0.5, 100),
+    rotate: false
   },
   {
     name: "ring_2",
     filename: "./../resources/models/yellow_ring.glb",
-    position: new Vector3(43.70883094989104, 3.0149306909942626, 20.540877822233906),
+    position: new Vector3(43.70883094989104, 3.0149306909942626, 18.540877822233906),
     // geometry: new TorusGeometry(0.8, 0.2, 20, 100),
     // geometry: new SphereGeometry(1, 20, 10),
     geometry: new CylinderGeometry(1, 1, 0.5, 100),
     rotation: new Euler(0, 0, 0),
     physics: new CANNON.Cylinder(1, 1, 0.5, 100),
+    rotate: false
   },
   {
     name: "noodle",
     filename: "./../resources/models/purple_noodle.glb",
     position: new Vector3(33.5110924256302, 3.0149306909942626, 27.12094054470053),
-    geometry: new CylinderGeometry(0.3, 0.3, 3),
-    rotation: new Euler(Math.PI / 2, 0, 0),
-    physics: new CANNON.Cylinder(0.3, 0.3, 3)
+    geometry: new CylinderGeometry(1, 1, 0.5, 100),
+    rotation: new Euler(0, 0, 0),
+    physics: new CANNON.Cylinder(1, 1, 0.5, 100),
+    rotate: false
+  },
+  {
+    name: "ball",
+    filename: "./../resources/models/white_ball.glb",
+    position: new Vector3(38.72937366844723, 3.0149306909942626, 21.85546584699992),
+    geometry: new CylinderGeometry(0.6, 0.6, 0.5, 100),
+    rotation: new Euler(0, 0, 0),
+    physics: new CANNON.Cylinder(0.6, 0.6, 0.5, 100),
+    rotate: true
   },
   // {
   //   name: "water",
@@ -45,7 +57,21 @@ export const noodles = [
 
 const poolItems = [];
 
-export const loadPoolNoodles = (scene, world, ground) => {
+export const loadPoolNoodles = (scene, world, material) => {
+  let raftGeometry= new BoxGeometry(2, 1, 4);
+  let raftMesh = new Mesh(raftGeometry,  new MeshBasicMaterial({ color: 0xff0000 }));
+  raftMesh.position.set(42.565580399700676, 3.0149306909942626, 25.2293704771954);
+  raftMesh.quaternion.setFromEuler(new Euler(0, - Math.PI / 5.5, 0))
+  // scene.add(raftMesh);
+
+  let raftBody = new CANNON.Body({
+    type: CANNON.Body.STATIC,
+    shape: new CANNON.Box(new CANNON.Vec3(2, 1, 4))
+  });
+  raftBody.position.set(42.565580399700676, 3.0149306909942626, 25.2293704771954);
+  raftBody.quaternion.setFromEuler(0, - Math.PI / 5.5, 0);
+  world.addBody(raftBody);
+
   noodles.forEach(function(noodle) {
     // console.log(world)
     // const { scene } = useGLTF(noodle.filename);
@@ -75,19 +101,22 @@ export const loadPoolNoodles = (scene, world, ground) => {
       // mesh.rotation.copy(noodle.rotation);
       mesh.quaternion.setFromEuler(noodle.rotation);
       mesh.position.copy(noodle.position);
-      scene.add(mesh);
+      // scene.add(mesh);
+
+      // noodle.physics.material = material;
 
       let pBody = new CANNON.Body({
-        mass: 4,
+        mass: 5,
         shape: noodle.physics,
         position: noodle.position,
-        fixedRotation: true,
+        fixedRotation: !noodle.rotate,
+        material: material
         // torque: new CANNON.Vec3(1, 1, 1),
         // linearDamping: new CANNON.Vec3(1, 0, 1)
-        force: new CANNON.Vec3(1, 0, 1)
+        // force: new CANNON.Vec3(1, 0, 1)
       });
-      pBody.linearDamping = 0.2;
-      pBody.linearFactor = new CANNON.Vec3(1, 0.1, 1);
+      // pBody.linearDamping = 0.1;
+      // pBody.linearFactor = new CANNON.Vec3(1, 1, 0);
       pBody.quaternion.copy(mesh.quaternion);
       world.addBody(pBody);
 
@@ -115,7 +144,7 @@ export const updatePosition = (playerPosition) => {
   let geoms = [];
   poolItems.forEach((item) => {
     item.mesh.position.copy(item.pBody.position);
-    // item.mesh.quaternion.copy(item.pBody.quaternion);
+    item.mesh.quaternion.copy(item.pBody.quaternion);
     // item.mesh.position.x = item.pBody.position.x;
     // item.mesh.position.z = item.pBody.position.z;
 
@@ -126,7 +155,7 @@ export const updatePosition = (playerPosition) => {
     // playerCollidesMesh = Math.abs(playerPosition.x - item.mesh.position.x) < 1 || Math.abs(playerPosition.z - item.mesh.position.z) < 1;
     
     item.helper.position.copy(item.pBody.position);
-    // item.helper.quaternion.copy(item.pBody.quaternion);
+    item.helper.quaternion.copy(item.pBody.quaternion);
     // item.helper.position.x = item.pBody.position.x;
     // item.helper.position.z = item.pBody.position.z;
     geoms.push(item.helper);

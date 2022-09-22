@@ -14,6 +14,7 @@ const initialState = {
   move: true,
   movableColliders: null,
   checkpoints: checkpoint,
+  playerPhysics: null
 };
 
 export const AppStateContext = createContext({state: initialState});
