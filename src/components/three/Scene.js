@@ -42,10 +42,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const timeStep = 1 / 60;
   const animations = [];
   const cameraRoutes = [
-    { pos: [0, 150, 6], rotation: [0, 0, 0] },
-    // { pos: [1.6839, 120, 20.205], rotation: [34.6, 18.3, 0] },
-    // // { pos: [-8.2254, 95.891, 10.757], rotation: [34.6, 18.3, 0] },
-    // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
+    { pos: [0, 90, 6], rotation: [0, 0, 0] },
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
@@ -94,12 +91,12 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
-    config: { duration: 1000, easing: easings.easeCubic },
+    config: { duration: 1000, easing: easings.easeInOutCubic},
     zoomProp: zoomCamera ? 2 : 4.5,
   });
 
   const introZoomAnim = useSpring({
-    config: { duration: 5000, easing: easings.easeCubic},
+    config: { duration: 5000, easing: easings.easeInOutCubic},
     zoomProp: !zoomCamera ? 1 : 12,
   });
 
@@ -119,8 +116,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     });
 
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
-    cm.position.set(0, 50, 6);
-    cm.visible = false;
+    cm.position.set(0, 3.7, 6);
+    cm.visible = true;
     scene.add(cm);
     setCameraMesh(cm);
 
@@ -130,11 +127,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     scene1.nodes['CameraSolver'].visible = false;
     // scene1.nodes['CameraSolver'].position.set(cameraRoutes[0].pos[0], cameraRoutes[0].pos[1], cameraRoutes[0].pos[2]);
-    scene1.nodes['CameraSolver'].position.set(0, 0, 6);
-    scene1.nodes['CameraSolver'].rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
+    scene1.nodes['CameraSolver'].position.set(0, 6, 5.8);
+    scene1.nodes['CameraSolver'].rotation.set(0, -Math.PI / 2, 0);
     setZoomCamera(false);
     // console.log(state.camera.position);
-
+    //console.log(scene1.nodes['CameraSolver'].rotation)
     let groundBody = new CANNON.Body({
       shape: new CANNON.Plane(),
       type: CANNON.Body.STATIC
@@ -197,7 +194,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     // });
 
-    let box = new BoxGeometry(2, 2, 2);
+    let box = new BoxGeometry(1, 1, 1);
 
     let wireframe = new WireframeGeometry(box.geometry);
 
@@ -229,16 +226,16 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         actions[a.name].play();
     });
 
-    // console.log(state.camera.position);
+    //console.log(cameraRoutes[0].pos + " is the current position");
     let position = cameraRoutes[0].pos;
-    let route = new Vector3(position[0], scene1.nodes['CameraSolver'].position.y, position[2]);
+    let route = new Vector3(position[0], position[1], position[2]);
     let m = new LinearMovement(scene1.nodes['CameraSolver'].position, route);
     // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
     // state.camera.position.set(0, 150, 0);
     // // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
     // state.camera.up.set(0, 1, 0);
     // state.camera.lookAt(0, 150, 0);
-    state.camera.zoom = 1;
+    state.camera.zoom = 14;
     dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
     // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
     setMovement(m);
@@ -292,7 +289,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     });
     // camera.position.y = 175;
     state.playerMesh.visible = introDone;
-    scene1.nodes["Tutorial"].visible = introDone;
+    //scene1.nodes["Tutorial"].visible = introDone;
     if (!isPlaying) {
 
       if (moveToStart) {
@@ -302,7 +299,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           let position = cameraRoutes[currentRoute].pos;
           let rotation = cameraRoutes[currentRoute].rotation;
           let cubePos = scene1.nodes['CameraSolver'].position;
-
+          
           if (cubePos.x <= (position[0] + 0.02)
             && cubePos.z <= (position[2] + 0.02)) {
             // camera.lookAt(cubePos);
@@ -325,6 +322,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           }
 
           if (movement) {
+            console.log('we are moving')
             // console.log(cubePos, position);
             // console.log(cubeSpring);
             let newPosition = movement.move();
@@ -332,13 +330,19 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
             scene1.nodes['CameraSolver'].position.copy(newPosition);
             cameraMesh.position.copy(newPosition);
+            console.log(cameraMesh);
+            console.log(cameraMesh.position);
+            //console.log(cameraMesh.scale);
+            
             state.controls.update();
             if (currentRoute === (cameraRoutes.length - 1)) {
+              camera.up.set(0, 1, 0);
               state.controls.target.copy(cameraMesh.position)
               if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
                 // console.log("Setting camera pos");
                 let cmPosition = camereaMovment.move();
                 camera.position.copy(cmPosition);
+                console.log( "current duratino =" + new Date().getTime())
                 //console.log(cmPosition.z +  " is cmPosition Z")
               }
               // console.log(cameraMesh.position);
@@ -346,9 +350,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
               setZoomCamera(true);
               // camera.zoom = 12;
               if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 4.5) {
-                // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
+                console.log(introZoomAnim.zoomProp.animation.values[0]._value);
                 state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-                // console.log(state.camera.zoom);
+                console.log(state.camera.zoom);
               }
             } else {
               camera.position.x = newPosition.x;
