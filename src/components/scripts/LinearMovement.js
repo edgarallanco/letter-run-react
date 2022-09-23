@@ -3,7 +3,7 @@ import { Vector3 } from 'three';
 class LinearMovement {
 
   t = 0;
-  dt = 0.001;
+  dt = 0.00075;
 
   constructor(start, end, step) {
     this.start = start;
@@ -13,7 +13,9 @@ class LinearMovement {
   }
 
   ease = (t) => {
-    return t < 0.5 ? (2 * t * t) : (-1 + (4 - 2 * t) * t);
+    //return t < 0.5 ? (2 * t * t) : (-1 + (4 - 2 * t) * t);
+    return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1
+    
   }
 
   lerp = (a, b, ease) => {

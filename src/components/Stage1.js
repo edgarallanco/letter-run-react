@@ -45,20 +45,23 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
       //console.log('loaded is 30!')
       var newEvent = new Event('completed');
       window.dispatchEvent(newEvent);
-      lottie2.onComplete = function () {
+      /* lottie2.onComplete = function () {
         console.log('complete!');
         document.getElementById('preload-wrapper').classList.add('gc-hide');
         console.log('hide fired')
-      }
+      } */
       var lottieToggle = false;
+      setTimeout(function() {
+        setMoveToStart(true)
+      },6000)
       
-      lottie2.addEventListener('enterFrame', function() {
+      /* lottie2.addEventListener('enterFrame', function() {
         console.log('lottie 2 playing')
         if ((lottie2.currentFrame >= (lottie2.totalFrames - 5) && !lottieToggle)){
           lottieToggle = true;
           console.log('threshold hit, start now')
           setMoveToStart(true)
-      }})
+      }}) */
       
     }
     // console.log(total);
