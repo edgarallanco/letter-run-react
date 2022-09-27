@@ -288,7 +288,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       scene1.nodes[poolItemNames[index]].quaternion.copy(item.quaternion);
     });
     // camera.position.y = 175;
-    state.playerMesh.visible = introDone;
+    state.playerMesh.visible = isPlaying;
+    
     //scene1.nodes["Tutorial"].visible = introDone;
     if (!isPlaying) {
 
@@ -349,7 +350,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
               camera.lookAt(cameraMesh.position);
               setZoomCamera(true);
               // camera.zoom = 12;
-              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 4.5) {
+              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 6) {
                 console.log(introZoomAnim.zoomProp.animation.values[0]._value);
                 state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
                 console.log(state.camera.zoom);
@@ -389,7 +390,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
           if (!introDone)
             setZoomCamera(false);
-          setIntroDone(true);
+            setIntroDone(true);
           // setIsplaying(true);
         }
       } else {
@@ -406,7 +407,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
       dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
-
+      //console.log("player y = " + state.playerMesh.position.y)
       if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
         scene1.nodes["Tutorial"].material.opacity = 0;
       // if (introZoomAnim.zoomProp.animation.values[0] && camera.zoom < 12) {

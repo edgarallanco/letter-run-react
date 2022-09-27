@@ -25,7 +25,7 @@
   transition: 1s ease 0.3s;
 }
 
-.intro-wrapper {
+/* .intro-wrapper {
   position: fixed;
   left: 0;
   width: 400px;
@@ -44,7 +44,7 @@
   font-weight: 400;
   font-size: 140px;
   line-height: 80%;
-  /* or 112px */
+  /* or 112px 
 
   display: flex;
   align-items: flex-end;
@@ -64,7 +64,7 @@
   font-weight: 500;
   font-size: 18px;
   line-height: 32px;
-  /* or 178% */
+  /* or 178%
 
 
   color: #222222;
@@ -89,4 +89,4 @@
 
   background: #4FE9A4;
   border-radius: 30px;
-}
+} */

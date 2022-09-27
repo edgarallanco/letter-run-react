@@ -9,7 +9,8 @@ import { Actions } from '../../reducer/AppReducer';
 import * as THREE from 'three';
 
 // Extend will make OrbitControls available as a JSX element called orbitControls for us to use.
-// extend({OrbitControls, MapControls});
+// extend({OrbitControls, MapControl});
+
 
 const Camera = ({ zoom }) => {
   const { gl, camera, scene } = useThree();
