@@ -179,7 +179,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     // camera.position.y = 175;
     state.playerMesh.visible = introDone;
-    // scene1.nodes["Tutorial"].visible = introDone;
+    scene1.nodes["Tutorial"].visible = false;
 
     if (!isPlaying) {
       // console.log(camera.position);
