@@ -55,10 +55,10 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
   const initialPos = cameraRoutes[0].pos;
 
-  const poolItemNames = [
-    'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
-  ]
-  // const poolItemNames = [];
+  // const poolItemNames = [
+  //   'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
+  // ]
+  const poolItemNames = [];
 
   scene1.animations.forEach((ani) => {
     let exists = animations.find((a) => {
@@ -153,7 +153,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
   useFrame(({ controls }) => {
     if (state?.playerMesh)
-      controls.target = isPlaying ? state?.playerMesh.position : cameraMesh.position;
+      controls.target = introDone ? state?.playerMesh.position : cameraMesh.position;
   });
 
   useFrame(({ }, delta) => {
@@ -187,11 +187,12 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     if (!isPlaying) {
       // console.log(camera.position);
       if (moveToStart) {
-        // console.log(camPosition);
-        camera.position.copy(camPosition);
-        camera.lookAt(cameraMesh.position);
-        camera.up.set(0, 1, 0);
-
+        if (!introDone) {
+          // console.log(camPosition);
+          camera.position.copy(camPosition);
+          camera.lookAt(cameraMesh.position);
+          camera.up.set(0, 1, 0);
+        }
       } else {
         camera.position.set(initialPos[0], initialPos[1], initialPos[2]);
         camera.up.set(0, 1, 0);
@@ -214,8 +215,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       setZoomCamera(true);
     } else if (launchRocket && zoomCamera) {
       // console.log(zoomAnim.zoomProp.animation.values[0]._value)
-      if (zoomAnim.zoomProp.animation.values[0] && state.camera.zoom > 2) {
-        state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+      if (zoomAnim.zoomProp.animation.values[0] && camera.zoom > 2) {
+        camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
       }
     } else if (!zoomCamera && launchRocket) {
       if (zoomAnim.zoomProp.animation.values[0]) {
@@ -225,7 +226,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           setIsplaying(true);
         } else {
           setModal(false);
-          state.camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
+          camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
         }
       }
     }
@@ -374,7 +375,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           setIsplaying(false);
           setTimeout(() => {
             // state.camera.zoom = 6;
-            dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
+            // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
             setTimeout(() => {
               actions["Anim_Rocket"].play();
               setTimeout(() => {
@@ -384,7 +385,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
                 setZoomCamera(false);
                 // setIsplaying(true);
                 // state.camera.zoom = 4.5;
-                dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
+                // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
                 actions["Anim_Rocket"].stop();
               }, 2000)
             }, 500);
