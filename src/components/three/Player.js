@@ -5,6 +5,7 @@ import { AppStateContext, AppDispatchContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import equal from 'fast-deep-equal';
 import stateValtio from 'context/store';
+import * as CANNON from 'cannon-es';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { getDirectionOffset } from 'src/utils/directionalOffset';
 import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
@@ -56,13 +57,15 @@ const Player = ({
     meshRef.current.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
     velocity.set(0, 0, 0);
     setVelocity(velocity);
-    camera.position.sub(state.controls.target);
-    state.controls.target.copy(meshRef.current.position);
+
     // camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);
     state.controls.update();
     dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current });
     setPlayer(meshRef.current);
+
+    camera.position.sub(state.controls.target);
+    state.controls.target.copy(meshRef.current.position);
 
     // let wireframe = new WireframeGeometry(nodes.Plane022.geometry);
 
@@ -157,35 +160,36 @@ const Player = ({
       }
     });
 
-
-    const angleYCameraDirection = -2.55555;
-    const directionOffset = getDirectionOffset(
-      fwdPressed,
-      bkdPressed,
-      rgtPressed,
-      lftPressed
-    );
-    rotateQuarternion.setFromAxisAngle(
-      rotateAngle,
-      directionOffset + angleYCameraDirection
-    );
-    if (stateValtio.action === 'Anim_Walk') {
-      meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.1);
-    }
-    if (jump && velocity.y === 0) {
-      setTimeout(() => {
-        velocity.y = 6.0;
-        setVelocity(velocity);
-        // stateValtio.action = 'Anim_Jump_Air';
-      }, 60);
-      // setTimeout(() => {
-      //   if (stateValtio.action == 'Anim_Jump') stateValtio.action = 'Anim_Idle';
-      //   //   // velocity.y = 2;
-      //   //   setVelocity(velocity);
-      // }, 370);
-      setTimeout(() => {
-        setJump(false);
-      }, 460);
+    if (isPlaying) {
+      const angleYCameraDirection = -2.55555;
+      const directionOffset = getDirectionOffset(
+        fwdPressed,
+        bkdPressed,
+        rgtPressed,
+        lftPressed
+      );
+      rotateQuarternion.setFromAxisAngle(
+        rotateAngle,
+        directionOffset + angleYCameraDirection
+      );
+      if (stateValtio.action === 'Anim_Walk') {
+        meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.1);
+      }
+      if (jump && velocity.y === 0) {
+        setTimeout(() => {
+          velocity.y = 6.0;
+          setVelocity(velocity);
+          // stateValtio.action = 'Anim_Jump_Air';
+        }, 60);
+        // setTimeout(() => {
+        //   if (stateValtio.action == 'Anim_Jump') stateValtio.action = 'Anim_Idle';
+        //   //   // velocity.y = 2;
+        //   //   setVelocity(velocity);
+        // }, 370);
+        setTimeout(() => {
+          setJump(false);
+        }, 460);
+      }
     }
   });
 
@@ -207,6 +211,7 @@ const Player = ({
       let player = meshRef.current;
       let angle = state.controls.getAzimuthalAngle();
       // console.log(player.position);
+      // state.playerPhysics.velocity.set(0, 0, 0);
 
       // if (!isModal) {
       if (fwdPressed) {
@@ -214,6 +219,7 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        // state.playerPhysics.velocity.set(0, 0, -2);
       }
 
       if (bkdPressed) {
@@ -221,6 +227,7 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        // state.playerPhysics.velocity.set(0, 0, 2);
       }
 
       if (lftPressed) {
@@ -228,6 +235,7 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        // state.playerPhysics.velocity.set(-2, 0, 0);
       }
 
       if (rgtPressed) {
@@ -235,7 +243,10 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
+        // state.playerPhysics.velocity.set(2, 0, 0);
       }
+
+      dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: state.playerPhysics });
 
       if (jumpPressed) {
         stateValtio.action = 'Anim_Jump';
@@ -362,36 +373,6 @@ const Player = ({
       }
     }
 
-    // if (state.movableColliders) {
-    //   // console.log(state.movableColliders);
-    //   state.movableColliders.forEach((collideObj) => {
-    //     // console.log(collideObj);
-    //     collideObj?.geometry?.boundsTree.shapecast({
-    //       intersectsBounds: (box) => box.intersectsBox(tempBox),
-
-    //       intersectsTriangle: (tri) => {
-    //         // check if the triangle is intersecting the capsule and adjust the
-    //         // capsule position if it is.
-    //         const triPoint = tempVector;
-    //         const capsulePoint = tempVector2;
-
-    //         const distance = tri.closestPointToSegment(
-    //           tempSegment,
-    //           triPoint,
-    //           capsulePoint
-    //         );
-    //         if (distance < capsuleInfo.radius) {
-    //           const depth = capsuleInfo.radius - distance;
-    //           const direction = capsulePoint.sub(triPoint).normalize();
-
-    //           tempSegment.start.addScaledVector(direction, depth);
-    //           tempSegment.end.addScaledVector(direction, depth);
-    //         }
-    //       },
-    //     });
-    //   });
-    // }
-
     if (isPlaying) {
       let lastControl = state.controls.target;
       // state.controls.enabled = false;
@@ -402,10 +383,10 @@ const Player = ({
 
     setVelocity(velocity);
 
-    dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
+    // dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     // setPlayer(player);
     dispatch({ type: Actions.UPDATE_PLAYER, payload: player.position });
-    dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
   };
 
   const closeModal = () => {
