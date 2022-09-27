@@ -7,7 +7,7 @@ import { AppDispatchContext, AppStateContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import stateValtio from 'context/store';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { BoxGeometry, Clock, CylinderGeometry, LineSegments, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
+import { BoxGeometry, Clock, CylinderGeometry, Euler, LineSegments, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
 import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
 import Intro from 'components/UI/Intro';
@@ -17,12 +17,14 @@ import { loadPoolNoodles, noodles, updatePosition } from 'src/utils/LoadPoolNood
 import { loadPlanes } from 'src/utils/LoadPoolPlanes';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Plane } from 'cannon-es';
+import { animate } from '../scripts/IntroAnimation';
+import { setupPhysics, worldStep } from '../scripts/Physics';
 
 const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   let environment;
-  const { scene, gl } = useThree();
+  const { scene, gl, camera, controls } = useThree();
   const [stairs, setStairs] = useState([]);
   const [launchRocket, setLaunchRocket] = useState(false);
   const [zoomCamera, setZoomCamera] = useState(false);
@@ -36,51 +38,27 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [playerBox, setPlayerBox] = useState();
   const [poolItems, setPoolItems] = useState([]);
   const [cameraMesh, setCameraMesh] = useState();
+  const [camPosition, setCamPosition] = useState(new Vector3(0, 90, 6));
   let collider;
   const loader = new GLTFLoader();
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v28.glb');
   const [world, setWorld] = useState();
-  const timeStep = 1 / 60;
+
   const animations = [];
   const cameraRoutes = [
-    { pos: [0, 150, 0], rotation: [0, 0, 0] },
+    { pos: [0, 90, 6], rotation: [0, 0, 0] },
     // { pos: [1.6839, 120, 20.205], rotation: [34.6, 18.3, 0] },
     // // { pos: [-8.2254, 95.891, 10.757], rotation: [34.6, 18.3, 0] },
     // { pos: [45.53, 95.891, 60.757], rotation: [34.6, 18.3, 0] },
     { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
   ]
 
+  const initialPos = cameraRoutes[0].pos;
+
   const poolItemNames = [
     'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
   ]
-
-  // const poolItemNames = []
-
-  // noodles.forEach(function(noodle) {
-  //   // console.log(world)
-  //   // const { scene } = useGLTF(noodle.filename);
-  //   // console.log(scene);
-  //   // scene.position(noodle.position);
-  //   // scene1.scene.add(scene);
-  //   loader.load(noodle.filename, function(gltf) {
-  //     gltf.position.set(noodle.position);
-  //     scene.add(gltf.scene);
-  //   })
-  // });
-
-  // for(let x = 0; x < noodles.length; x++) {
-  //   const { scene } = useGLTF(noodles[x].filename);
-  //   console.log(scene);
-  //   scene.position(noodles[x].position);
-  //   scene1.scene.add(scene);
-  // }
-
-  // const cameraRoutes = [
-  //   { pos: [31.38445573844476, 181.23, -19.678934669579434], rotation: [13, 6.57, 0] },
-  //   { pos: [32.74560728012071, 95.891, 32.09665054408821], rotation: [34.6, 18.3, 0] },
-  //   { pos: [-45.99342762761975, 95.891, 12.280006304812702], rotation: [34.6, 18.3, 0] },
-  //   { pos: [-57.53, 3.79, -8], rotation: [60.6, 0, 36] },
-  // ]
+  // const poolItemNames = [];
 
   scene1.animations.forEach((ani) => {
     let exists = animations.find((a) => {
@@ -100,8 +78,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   });
 
   const introZoomAnim = useSpring({
-    config: { duration: 5000, easing: easings.easeCubic },
-    zoomProp: !zoomCamera ? 1 : 12,
+    config: { duration: 3000, easing: easings.easeInOutCubic, step: 1 },
+    zoomProp: !zoomCamera ? 1 : 4.5,
   });
 
   useEffect(() => {
@@ -115,130 +93,26 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
   useEffect(() => {
     // console.log(scene1);
-    let w = new CANNON.World({
-      gravity: new CANNON.Vec3(0, -9.81, 0)
-    });
 
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
-    cm.position.set(0, 50, 0);
+    // cm.quaternion.set(0, Math.PI / 2, 0);
+    cm.position.set(initialPos[0], 3.79, initialPos[2]);
     cm.visible = false;
+    cm.quaternion.setFromEuler(new Euler(Math.PI / 2, 0, 0))
     scene.add(cm);
     setCameraMesh(cm);
 
-    let cmMovment = new LinearMovement(new Vector3(0, 90, 0),
-      new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 0.01);
+    let cmMovment = new LinearMovement(new Vector3(initialPos[0], initialPos[1], initialPos[2]),
+      new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 0.014);
     setCameraMovement(cmMovment);
 
     scene1.nodes['CameraSolver'].visible = false;
-    // scene1.nodes['CameraSolver'].position.set(cameraRoutes[0].pos[0], cameraRoutes[0].pos[1], cameraRoutes[0].pos[2]);
-    scene1.nodes['CameraSolver'].position.set(0, 0, 0);
-    scene1.nodes['CameraSolver'].rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
-    setZoomCamera(false);
-    // console.log(state.camera.position);
 
-    let groundBody = new CANNON.Body({
-      shape: new CANNON.Plane(),
-      type: CANNON.Body.STATIC
-    });
-    groundBody.position.set(0, 2.8, 0);
-    groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-    w.addBody(groundBody);
-
-    let noodleMaterial = new CANNON.Material('noodle');
-    noodleMaterial.friction = 0.5;
-    noodleMaterial.restitution = 0.2;
-
-    loadPlanes(scene, w);
-    loadPoolNoodles(scene, w, noodleMaterial);
-
-    let playerMaterial = new CANNON.Material('player');
-    playerMaterial.friction = 0.5;
-    playerMaterial.restitution = 0.2;
-    let playerShape = new CANNON.Cylinder(0.5, 0.5, 2);
-
-    let pBody = new CANNON.Body({
-      mass: 1,
-      shape: playerShape,
-      type: CANNON.Body.KINEMATIC,
-      material: playerMaterial,
-      // position: new CANNON.Vec3(state.playerMesh.position.x, state.playerMesh.position.y, state.playerMesh.position.z)
-      velocity: new CANNON.Vec3(2, 0, 2)
-    });
-    // console.log(state.playerMesh);
-    // let playerShape = new CANNON.Vec3(1, 1, 1);
-    // pBody.addShape(playerShape);
-
-    let contactMaterial = new CANNON.ContactMaterial(playerMaterial, noodleMaterial, {
-      friction: 0.5,
-      restitution: 0.1
-    });
-    // contactMaterial.friction = 0.5;
-    // contactMaterial.restitution = 0.2;
-
-    w.addContactMaterial(contactMaterial);
-
-    dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: pBody});
-    w.addBody(pBody);
-    setPlayerBody(pBody);
-
-    let pBox = new CylinderGeometry(0.5, 0.5, 4);
-    let pMesh = new Mesh(pBox, new MeshBasicMaterial({ color: 0x00ff00 }));
-    // scene.add(pMesh);
-    setPlayerBox(pMesh);
     poolItemNames.forEach((item) => {
       scene1.nodes[item].visible = false;
     })
 
-    // poolItemNames.forEach((item) => {
-    //   let poolBody = new CANNON.Body({
-    //     mass: 1,
-    //     position: scene1.nodes[item].position,
-    //     shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1))
-    //   });
-
-    //   // scene1.nodes[item].visible = false;
-    //   let poolShape = CannonUtils.CreateTrimesh(scene1.nodes[item].geometry);
-    //   // poolBody.addShape(poolShape);
-    //   w.addBody(poolBody);
-    //   poolItems.push(poolBody);
-    //   setPoolItems([...poolItems]);
-
-    //   let wireframe = new WireframeGeometry(scene1.nodes[item].geometry);
-    //   let line = new LineSegments(wireframe);
-    //   line.material.depthTest = false;
-    //   line.material.opacity = 1;
-    //   // line.material.transparent = true;
-    //   line.position.copy(scene1.nodes[item].position);
-
-    //   let mesh = new Mesh(wireframe, new MeshBasicMaterial({ color: 0xff0000 }));
-    //   mesh.position.copy(poolBody.position);
-    //   // mesh.position.x = mesh.position.x + 11;
-    //   // mesh.position.y = mesh.position.y + 2;
-    //   // mesh.position.z = mesh.position.z + 9;
-    //   // console.log(mesh.position);
-
-    //   scene.add(mesh);
-    //   console.log(scene1.nodes[item]);
-
-    // });
-
-    let box = new BoxGeometry(2, 2, 2);
-
-    let wireframe = new WireframeGeometry(box.geometry);
-
-    let mesh = new Mesh(box, new MeshBasicMaterial({ color: 0xff0000 }));
-    let fBody = new CANNON.Body({
-      shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
-      mass: 1,
-      position: new Vector3(-55.53, 23.79, 6)
-    });
-    w.addBody(fBody);
-    setFrameBody(fBody);
-    mesh.position.copy(fBody.position);
-    setPlayerFrame(mesh);
-
-    // scene.add(mesh);
-    setWorld(w);
+    // setupPhysics(scene);
 
   }, []);
 
@@ -255,35 +129,39 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     });
 
     // console.log(state.camera.position);
-    let position = cameraRoutes[0].pos;
-    let route = new Vector3(position[0], scene1.nodes['CameraSolver'].position.y, position[2]);
-    let m = new LinearMovement(scene1.nodes['CameraSolver'].position, route);
-    // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
-    // state.camera.position.set(0, 150, 0);
-    // // state.camera.lookAt(scene1.nodes['CameraSolver'].position);
-    // state.camera.up.set(0, 1, 0);
-    // state.camera.lookAt(0, 150, 0);
+    let position = initialPos;
+    let route = new Vector3(position[0], position[1], position[2]);
+    let m = new LinearMovement(cameraMesh.position, route, 0.001);
     state.camera.zoom = 1;
-    dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
     // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
     setMovement(m);
+
+    dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+
   }, [state.playerMesh]);
+
+  useEffect(() => {
+    if (moveToStart) {
+      animate(camera, cameraMesh, setCamPosition, initialPos).then(
+        () => {
+          setIsplaying(true);
+          setIntroDone(true);
+        }
+      )
+    }
+  }, [moveToStart])
 
   useFrame(({ controls }) => {
     if (state?.playerMesh)
-      controls.target = state?.playerMesh.position
+      controls.target = isPlaying ? state?.playerMesh.position : cameraMesh.position;
   });
 
-  useFrame(({ camera }, delta) => {
+  useFrame(({ }, delta) => {
     if (!state?.playerMesh)
       return;
 
-    if (world)
-      world.step(timeStep);
+    // worldStep(state?.playerMesh);
 
-    playerBody.position.copy(state.playerMesh.position);
-    playerBody.quaternion.copy(state.playerMesh.quaternion);
-    playerBody.velocity.set(2, 0, 2);
     // playerBody.position.y = 3.5;
     setPlayerBody(playerBody);
     // state.playerPhysics.position.copy(state.playerMesh.position);
@@ -302,151 +180,29 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     // playerBody.position.vadd(endPosition, playerBody.position);
 
 
-    playerFrame.position.copy(frameBody.position);
-    playerFrame.quaternion.copy(frameBody.quaternion);
-    playerBox.position.copy(state.playerMesh.position);
-    playerBox.quaternion.copy(state.playerMesh.quaternion);
-    // playerBox.position.y = 3.5;
-    setPlayerBox(playerBox);
-
-    let geoms = updatePosition(state.playerMesh.position);
-    let colliders = [];
-    geoms.forEach((obj) => {
-      let clone = obj.clone();
-      const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
-        [clone.geometry],
-        false
-      );
-      mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
-        maxDepth: 200,
-      });
-      clone.geometry = mergedGeometry;
-      colliders.push(clone);
-    });
-    dispatch({ type: Actions.UPDATE_MOVABLE_COLLIDERS, payload: colliders });
-    // console.log(!collide)
-    // dispatch({type: Actions.UPDATE_MOVEMENT, payload: !collide});
-
-    poolItems.map((item, index) => {
-      scene1.nodes[poolItemNames[index]].position.copy(item.position);
-      scene1.nodes[poolItemNames[index]].quaternion.copy(item.quaternion);
-    });
     // camera.position.y = 175;
     state.playerMesh.visible = introDone;
     scene1.nodes["Tutorial"].visible = introDone;
+
     if (!isPlaying) {
-
+      // console.log(camera.position);
       if (moveToStart) {
-        //camera.fov = window.screen.width === 1920 ? 80 : 50;
-        // console.log(currentRoute);
-        if (cameraRoutes[currentRoute] !== undefined) {
-          let position = cameraRoutes[currentRoute].pos;
-          let rotation = cameraRoutes[currentRoute].rotation;
-          let cubePos = scene1.nodes['CameraSolver'].position;
-
-          if (cubePos.x <= (position[0] + 0.02)
-            && cubePos.z <= (position[2] + 0.02)) {
-            // camera.lookAt(cubePos);
-            // console.log(scene1.nodes['CameraSolver'].position);
-            // console.log(camera.rotation);
-            let r = currentRoute;
-            if (movement) { // if the movement if already initialized, increment current route
-              r = currentRoute + 1;
-              setCurrentRoute(r);
-            }
-            // console.log(scene1.nodes['CameraSolver'].position);
-
-            if (cameraRoutes[r]) {
-              let position = cameraRoutes[r].pos;
-              let route = new Vector3(position[0], state.playerMesh.position.y, position[2]);
-              let m = new LinearMovement(cubePos, route);
-              setMovement(m);
-            }
-
-          }
-
-          if (movement) {
-            // console.log(cubePos, position);
-            // console.log(cubeSpring);
-            let newPosition = movement.move();
-            // console.log(movement);
-
-            scene1.nodes['CameraSolver'].position.copy(newPosition);
-            cameraMesh.position.copy(newPosition);
-            state.controls.update();
-            if (currentRoute === (cameraRoutes.length - 1)) {
-              state.controls.target.copy(cameraMesh.position)
-              if (camera.position.x < 5.78551222602024 && camera.position.z < 60.825936793399624) {
-                // console.log("Setting camera pos");
-                let cmPosition = camereaMovment.move();
-                camera.position.copy(cmPosition);
-              }
-              // console.log(cameraMesh.position);
-              camera.lookAt(cameraMesh.position);
-              setZoomCamera(true);
-              // camera.zoom = 12;
-              if (introZoomAnim.zoomProp.animation.values[0] && state.camera.zoom < 4.5) {
-                // console.log(introZoomAnim.zoomProp.animation.values[0]._value);
-                state.camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-                // console.log(state.camera.zoom);
-              }
-            } else {
-              camera.position.x = newPosition.x;
-              camera.position.z = newPosition.z;
-              camera.up.set(0, 1, 0);
-              camera.lookAt(cameraMesh.position);
-              // console.log(camera.position.y);
-            }
-
-            // camera.lookAt(new Vector3(rotation[0], rotation[1], rotation[2]));
-          }
-
-
-        } else {
-          // console.log("intro done.");
-          // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
-          // camera.up.set(0, 1, 0);
-          // camera.lookAt(state.playerMesh.position);
-          // let lastControl = state.playerMesh.position;
-          // camera.position.sub(lastControl);
-          // state.controls.target.copy(state.playerMesh.position);
-          // camera.position.add(state.playerMesh.position);
-          // camera.position.y = 175;
-          // camera.quaternion.rotateTowards(state.playerMesh.quaternion, 0.1);
-
-          // let route = new Vector3(-57.53, state.playerMesh.position.y, 8);
-          // let m = new LinearMovement(cameraMesh.position, route);
-          // let pos = m.move();
-          // camera.position.x = 5.78651222602025;
-          // camera.position.y = 72.32470228479104;
-          // camera.position.z = 60.826936793399625;
-
-          // camera.lookAt(state.playerMesh.position);
-          // state.camera.rotation.setFromVector3(new Vector3(0, Math.PI / 2, 0));
-          state.playerMesh.position.set(32, 3.79, 15);
-          if (!introDone)
-            setZoomCamera(false);
-          setIntroDone(true);
-          setIsplaying(true);
-        }
-      } else {
-        camera.position.set(0, 90, 0);
+        // console.log(camPosition);
+        camera.position.copy(camPosition);
+        camera.lookAt(cameraMesh.position);
         camera.up.set(0, 1, 0);
-        // camera.lookAt(0, 0, 0);
+
+      } else {
+        camera.position.set(initialPos[0], initialPos[1], initialPos[2]);
+        camera.up.set(0, 1, 0);
         camera.lookAt(cameraMesh.position);
       }
-      // console.log(camera);
-      dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
-      dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
+      //   // console.log(camera);
+      //   dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+      //   dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
-
       if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
         scene1.nodes["Tutorial"].material.opacity += 0.05;
-      // if (introZoomAnim.zoomProp.animation.values[0] && camera.zoom < 12) {
-      //   camera.zoom = introZoomAnim.zoomProp.animation.values[0]._value;
-      // }
-      // camera.zoom = 12;
-      // console.log(camera.position);
     }
 
     if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {
@@ -579,14 +335,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     collider.material.opacity = 0;
     collider.material.transparent = true;
     // visualizer = new MeshBVHVisualizer(collider, 10);
-    let ground = new CANNON.Body({
-      type: CANNON.Body.STATIC
-    });
-    let groundShape = CannonUtils.CreateTrimesh(mergedGeometry);
-    ground.addShape(groundShape);
-    ground.position.copy(collider.position);
-    ground.quaternion.copy(collider.quaternion);
-    world.addBody(ground);
     // let groundFrame = new WireframeGeometry(mergedGeometry);
     // let groundMesh = new Mesh(groundFrame, new MeshBasicMaterial({ color: 0x00ff00 }));
     // // groundMesh.position.copy(groundBody.position);

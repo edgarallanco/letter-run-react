@@ -38,6 +38,7 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     // console.log(total);
     if (progress === 100) {
       setHasLoaded(true);
+      // setMoveToStart(true);
       setTimeout(() => {
         setMoveToStart(true);
       }, 1000)

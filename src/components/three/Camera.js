@@ -28,55 +28,10 @@ const Camera = ({ zoom }) => {
   useEffect(() => {
     // let camera = cameraRef.current;
     // gl.camera = camera;
+    camera.position.set(0, 90, 0);
     const controls = controlsRef.current;
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
-
-    // update camera and render on window resize
-    // const fov = 50;
-    // const planeAspectRatio = 16 / 9;
-
-    // window.addEventListener('resize', () => {
-    //   camera.aspect = window.innerWidth / window.innerHeight;
-
-    //   if (camera.aspect > planeAspectRatio) {
-    //     // window too narrow
-    //     console.log("indow too narrow");
-    //     camera.fov = fov;
-    //   } else {
-    //     // window too large
-    //     console.log("indow too large");
-    //     const cameraHeight = Math.tan(MathUtils.degToRad(fov / 2));
-    //     const ratio = camera.aspect / planeAspectRatio;
-    //     const newCameraHeight = cameraHeight / ratio;
-    //     camera.fov = MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
-    //     console.log(camera.fov);
-    //   }
-    // })
-    // console.log(window.screen.availWidth);
-    // if (window.screen.width >= 1920) {
-    //   camera.fov = 75;
-    //   camera.position.y = camera.position.y - 20;
-    // } else {
-    //   camera.fov = 50;
-    //   camera.position.y = camera.position.y + 20;
-    // }
-    // camera.aspect = window.innerWidth / window.innerHeight;
-    window.addEventListener('resize', () => {
-      // console.log(window.screen.width);
-      if (window.screen.width >= 1920) {
-        camera.fov = 75;
-        // camera.position.y = camera.position.y - 20;
-      } else {
-        camera.fov = 50;
-        // camera.position.y = camera.position.y + 20;
-      }
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      // console.log(camera.fov);
-      gl.setSize(window.innerWidth, window.innerHeight);
-      dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
-    });
   }, [gl]);
 
   const zoomAnim = useSpring({
@@ -90,8 +45,8 @@ const Camera = ({ zoom }) => {
   });
 
   useFrame(({ controls }) => {
-    if (state?.playerMesh)
-      controls.target = state?.playerMesh.position;
+    // if (state?.playerMesh)
+    //   controls.target = state?.playerMesh.position;
   });
 
   useFrame(({ camera }) => {
@@ -117,9 +72,9 @@ const Camera = ({ zoom }) => {
         args={[camera, gl.domElement]}
         ref={controlsRef}
         makeDefault={true}
-        // maxPolarAngle={Math.PI / 2.5}
-        // maxAzimuthAngle={Math.PI / 2.8}
-        // minAzimuthAngle={-Math.PI / 0.52}
+        maxPolarAngle={Math.PI / 2.5}
+        maxAzimuthAngle={Math.PI / 2.8}
+        minAzimuthAngle={-Math.PI / 0.52}
         enableZoom={false}
         enablePan={false}
       />
