@@ -383,10 +383,10 @@ const Player = ({
 
     setVelocity(velocity);
 
-    // dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
+    dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     // setPlayer(player);
     dispatch({ type: Actions.UPDATE_PLAYER, payload: player.position });
-    // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
   };
 
   const closeModal = () => {

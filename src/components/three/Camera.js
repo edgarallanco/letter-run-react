@@ -45,10 +45,11 @@ const Camera = ({ zoom }) => {
     zoomProp: zoom ? new Vector3(10, 15, 10) : 12,
   });
 
-  useFrame(({ controls }) => {
-    // if (state?.playerMesh)
-    //   controls.target = state?.playerMesh.position;
-  });
+  // useFrame(({ controls }) => {
+  //   if (state?.playerMesh)
+  //     controls.target = state?.playerMesh.position;
+  //   dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
+  // });
 
   useFrame(({ camera }) => {
     // console.log(zoomAnim.zoomProp.animation.values);
