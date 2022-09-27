@@ -100,7 +100,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     setCameraMesh(cm);
 
     let cmMovment = new LinearMovement(new Vector3(initialPos[0], initialPos[1], initialPos[2]),
-      new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 0.014);
+      new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 1);
     setCameraMovement(cmMovment);
 
     scene1.nodes['CameraSolver'].visible = false;
@@ -141,7 +141,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     if (moveToStart) {
       animate(camera, cameraMesh, setCamPosition, initialPos).then(
         () => {
-          setIsplaying(true);
+          //setIsplaying(true);
           setIntroDone(true);
         }
       )
@@ -178,7 +178,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
 
     // camera.position.y = 175;
-    state.playerMesh.visible = introDone;
+    state.playerMesh.y = -10;
+    state.playerMesh.visible = introDone; 
     scene1.nodes["Tutorial"].visible = false;
 
     if (!isPlaying) {
