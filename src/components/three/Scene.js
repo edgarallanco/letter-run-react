@@ -51,7 +51,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   ]
 
   const initialPos = cameraRoutes[0].pos;
-
+  
   // const poolItemNames = [
   //   'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
   // ]
@@ -116,10 +116,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   useEffect(() => {
     if (!state.playerMesh)
       return;
-
+      state.playerMesh.material.opacity = 0;
     //console.log(scene1.animations);
     // setInterval(() => {
-
     scene1.animations.forEach((a) => {
       if (a.name !== 'Anim_Rocket')
         actions[a.name].play();
@@ -177,7 +176,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
 
     // camera.position.y = 175;
-    state.playerMesh.visible = introDone; 
+    state.playerMesh.visible = playerVis; 
+    if ((playerVis === true) && (state.playerMesh.material.opacity < 1)){
+      console.log(state.playerMesh.material.opacity + " = player opacity")
+      state.playerMesh.material.opacity += .02;
+    } 
    // console.log(state.playerMesh.position.y + " is the player position")
     //scene1.nodes["Tutorial"].visible = false;
 

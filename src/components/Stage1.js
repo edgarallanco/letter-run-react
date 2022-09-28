@@ -131,6 +131,7 @@ export const Stage1 = () => {
     soundButtonStart.addEventListener('click', function () {
       currentlyPlaying = true;
       setIsplaying(true);
+      playerVis = true;
       intro_closer.click();
       soundButton.click();
       setTimeout(function(){
@@ -142,6 +143,7 @@ export const Stage1 = () => {
     startBtn.addEventListener('click', function () {
       currentlyPlaying = true;
       setIsplaying(true);
+      playerVis = true;
       intro_closer.click();
       setTimeout(function(){
         inst_trigger.click();
