@@ -7,18 +7,11 @@ import { AppDispatchContext, AppStateContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import stateValtio from 'context/store';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { BoxGeometry, Clock, CylinderGeometry, Euler, LineSegments, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
+import { BoxGeometry, Euler, Mesh, MeshBasicMaterial, Quaternion, Vector3, WireframeGeometry } from 'three';
 import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
-import Intro from 'components/UI/Intro';
-import * as CANNON from 'cannon-es';
-import CannonUtils from 'src/utils/CannonUtils';
-import { loadPoolNoodles, noodles, updatePosition } from 'src/utils/LoadPoolNoodles';
-import { loadPlanes } from 'src/utils/LoadPoolPlanes';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Plane } from 'cannon-es';
 import { animate } from '../scripts/IntroAnimation';
-import { setupPhysics, worldStep } from '../scripts/Physics';
 
 const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
@@ -31,12 +24,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   // const [moveToStart, setMoveToStart] = useState(false);
   const [movement, setMovement] = useState();
   const [camereaMovment, setCameraMovement] = useState();
-  const [currentRoute, setCurrentRoute] = useState(0);
   const [playerBody, setPlayerBody] = useState();
   const [cameraMesh, setCameraMesh] = useState();
   const [camPosition, setCamPosition] = useState(new Vector3(0, 90, 6));
-  const [camRotation, setCamRotation] = useState(new Vector3(0, 0, 0));
-  const [startRotate, setStartRotate] = useState(false);
   let collider;
   const loader = new GLTFLoader();
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v28.glb');
@@ -142,7 +132,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
   useEffect(() => {
     if (moveToStart) {
-      animate(camera, cameraMesh, setCamPosition, setCamRotation, setStartRotate, initialPos).then(
+      animate(camera, cameraMesh, setCamPosition, initialPos).then(
         () => {
           setIsplaying(true);
           setIntroDone(true);
@@ -207,11 +197,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         if (!introDone) {
           // console.log(camera.rotation);
           camera.position.copy(camPosition);
-
-          if (startRotate)
-            camera.rotation.copy(camRotation);
-          else
-            camera.lookAt(cameraMesh.position);
+          camera.lookAt(cameraMesh.position);
           camera.up.set(0, 1, 0);
         }
       } else {
