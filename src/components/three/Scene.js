@@ -41,7 +41,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [camPosition, setCamPosition] = useState(new Vector3(0, 90, 6));
   let collider;
   const loader = new GLTFLoader();
-  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_v28.glb');
+  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_no_cam.glb');
   const [world, setWorld] = useState();
 
   const animations = [];
@@ -79,14 +79,14 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     zoomProp: !zoomCamera ? 1 : 4.5,
   });
 
-  useEffect(() => {
+ /*  useEffect(() => {
     if (hideTutorial) {
       // console.log(scene);
       setTimeout(() => {
         scene1.nodes["Tutorial"].material.opacity = 0;
       }, 5000)
     } 
-  }, [hideTutorial])
+  }, [hideTutorial]) */
 
   useEffect(() => {
     // console.log(scene1);
@@ -103,7 +103,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       new Vector3(5.78651222602025, 72.32470228479104, 60.826936793399625), 1);
     setCameraMovement(cmMovment);
 
-    scene1.nodes['CameraSolver'].visible = false;
+  
 
     poolItemNames.forEach((item) => {
       scene1.nodes[item].visible = false;
@@ -121,7 +121,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     // setInterval(() => {
 
     scene1.animations.forEach((a) => {
-      if (a.name !== 'Anim_CameraSolver' && a.name !== 'Anim_Rocket')
+      if (a.name !== 'Anim_Rocket')
         actions[a.name].play();
     });
 
@@ -130,7 +130,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     let route = new Vector3(position[0], position[1], position[2]);
     let m = new LinearMovement(cameraMesh.position, route, 0.001);
     state.camera.zoom = 1;
-    // scene1.nodes['CameraSolver'].position.copy(state.playerMesh.position);
     setMovement(m);
 
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
@@ -178,9 +177,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
 
     // camera.position.y = 175;
-    state.playerMesh.y = -10;
     state.playerMesh.visible = introDone; 
-    scene1.nodes["Tutorial"].visible = false;
+   // console.log(state.playerMesh.position.y + " is the player position")
+    //scene1.nodes["Tutorial"].visible = false;
 
     if (!isPlaying) {
       // console.log(camera.position);
@@ -203,8 +202,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       //   dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
       //   dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
-      if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
-        scene1.nodes["Tutorial"].material.opacity += 0.05;
+      /* if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
+        scene1.nodes["Tutorial"].material.opacity += 0.05; */
     }
 
     if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {
@@ -245,9 +244,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     environment.scale.set(1.5, 1.5, 1.5);
     // environment.matrix.makeScale(1.5, 1.5, 1.5)
     environment.updateMatrixWorld(true);
-    scene1.nodes["Tutorial"].material.transparent = true;
+    /* scene1.nodes["Tutorial"].material.transparent = true;
     scene1.nodes["Tutorial"].material.opacity = 0.01;
-    scene1.nodes['1_E_Object'].material.metalness = 0;
+    scene1.nodes['1_E_Object'].material.metalness = 0; */
     // scene1.nodes['1_E_Object'].visible = false;
     // console.log(scene1);
     // scene1.nodes['Letters'].children.forEach((mesh) => {
@@ -305,6 +304,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         ) {
           cloned.name = c.userData.name;
           geoms.push(cloned);
+          console.log(cloned)
         }
 
         // if (c.name.includes('Plane012')) {

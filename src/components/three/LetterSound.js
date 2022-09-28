@@ -8,13 +8,14 @@ function LetterSound({isSound, track, isInLetter}) {
   useEffect(() => {
     if (isInLetter) {
       letterSound.current.howler.fade(0.0, 1.0, 3000);
+      //letterSound.current.seek(0.04702083333333333);
       console.log(lettersCoordinates.current)
       var nudgeEvent = new Event('inLetterNow');
       window.dispatchEvent(nudgeEvent);
     } else {
       var clearEvent = new Event('outLetterNow');
       window.dispatchEvent(clearEvent);
-      letterSound.current.howler.fade(1.0, 0.0, 2000);
+      letterSound.current.howler.fade(1.0, 0.0, 1000);
     }
   }, [isInLetter]);
 

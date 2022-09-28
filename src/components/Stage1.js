@@ -39,8 +39,8 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     // test lottie playback
     //lottie1.playSegments([progress, progress + 1], true)
     //console.log(progress + "is current progress frame")
-    
-    if (loaded === 30) {
+    console.log(loaded + " is the loaded amount")
+    if (loaded >= 29) {
       completedTrigger = true;
       //console.log('loaded is 30!')
       var newEvent = new Event('completed');

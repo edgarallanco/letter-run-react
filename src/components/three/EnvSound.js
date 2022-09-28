@@ -10,6 +10,8 @@ function EnvSound({isSound, isInLetter}) {
     } else {
       envSound.current.howler.fade(0.0, 1.0, 2000);
     } */
+    //envSound.current.seek(0.04702083333333333);
+    //envSound.current.howler.fade(0.0, 1.0, 2000);
   }, [isInLetter]);
 
   return (
