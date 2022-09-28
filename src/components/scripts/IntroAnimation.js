@@ -10,15 +10,16 @@ export const animate = (camera, cameraMesh, setCamPosition, initialPos) => {
     camera.position.copy(camInitialPos);
     // console.log(camera.position);
     gsap.to(camInitialPos, {
-      ease: "easeInOutCubic", duration: (animDuration), delay: 0, x: 5.78651222602025, y: 72.32470228479104, z: 60.826936793399625,
+      ease: "easeInOutCubic", duration: (animDuration), x: 5.78651222602025, y: 72.32470228479104, z: 60.826936793399625,
       onComplete: () => {
         resolve()
       }
     });
 
     gsap.to(cameraMesh.position, {
-      ease: "easeInOutCubic", duration: (animDuration - 1), delay: 1, x: -57.53, z: -8,
+      ease: "easeInOutCubic", duration: (animDuration - 1.5), delay: 1.5, x: -57.53, z: -8,
       onUpdate: () => {
+        // console.log(camera.rotation);
         setCamPosition(camInitialPos);
       }
     })
