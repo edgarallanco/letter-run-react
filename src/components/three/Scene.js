@@ -33,12 +33,10 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [camereaMovment, setCameraMovement] = useState();
   const [currentRoute, setCurrentRoute] = useState(0);
   const [playerBody, setPlayerBody] = useState();
-  const [frameBody, setFrameBody] = useState();
-  const [playerFrame, setPlayerFrame] = useState();
-  const [playerBox, setPlayerBox] = useState();
-  const [poolItems, setPoolItems] = useState([]);
   const [cameraMesh, setCameraMesh] = useState();
   const [camPosition, setCamPosition] = useState(new Vector3(0, 90, 6));
+  const [camRotation, setCamRotation] = useState(new Vector3(0, 0, 0));
+  const [startRotate, setStartRotate] = useState(false);
   let collider;
   const loader = new GLTFLoader();
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_no_cam.glb');
@@ -131,13 +129,19 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     state.camera.zoom = 1;
     setMovement(m);
 
+    // console.log(state.playerMesh);
+    // state.playerMesh.material.opacity = 0.2;
+
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    setPlayerOpacity(state.playerMesh, 1, true);
+    dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: state.playerMesh });
+    // console.log(state.playerMesh);
 
   }, [state.playerMesh]);
 
   useEffect(() => {
     if (moveToStart) {
-      animate(camera, cameraMesh, setCamPosition, initialPos).then(
+      animate(camera, cameraMesh, setCamPosition, setCamRotation, setStartRotate, initialPos).then(
         () => {
           //setIsplaying(true);
           setIntroDone(true);
@@ -145,6 +149,23 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       )
     }
   }, [moveToStart])
+
+  const setPlayerOpacity = (mesh, opacity, transparent) => {
+    if(mesh.material) {
+      mesh.material.transparent = transparent;
+      mesh.material.opacity = opacity;
+    }
+
+    mesh.children.forEach((m) => {
+      if(m.material) {
+        m.material.opacity = opacity;
+        m.material.transparent = transparent;
+      }
+      
+      if(m.children)
+        setPlayerOpacity(m, opacity, transparent);
+    })
+  }
 
   useFrame(({ controls }) => {
     if (state?.playerMesh)
@@ -188,9 +209,13 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       // console.log(camera.position);
       if (moveToStart) {
         if (!introDone) {
-          // console.log(camPosition);
+          // console.log(camera.rotation);
           camera.position.copy(camPosition);
-          camera.lookAt(cameraMesh.position);
+
+          if (startRotate)
+            camera.rotation.copy(camRotation);
+          else
+            camera.lookAt(cameraMesh.position);
           camera.up.set(0, 1, 0);
         }
       } else {
