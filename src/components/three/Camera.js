@@ -32,6 +32,20 @@ const Camera = ({ zoom }) => {
     const controls = controlsRef.current;
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+
+
+
+    document.addEventListener('mousemove', (e) => {
+      let scale = -0.01;
+      // camera.rotateX(e.movementX * scale);
+      // camera.rotateY(e.movementY * scale);
+      // document.dispatchEvent(new Event("mousedown"));
+      // console.log(e.movementX * scale);
+
+      // camera.position.x = e.movementX * scale;
+      // camera.position.z = e.movementY * scale;
+      // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    });
   }, [gl]);
 
   const zoomAnim = useSpring({
