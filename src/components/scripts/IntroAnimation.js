@@ -4,6 +4,7 @@ import { Vector3, Euler } from 'three';
 export const animate = (camera, cameraMesh, setCamPosition, setCamRotation, initialPos) => {
   return new Promise((resolve, reject) => {
     let animDuration = 3.5;
+    let firstTurnDuration = 2;
     // console.log(cameraMesh.position);
     // let initialPosition = new Vector3();
     let camInitialPos = new Vector3(initialPos[0], initialPos[1], initialPos[2]);
@@ -26,18 +27,18 @@ export const animate = (camera, cameraMesh, setCamPosition, setCamRotation, init
     let finalTUrn = new Euler().copy(cameraClone.rotation);
 
     let camRotation = gsap.timeline();
-    camRotation.to(initRotation, {ease: "none", duration: 2, x: firstTurn.x, y: firstTurn.y, z: firstTurn.z,
+    camRotation.to(initRotation, {ease: "none", duration: firstTurnDuration, x: firstTurn.x, y: firstTurn.y, z: firstTurn.z,
     onUpdate: () => {
       setCamRotation(initRotation);
     }
     });
-    camRotation.to(initRotation, {ease: "none", duration: (animDuration - 2), x: finalTUrn.x, y: finalTUrn.y, z: finalTUrn.z,
+    camRotation.to(initRotation, {ease: "none", duration: (animDuration - firstTurnDuration), x: finalTUrn.x, y: finalTUrn.y, z: finalTUrn.z,
       onUpdate: () => {
         setCamRotation(initRotation);
       }
     })
 
-    gsap.to(cameraMesh.position, { ease: "none", duration: (animDuration), x: -57.53, z: -8, 
+    gsap.to(cameraMesh.position, { ease: "easeInOutCubic", duration: (animDuration), x: -57.53, z: -8, 
       onUpdate: () => {
         // console.log(camera.rotation);
         setCamPosition(camInitialPos);
@@ -45,7 +46,7 @@ export const animate = (camera, cameraMesh, setCamPosition, setCamRotation, init
       onStart: () => {
         // console.log(camera.rotation);
       } })
-    gsap.to(camera, { ease: "none", duration: animDuration, zoom: 4.5 })
+    gsap.to(camera, { ease: "easeInOutCubic", duration: animDuration, zoom: 4.5 })
   });
 
 }
