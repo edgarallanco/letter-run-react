@@ -27,6 +27,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [playerBody, setPlayerBody] = useState();
   const [cameraMesh, setCameraMesh] = useState();
   const [camPosition, setCamPosition] = useState(new Vector3(0, 90, 6));
+  const [camRotation, setCamRotation] = useState(new Euler());
   let collider;
   const loader = new GLTFLoader();
   const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_no_cam.glb');
@@ -131,7 +132,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
   useEffect(() => {
     if (moveToStart) {
-      animate(camera, cameraMesh, setCamPosition, initialPos).then(
+      animate(camera, cameraMesh, setCamPosition, setCamRotation, initialPos).then(
         () => {
           //setIsplaying(true);
           setIntroDone(true);
@@ -141,18 +142,18 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   }, [moveToStart])
 
   const setPlayerOpacity = (mesh, opacity, transparent) => {
-    if(mesh.material) {
+    if (mesh.material) {
       mesh.material.transparent = transparent;
       mesh.material.opacity = opacity;
     }
 
     mesh.children.forEach((m) => {
-      if(m.material) {
+      if (m.material) {
         m.material.opacity = opacity;
         m.material.transparent = transparent;
       }
-      
-      if(m.children)
+
+      if (m.children)
         setPlayerOpacity(m, opacity, transparent);
     })
   }
@@ -199,18 +200,18 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       // console.log(camera.position);
       if (moveToStart) {
         if (!introDone) {
-          // console.log(camera.rotation);
           camera.position.copy(camPosition);
-          camera.lookAt(cameraMesh.position);
-          camera.up.set(0, 1, 0);
+          // camera.lookAt(cameraMesh.position);
+          camera.rotation.copy(camRotation);
+          // console.log(camera.rotation);
+          // camera.up.set(0, 1, 0);
         }
       } else {
         camera.position.set(initialPos[0], initialPos[1], initialPos[2]);
         camera.up.set(0, 1, 0);
         camera.lookAt(cameraMesh.position);
-        // camera.lookAt(0, 0, 0);
-        //camera.lookAt(cameraMesh.position.x, cameraMesh.position.y, (cameraMesh.position.z + 6));
-        //console.log(cameraMesh.position + " is the camera mesh position")
+        let rotation = new Euler().copy(camera.rotation);
+        setCamRotation(rotation);
       }
       //   // console.log(camera);
       //   dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
