@@ -47,6 +47,7 @@ const Player = ({
   );
   const { actions } = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
+  const speedVar = 6;
   useEffect(() => {
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
@@ -83,6 +84,8 @@ const Player = ({
       //let boxFrame = new WireframeGeometry(boxGeo);
       let boxMesh = new Mesh(boxGeo, new MeshBasicMaterial({ color: 0x00ff00 }));
       boxMesh.visible = false;
+      //boxMesh.material.transparent = true;
+      //boxMesh.material.opacity = .25;
       boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
       scene.add(boxMesh);
       checkpointsMesh.push(boxMesh);
@@ -216,7 +219,7 @@ const Player = ({
       // if (!isModal) {
       if (fwdPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.2);
+        speed <= speedVar && setSpeed(speed + 0.2);
         vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // state.playerPhysics.velocity.set(0, 0, -2);
@@ -224,7 +227,7 @@ const Player = ({
 
       if (bkdPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.2);
+        speed <= speedVar && setSpeed(speed + 0.2);
         vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // state.playerPhysics.velocity.set(0, 0, 2);
@@ -232,7 +235,7 @@ const Player = ({
 
       if (lftPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.2);
+        speed <= speedVar && setSpeed(speed + 0.2);
         vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // state.playerPhysics.velocity.set(-2, 0, 0);
@@ -240,7 +243,7 @@ const Player = ({
 
       if (rgtPressed) {
         stateValtio.action = 'Anim_Walk';
-        speed <= 7 && setSpeed(speed + 0.2);
+        speed <= speedVar && setSpeed(speed + 0.2);
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
         // state.playerPhysics.velocity.set(2, 0, 0);

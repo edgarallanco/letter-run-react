@@ -30,7 +30,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [camRotation, setCamRotation] = useState(new Euler());
   let collider;
   const loader = new GLTFLoader();
-  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/EA_Baking_AllLetters_no_cam.glb');
+  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/ea_baked_world_v2.glb');
   const [world, setWorld] = useState();
 
   const animations = [];
@@ -59,8 +59,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
-    config: { duration: 1000, easing: easings.easeInOutCubic},
-    zoomProp: zoomCamera ? 2 : 4.5,
+    config: { duration: 2000, easing: easings.easeInOutCubic},
+    zoomProp: zoomCamera ? 1 : 8,
   });
 
   const introZoomAnim = useSpring({
@@ -98,7 +98,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       scene1.nodes[item].visible = false;
     })
 
-    // setupPhysics(scene);
+    //setupPhysics(scene);
 
   }, []);
 
@@ -124,7 +124,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     // state.playerMesh.material.opacity = 0.2;
 
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
-    setPlayerOpacity(state.playerMesh, 1, true);
+    //setPlayerOpacity(state.playerMesh, 1, true);
     dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: state.playerMesh });
     // console.log(state.playerMesh);
 
@@ -230,13 +230,13 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       setZoomCamera(true);
     } else if (launchRocket && zoomCamera) {
       // console.log(zoomAnim.zoomProp.animation.values[0]._value)
-      if (zoomAnim.zoomProp.animation.values[0] && camera.zoom > 2) {
+      if (zoomAnim.zoomProp.animation.values[0] && camera.zoom > 1) {
         camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
       }
     } else if (!zoomCamera && launchRocket) {
       if (zoomAnim.zoomProp.animation.values[0]) {
         //console.log(zoomAnim.zoomProp.animation.values[0]._value)
-        if (zoomAnim.zoomProp.animation.values[0]._value >= 4.5) {
+        if (zoomAnim.zoomProp.animation.values[0]._value >= 8) {
           setLaunchRocket(false);
           setIsplaying(true);
         } else {
@@ -309,9 +309,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
             )
             : undefined;
           c.visible = found ? false : true;
+          
           if (!found) {
             cloned.name = c.userData.name;
             geoms.push(cloned);
+            
           }
         } else if (
           !c.name.includes('Grass') &&
@@ -319,6 +321,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         ) {
           cloned.name = c.userData.name;
           geoms.push(cloned);
+          console.log(c.userData.name + " is the name");
+          console.log("x =" + c.position.x + ", y = " + c.position.y + ", z =" + c.position.z + " is the position");
           console.log(cloned)
         }
 
@@ -347,6 +351,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     );
     mergedGeometry.boundsTree = new MeshBVH(mergedGeometry, {
       maxDepth: 200,
+      visible: false,
     });
     const collider = new THREE.Mesh(mergedGeometry);
     collider.material.opacity = 0;
@@ -404,8 +409,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
                 // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
                 actions["Anim_Rocket"].stop();
               }, 2000)
-            }, 500);
-          }, 1000);
+            }, 1000);
+          }, 1500);
         } else {
           c.visible = false;
         }
