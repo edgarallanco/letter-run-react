@@ -40,7 +40,7 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
     //lottie1.playSegments([progress, progress + 1], true)
     //console.log(progress + "is current progress frame")
     console.log(loaded + " is the loaded amount")
-    if (loaded >= 29) {
+    if (loaded >= 25) {
       completedTrigger = true;
       //console.log('loaded is 30!')
       var newEvent = new Event('completed');
@@ -53,7 +53,7 @@ const Loader = ({ setHasLoaded, setMoveToStart }) => {
       var lottieToggle = false;
       setTimeout(function() {
         setMoveToStart(true)
-      },6000)
+      },5000)
       
       /* lottie2.addEventListener('enterFrame', function() {
         console.log('lottie 2 playing')
