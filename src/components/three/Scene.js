@@ -12,6 +12,7 @@ import { easings, useSpring } from 'react-spring';
 import LinearMovement from 'components/scripts/LinearMovement';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { animate } from '../scripts/IntroAnimation';
+import { setupPhysics, worldStep } from '../scripts/Physics';
 
 const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setModal, isPlaying, setIsplaying, introDone, setIntroDone }) => {
   const { state } = useContext(AppStateContext);
@@ -40,11 +41,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   ]
 
   const initialPos = cameraRoutes[0].pos;
-  
-  // const poolItemNames = [
-  //   'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
-  // ]
-  const poolItemNames = [];
+
+  const poolItemNames = [
+    'Pool_Item_1', 'Pool_Item_2', 'Pool_Item_6', 'Pool_Item_3'
+  ]
+  // const poolItemNames = [];
 
   scene1.animations.forEach((ani) => {
     let exists = animations.find((a) => {
@@ -98,7 +99,11 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       scene1.nodes[item].visible = false;
     })
 
+<<<<<<< HEAD
     //setupPhysics(scene);
+=======
+    setupPhysics(scene);
+>>>>>>> 764e6080a2974aba789fba37ed0c9c377eaeccb5
 
   }, []);
 
@@ -167,7 +172,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     if (!state?.playerMesh)
       return;
 
-    // worldStep(state?.playerMesh);
+    worldStep(state?.playerMesh);
 
     // playerBody.position.y = 3.5;
     setPlayerBody(playerBody);

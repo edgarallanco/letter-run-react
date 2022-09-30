@@ -46,7 +46,7 @@ export const setupPhysics = (scene) => {
   // contactMaterial.friction = 0.5;
   // contactMaterial.restitution = 0.2;
 
-  world.addContactMaterial(contactMaterial);
+  // world.addContactMaterial(contactMaterial);
   world.addBody(pBody);
 
   loadPoolNoodles(scene, world, noodleMaterial);
@@ -58,7 +58,8 @@ export const worldStep = (player) => {
 
   pBody.position.copy(player.position);
   pBody.quaternion.copy(player.quaternion);
-  pBody.velocity.set(2, 0, 2);
+  pBody.position.y = 3.5;
+  // pBody.velocity.set(2, 0, 2);
 
   updatePosition();
 }
