@@ -52,7 +52,7 @@ const checkpoint = [
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_04.png',
     number: 3,
     position: globeCoords,
-    size: [2, 2, 2],
+    size: [2, 2, 2.5],
     stair: '4_A_Stairs',
     collected: false,
     object: '4_A_Object',

@@ -440,7 +440,15 @@ const Player = ({
     window.addEventListener(
       'keyup',
       (e) => {
+        console.log (e.code + " was pressed from JS")
         switch (e.code) {
+          case '0':
+            setFwdPressed(false);
+            setBkdPressed(false);
+            setRgtPressed(false);
+            setLftPressed(false);
+            setJumpressed(false);
+            break;
           case 'ArrowUp':
             setFwdPressed(false);
             break;
