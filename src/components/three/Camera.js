@@ -46,10 +46,11 @@ const Camera = ({ zoom }) => {
 
     document.addEventListener('mousedown', () => {
       setOnClick(true);
+      resetZoomVar = false;
     });
 
     document.addEventListener('mouseup', () => {
-      setOnClick(false);
+      resetZoomVar = true;
     });
   }, [gl]);
 
@@ -82,7 +83,7 @@ const Camera = ({ zoom }) => {
       }
     }
 
-    if (state.controls) {
+    /* if (state.controls) {
       // console.log(mouseX);
       if (mouseX !== 0 && mouseY !== 0 && !onClick) {
         // camera.position.x = camera.position.x + mouseX;
@@ -98,7 +99,7 @@ const Camera = ({ zoom }) => {
         setMouseX(0);
         setMouseY(0);
       }
-    }
+    } */
   });
 
   return (

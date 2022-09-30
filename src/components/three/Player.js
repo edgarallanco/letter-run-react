@@ -10,6 +10,7 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { getDirectionOffset } from 'src/utils/directionalOffset';
 import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
 import checkpoints from 'src/resources/checkpoints';
+import gsap from 'gsap';
 
 const Player = ({
   setIsModal,
@@ -48,6 +49,7 @@ const Player = ({
   const { actions } = useAnimations(animations, meshRef);
   const previousAction = usePrevious(stateValtio.action);
   const speedVar = 6;
+  
   useEffect(() => {
     if (!state.controls) return;
     meshRef.current.capsuleInfo = {
@@ -84,8 +86,8 @@ const Player = ({
       //let boxFrame = new WireframeGeometry(boxGeo);
       let boxMesh = new Mesh(boxGeo, new MeshBasicMaterial({ color: 0x00ff00 }));
       boxMesh.visible = false;
-      //boxMesh.material.transparent = true;
-      //boxMesh.material.opacity = .25;
+      boxMesh.material.transparent = true;
+      boxMesh.material.opacity = .25;
       boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
       scene.add(boxMesh);
       checkpointsMesh.push(boxMesh);
@@ -400,6 +402,13 @@ const Player = ({
     window.addEventListener(
       'keydown',
       (e) => {
+        if (resetZoomVar === true) {
+          gsap.to(camera.position, {
+            ease: "power3.out", duration: .25, x: 5.78651222602025, y: 72.32470228479104, z: 60.826936793399625,
+          });
+          resetZoomVar = false;
+        } 
+        
         setHideTutorial(true);
         switch (e.code) {
           case 'ArrowUp':

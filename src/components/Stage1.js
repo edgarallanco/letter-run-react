@@ -15,6 +15,7 @@ import LetterSound from './three/LetterSound';
 import { Html, Stars, useProgress } from '@react-three/drei';
 import GlobalVars from 'src/components/globalVar';
 import { findRenderedDOMComponentWithClass } from 'react-dom/test-utils';
+import gsap from 'gsap';
 
 const Loader = ({ setHasLoaded, setMoveToStart }) => {
   const { active, progress, errors, item, loaded, total } = useProgress();
@@ -134,6 +135,7 @@ export const Stage1 = () => {
       playerVis = true;
       intro_closer.click();
       soundButton.click();
+      /* gsap.to(camera, { ease: "power3.inOut", duration: 1, zoom: 8 }) */
       setTimeout(function(){
         inst_trigger.click();
       },1000)
@@ -145,7 +147,8 @@ export const Stage1 = () => {
       setIsplaying(true);
       playerVis = true;
       intro_closer.click();
-      setTimeout(function(){
+/*       gsap.to(camera, { ease: "power3.inOut", duration: 1, zoom: 8 })
+ */      setTimeout(function(){
         inst_trigger.click();
       },1000)
     })
