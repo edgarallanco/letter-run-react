@@ -7,6 +7,7 @@ import { TWEEN } from 'three/examples/jsm/libs/tween.module.min';
 import { AppStateContext, AppDispatchContext } from '../../context/AppContext';
 import { Actions } from '../../reducer/AppReducer';
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 // Extend will make OrbitControls available as a JSX element called orbitControls for us to use.
 // extend({OrbitControls, MapControls});
@@ -18,6 +19,9 @@ const Camera = ({ zoom }) => {
   const cameraRef = useRef();
   const controlsRef = useRef();
   const [zoomPressed, setZoomPressed] = useState(true);
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+  const [onClick, setOnClick] = useState(false);
 
   useEffect(() => {
     if (zoom) {
@@ -33,18 +37,18 @@ const Camera = ({ zoom }) => {
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
 
-
-
     document.addEventListener('mousemove', (e) => {
-      let scale = -0.01;
-      // camera.rotateX(e.movementX * scale);
-      // camera.rotateY(e.movementY * scale);
-      // document.dispatchEvent(new Event("mousedown"));
-      // console.log(e.movementX * scale);
+      let scale = -0.2;
+      setMouseX(e.movementX * scale);
+      setMouseY(e.movementY * scale);
+    });
 
-      // camera.position.x = e.movementX * scale;
-      // camera.position.z = e.movementY * scale;
-      // dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
+    document.addEventListener('mousedown', () => {
+      setOnClick(true);
+    });
+
+    document.addEventListener('mouseup', () => {
+      setOnClick(false);
     });
   }, [gl]);
 
@@ -74,6 +78,19 @@ const Camera = ({ zoom }) => {
           camera.zoom = zoomAnim.zoomProp.animation.values[0]._value;
         else
           setZoomPressed(false);
+      }
+    }
+
+    if (state.controls) {
+      // console.log(mouseX);
+      if (mouseX !== 0 && mouseY !== 0 && !onClick) {
+        // camera.position.x = camera.position.x + mouseX;
+        // camera.position.y = camera.position.y + mouseY;
+        let moveX = camera.position.x + mouseX;
+        let moveZ = camera.position.z + mouseY;
+        gsap.to(camera.position, {ease: "none", duration: 0.2, x: moveX, z: moveZ})
+        setMouseX(0);
+        setMouseY(0);
       }
     }
   });
