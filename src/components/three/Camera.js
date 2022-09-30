@@ -38,7 +38,7 @@ const Camera = ({ zoom }) => {
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
 
     document.addEventListener('mousemove', (e) => {
-      let scale = -0.2;
+      let scale = -0.4;
       setMouseX(e.movementX * scale);
       setMouseY(e.movementY * scale);
     });
@@ -88,7 +88,12 @@ const Camera = ({ zoom }) => {
         // camera.position.y = camera.position.y + mouseY;
         let moveX = camera.position.x + mouseX;
         let moveZ = camera.position.z + mouseY;
-        gsap.to(camera.position, {ease: "none", duration: 0.2, x: moveX, z: moveZ})
+        gsap.to(camera.position, {
+          ease: "none", duration: 0.2, x: moveX, z: moveZ,
+          onUpdate: () => {
+            camera.lookAt(state.controls.target);
+          }
+        })
         setMouseX(0);
         setMouseY(0);
       }
