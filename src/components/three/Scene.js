@@ -99,11 +99,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       scene1.nodes[item].visible = false;
     })
 
-<<<<<<< HEAD
-    //setupPhysics(scene);
-=======
     setupPhysics(scene);
->>>>>>> 764e6080a2974aba789fba37ed0c9c377eaeccb5
 
   }, []);
 
