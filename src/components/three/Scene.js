@@ -357,8 +357,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     const collider = new THREE.Mesh(mergedGeometry);
     collider.material.opacity = 0;
     collider.material.transparent = true;
-    /* collider.material.visible = true; */
-    //collider.position.y = 0.45;
+    //collider.material.visible = true;
+    //collider.position.y = 0.49;
     // visualizer = new MeshBVHVisualizer(collider, 10);
     // let groundFrame = new WireframeGeometry(mergedGeometry);
     // let groundMesh = new Mesh(groundFrame, new MeshBasicMaterial({ color: 0x00ff00 }));
@@ -393,7 +393,8 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       }
       if (c.userData.name === checkpoint.object) {
         if (checkpoint.item_name === 'Spaceship') {
-          // console.log("Spaceship.");
+          // console.log("Spaceship.")
+          
           stateValtio.action = 'Anim_Idle';
           setLaunchRocket(true);
           setIsplaying(false);

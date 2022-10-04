@@ -407,7 +407,7 @@ const Player = ({
           //controls.reset();
           resetZoomVar = false;
         }
-       /*  if (resetZoomVar === true) {
+         if (resetZoomVar === true) {
           console.log("Before: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation." )
           gsap.to(camera.position, {
             ease: "power3.out", duration: .25, x: 0, y: 72, z: 53,
@@ -420,7 +420,7 @@ const Player = ({
           setTimeout(function() {
             console.log("After: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation." )
           },1000);
-        }  */
+        }  
         
         setHideTutorial(true);
         switch (e.code) {

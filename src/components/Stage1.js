@@ -175,11 +175,11 @@ export const Stage1 = () => {
     if (collectedCheckpoints.length === 10) {
       setIsFinished(true);
       setIsPopup(false);
-      formOpen.click();
+      allCollected = true;
       standardIcon.classList.add('gc-hide');
       partyPopper.classList.remove('gc-hide');
       finalContent.classList.remove('gc-hide');
-      aboutContent.classList.add('gc-hide');
+      //aboutContent.classList.add('gc-hide');
       innerExpander.click();
       startConfetti();
       setTimeout(function() {
@@ -196,7 +196,6 @@ export const Stage1 = () => {
     }
     // console.log("Checkpoint is:", checkpoint);
     UpdateItems(checkpoint.item_id, true);
-    menuCloserOn.click();
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
     //itemHeader.innerText = checkpoint.item_headline;
     //itemLabel.innerText = checkpoint.item_body_copy;
