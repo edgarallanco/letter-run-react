@@ -118,7 +118,7 @@ const Camera = ({ zoom }) => {
         maxPolarAngle={Math.PI / 2.5}
         maxAzimuthAngle={Infinity}
         minAzimuthAngle={Infinity}
-        enableZoom={true}
+        enableZoom={false}
         enablePan={false}
       />
 

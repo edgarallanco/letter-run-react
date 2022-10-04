@@ -196,7 +196,7 @@ export const Stage1 = () => {
     }
     // console.log("Checkpoint is:", checkpoint);
     UpdateItems(checkpoint.item_id, true);
-    menuOpen.click();
+    menuCloserOn.click();
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
     //itemHeader.innerText = checkpoint.item_headline;
     //itemLabel.innerText = checkpoint.item_body_copy;

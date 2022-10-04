@@ -49,6 +49,7 @@ export const animate = (camera, cameraMesh, setCamPosition, setCamRotation, init
     gsap.to(camera, { ease: "power3.inOut", duration: animDuration, zoom: 4.5 })
     window.addEventListener('finalZoom', function() {
       gsap.to(camera, { ease: "power3.inOut", duration: (animDuration / 2), zoom: 8 })
+      
     })
   });
 

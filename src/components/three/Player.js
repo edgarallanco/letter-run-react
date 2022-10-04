@@ -87,7 +87,7 @@ const Player = ({
       let boxMesh = new Mesh(boxGeo, new MeshBasicMaterial({ color: 0x00ff00 }));
       boxMesh.visible = false;
       boxMesh.material.transparent = true;
-      boxMesh.material.opacity = .25;
+      boxMesh.material.opacity = .2;
       boxMesh.position.copy(new Vector3(checkpoint.position[0], checkpoint.position[1], checkpoint.position[2]));
       scene.add(boxMesh);
       checkpointsMesh.push(boxMesh);
@@ -402,6 +402,7 @@ const Player = ({
     window.addEventListener(
       'keydown',
       (e) => {
+        console.log("Player's position is: " + player.position.x + ", " + player.position.y + ", " + player.position.z)
         if (resetZoomVar === true) {
           //controls.reset();
           resetZoomVar = false;
@@ -452,6 +453,7 @@ const Player = ({
     window.addEventListener(
       'keyup',
       (e) => {
+        console.log("Player's position is: " + player.position.x + ", " + player.position.y + ", " + player.position.z)
       //  console.log (e.code + " was pressed from JS")
         switch (e.code) {
           case 'ArrowUp':
