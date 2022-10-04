@@ -135,7 +135,8 @@ export const Stage1 = () => {
       playerVis = true;
       intro_closer.click();
       soundButton.click();
-      /* gsap.to(camera, { ease: "power3.inOut", duration: 1, zoom: 8 }) */
+      window.dispatchEvent(secondZoom);
+      //gsap.to(Camera.zoom, { ease: "power3.inOut", duration: 1, zoom: 8 }) 
       setTimeout(function(){
         inst_trigger.click();
       },1000)
@@ -147,6 +148,7 @@ export const Stage1 = () => {
       setIsplaying(true);
       playerVis = true;
       intro_closer.click();
+      window.dispatchEvent(secondZoom);
 /*       gsap.to(camera, { ease: "power3.inOut", duration: 1, zoom: 8 })
  */      setTimeout(function(){
         inst_trigger.click();

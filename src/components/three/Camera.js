@@ -42,10 +42,14 @@ const Camera = ({ zoom }) => {
       let scale = -0.4;
       setMouseX(e.movementX * scale);
       setMouseY(e.movementY * scale);
+        /* console.log(camera.position)
+        console.log(camera.rotation)
+        console.log(camera.zoom) */
     });
 
     document.addEventListener('mousedown', () => {
       setOnClick(true);
+      controls.saveState();
       resetZoomVar = false;
     });
 
@@ -105,8 +109,8 @@ const Camera = ({ zoom }) => {
   return (
     <>
       <OrbitControls
-        minDistance={10}
-        maxDistance={600}
+        minDistance={50}
+        maxDistance={200}
         minPolarAngle={Math.PI / 5}
         args={[camera, gl.domElement]}
         ref={controlsRef}
@@ -115,7 +119,7 @@ const Camera = ({ zoom }) => {
         maxAzimuthAngle={Infinity}
         minAzimuthAngle={Infinity}
         enableZoom={true}
-        enablePan={true}
+        enablePan={false}
       />
 
       <PerspectiveCamera

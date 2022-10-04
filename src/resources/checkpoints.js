@@ -21,7 +21,7 @@ const checkpoint = [
     img_url: 'https://fargamot.s3.amazonaws.com/images/objects_02.png',
     number: 1,
     position: socksCoords,
-    size: [1.5, 1, 1.5],
+    size: [1.5, 2, 1.5],
     stair: '2_D_Stairs',
     collected: false,
     object: '2_D_Object',
