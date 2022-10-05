@@ -403,24 +403,21 @@ const Player = ({
       'keydown',
       (e) => {
         console.log("Player's position is: " + player.position.x + ", " + player.position.y + ", " + player.position.z)
-        if (resetZoomVar === true) {
-          //controls.reset();
-          resetZoomVar = false;
-        }
-         if (resetZoomVar === true) {
+        
+         /* if (resetZoomVar === true) {
           console.log("Before: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation." )
           gsap.to(camera.position, {
-            ease: "power3.out", duration: .25, x: 0, y: 72, z: 53,
+            ease: "power3.out", duration: 1, x: 0, y: 72, z: 53,
           });
           gsap.to(camera.rotation, {
-            ease: "power3.out", duration: .25, x: -.8, y: .56, z: .54,
+            ease: "power3.out", duration: 1, x: -.8, y: .56, z: .54,
           })
 
           resetZoomVar = false;
           setTimeout(function() {
             console.log("After: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation." )
           },1000);
-        }  
+        }   */
         
         setHideTutorial(true);
         switch (e.code) {
