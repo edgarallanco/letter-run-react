@@ -38,24 +38,19 @@ const Camera = ({ zoom }) => {
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
 
-    document.addEventListener('mousemove', (e) => {
-      let scale = -0.4;
-      setMouseX(e.movementX * scale);
-      setMouseY(e.movementY * scale);
-        /* console.log(camera.position)
-        console.log(camera.rotation)
-        console.log(camera.zoom) */
-    });
+    // document.addEventListener('mousemove', (e) => {
+    //   let scale = -0.4;
+    //   setMouseX(e.movementX * scale);
+    //   setMouseY(e.movementY * scale);
+    // });
 
-    document.addEventListener('mousedown', () => {
-      setOnClick(true);
-      controls.saveState();
-      resetZoomVar = false;
-    });
+    // document.addEventListener('mousedown', () => {
+    //   setOnClick(true);
+    // });
 
-    document.addEventListener('mouseup', () => {
-      resetZoomVar = true;
-    });
+    // document.addEventListener('mouseup', () => {
+    //   setOnClick(false);
+    // });
   }, [gl]);
 
   const zoomAnim = useSpring({
