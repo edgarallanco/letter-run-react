@@ -218,9 +218,17 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       //   dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
       //   dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
+      window.addEventListener( "mousedown", event => {  
+        if (orbitChange === false){
+          orbitChange = true;
+          console.log( controls.object.position );  
+        }
+        
+      }) 
       /* if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
         scene1.nodes["Tutorial"].material.opacity += 0.05; */
     }
+
 
     if (launchRocket && scene1.nodes["7_L_Button"].position.y > -0.1) {
       let vector = new Vector3(0, 0, 0);

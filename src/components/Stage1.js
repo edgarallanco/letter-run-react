@@ -176,6 +176,7 @@ export const Stage1 = () => {
       setIsFinished(true);
       setIsPopup(false);
       allCollected = true;
+      expanderCloseToggle = false;
       standardIcon.classList.add('gc-hide');
       partyPopper.classList.remove('gc-hide');
       finalContent.classList.remove('gc-hide');

@@ -179,6 +179,7 @@ const Player = ({
         rotateAngle,
         directionOffset + angleYCameraDirection
       );
+      
       if (stateValtio.action === 'Anim_Walk') {
         meshRef.current.quaternion.rotateTowards(rotateQuarternion, 0.1);
       }
@@ -221,7 +222,10 @@ const Player = ({
       // state.playerPhysics.velocity.set(0, 0, 0);
 
       if(hasReset && !resetDone) {
-        resetCamera();
+        if (orbitChange === true){
+          resetCamera();
+          orbitChange = false;
+        }
       }
 
       // if (!isModal) {

@@ -105,7 +105,7 @@ const Camera = ({ zoom }) => {
     <>
       <OrbitControls
         minDistance={50}
-        maxDistance={200}
+        maxDistance={300}
         minPolarAngle={Math.PI / 5}
         args={[camera, gl.domElement]}
         ref={controlsRef}
@@ -113,7 +113,7 @@ const Camera = ({ zoom }) => {
         maxPolarAngle={Math.PI / 2.5}
         maxAzimuthAngle={Infinity}
         minAzimuthAngle={Infinity}
-        enableZoom={false}
+        enableZoom={true}
         enablePan={false}
       />
 
