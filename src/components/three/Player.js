@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Vector3, Box3, Matrix4, Line3, Quaternion, Mesh, WireframeGeometry, MeshBasicMaterial, BoxGeometry } from 'three';
+import { Vector3, Box3, Matrix4, Line3, Quaternion, Mesh, WireframeGeometry, MeshBasicMaterial, BoxGeometry, Euler } from 'three';
 import { AppStateContext, AppDispatchContext } from 'context/AppContext';
 import { Actions } from 'reducer/AppReducer';
 import equal from 'fast-deep-equal';
@@ -10,6 +10,7 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { getDirectionOffset } from 'src/utils/directionalOffset';
 import { pointInsideGeometry } from 'src/utils/pointInsideGeometry';
 import checkpoints from 'src/resources/checkpoints';
+import gsap from 'gsap';
 
 const Player = ({
   setIsModal,
@@ -34,6 +35,8 @@ const Player = ({
   const [lftPressed, setLftPressed] = useState(false);
   const [rgtPressed, setRgtPressed] = useState(false);
   const [jumpPressed, setJumpressed] = useState(false);
+  const [hasReset, setHasReset] = useState(false);
+  const [resetDone, setResetDone] = useState(false);
   const [isOnGround, setIsOnGround] = useState(true);
   const [vector, setVector] = useState(new Vector3());
   const [upVector, setUpVector] = useState(new Vector3(0, 0, 0));
@@ -212,6 +215,10 @@ const Player = ({
       // console.log(player.position);
       // state.playerPhysics.velocity.set(0, 0, 0);
 
+      if(hasReset && !resetDone) {
+        resetCamera();
+      }
+
       // if (!isModal) {
       if (fwdPressed) {
         stateValtio.action = 'Anim_Walk';
@@ -267,7 +274,7 @@ const Player = ({
       ) {
         setSpeed(1);
         stateValtio.action = 'Anim_Idle';
-      }
+      } 
       // }
     }
 
@@ -384,11 +391,44 @@ const Player = ({
     setIsModal(false);
   }
 
+  const resetCamera = () => {
+    // console.log("Before: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation.")
+    let posDifference = {
+      x: 63.31,
+      y: 68.53,
+      z: 68.82
+    }
+    gsap.to(camera.position, {
+      ease: "power3.out", duration: 1,
+      x: player.position.x + posDifference.x,
+      y: player.position.y + posDifference.y,
+      z: player.position.z + posDifference.z,
+      onComplete: () => {
+        let cameraClone = camera.clone();
+        cameraClone.lookAt(player.position);
+        let rotation = new Euler().copy(cameraClone.rotation);
+        gsap.to(camera.rotation, {
+          ease: "power3.out", duration: 1, x: rotation.x, y: rotation.y, z: rotation.z,
+        })
+      }
+    });
+    // resetZoomVar = false;
+    // setTimeout(function () {
+    //   console.log("After: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation.")
+    // }, 1000);
+
+    setResetDone(true);
+  }
+
   const registerEvents = () => {
     window.addEventListener(
       'keydown',
       (e) => {
+        // if (resetZoomVar === true) {
+
+        // }  
         setHideTutorial(true);
+        setHasReset(true);
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(true);
@@ -419,6 +459,8 @@ const Player = ({
     window.addEventListener(
       'keyup',
       (e) => {
+        setHasReset(false);
+        setResetDone(false);
         switch (e.code) {
           case 'ArrowUp':
             setFwdPressed(false);

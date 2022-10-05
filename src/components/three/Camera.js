@@ -37,19 +37,19 @@ const Camera = ({ zoom }) => {
     dispatch({ type: Actions.UPDATE_CONTROLS, payload: controls });
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
 
-    document.addEventListener('mousemove', (e) => {
-      let scale = -0.4;
-      setMouseX(e.movementX * scale);
-      setMouseY(e.movementY * scale);
-    });
+    // document.addEventListener('mousemove', (e) => {
+    //   let scale = -0.4;
+    //   setMouseX(e.movementX * scale);
+    //   setMouseY(e.movementY * scale);
+    // });
 
-    document.addEventListener('mousedown', () => {
-      setOnClick(true);
-    });
+    // document.addEventListener('mousedown', () => {
+    //   setOnClick(true);
+    // });
 
-    document.addEventListener('mouseup', () => {
-      setOnClick(false);
-    });
+    // document.addEventListener('mouseup', () => {
+    //   setOnClick(false);
+    // });
   }, [gl]);
 
   const zoomAnim = useSpring({
@@ -109,10 +109,10 @@ const Camera = ({ zoom }) => {
         args={[camera, gl.domElement]}
         ref={controlsRef}
         makeDefault={true}
-        maxPolarAngle={Math.PI / 2.5}
-        maxAzimuthAngle={Math.PI / 2.8}
+        maxPolarAngle={Math.PI / 2.25}
+        maxAzimuthAngle={Math.PI / 1.25}
         minAzimuthAngle={-Math.PI / 0.52}
-        enableZoom={false}
+        enableZoom={true}
         enablePan={false}
       />
 
