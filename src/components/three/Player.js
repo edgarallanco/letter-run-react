@@ -159,6 +159,7 @@ const Player = ({
         setCheckpoint(checkpoint);
         checkpoint.collected = true;
         checkpoint.last = true;
+        console.log("we picked up an item")
         if (checkpoint.item_name !== "Spaceship") {
           stateValtio.action = "Anim_Idle";
           setIsModal(true);
