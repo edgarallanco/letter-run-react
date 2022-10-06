@@ -31,7 +31,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [camRotation, setCamRotation] = useState(new Euler());
   let collider;
   const loader = new GLTFLoader();
-  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/ea_baked_world_v2.glb');
+  const scene1 = useGLTF('https://fargamot.s3.amazonaws.com/resources/ea_baked_world_v5.glb');
   const [world, setWorld] = useState();
 
   const animations = [];
@@ -223,7 +223,12 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           orbitChange = true;
           console.log( controls.object.position );  
         }
-        
+      }) 
+      window.addEventListener( "wheel", event => {  
+        if (orbitChange === false){
+          orbitChange = true;
+          console.log( controls.object.position );  
+        }
       }) 
       /* if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
         scene1.nodes["Tutorial"].material.opacity += 0.05; */
