@@ -219,7 +219,6 @@ const Player = ({
       if (!state.controls && !state.collider) return;
       let player = meshRef.current;
       let angle = state.controls.getAzimuthalAngle();
-      // console.log(player.position);
       // state.playerPhysics.velocity.set(0, 0, 0);
 
       if(hasReset && !resetDone) {
@@ -477,6 +476,7 @@ const Player = ({
     window.addEventListener(
       'keyup',
       (e) => {
+        console.log(player.position);
         setHasReset(false);
         setResetDone(false);
         switch (e.code) {
