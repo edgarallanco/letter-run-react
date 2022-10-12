@@ -109,9 +109,9 @@ const Camera = ({ zoom }) => {
         args={[camera, gl.domElement]}
         ref={controlsRef}
         makeDefault={true}
-        maxPolarAngle={Math.PI / 2.25}
-        maxAzimuthAngle={Math.PI / 1.25}
-        minAzimuthAngle={-Math.PI / 0.52}
+        // maxPolarAngle={Math.PI / 2.25}
+        // maxAzimuthAngle={Math.PI / 1.25}
+        // minAzimuthAngle={-Math.PI / 0.52}
         enableZoom={true}
         enablePan={false}
       />

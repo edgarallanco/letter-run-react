@@ -22,7 +22,7 @@ export const noodles = [
   },
   {
     name: "ring_2",
-    filename: "./../resources/models/yellow_ring.glb",
+    filename: "./../resources/models/yellow_ring.glb", 
     position: new Vector3(43.70883094989104, 3.0149306909942626, 18.540877822233906),
     // geometry: new TorusGeometry(0.8, 0.2, 20, 100),
     // geometry: new SphereGeometry(1, 20, 10),
@@ -106,16 +106,16 @@ export const loadPoolNoodles = (scene, world, material) => {
       // noodle.physics.material = material;
 
       let pBody = new CANNON.Body({
-        mass: 5,
+        mass: 1,
         shape: noodle.physics,
         position: noodle.position,
-        fixedRotation: !noodle.rotate,
+        // fixedRotation: !noodle.rotate,
         material: material
         // torque: new CANNON.Vec3(1, 1, 1),
         // linearDamping: new CANNON.Vec3(1, 0, 1)
         // force: new CANNON.Vec3(1, 0, 1)
       });
-      // pBody.linearDamping = 0.1;
+      pBody.linearDamping = 0.1;
       // pBody.linearFactor = new CANNON.Vec3(1, 1, 0);
       pBody.quaternion.copy(mesh.quaternion);
       world.addBody(pBody);
@@ -142,7 +142,7 @@ export const loadPoolNoodles = (scene, world, material) => {
 export const updatePosition = (playerPosition) => {
   // console.log(poolItems);
   let geoms = [];
-  poolItems.forEach((item) => {
+  poolItems.forEach((item, index) => {
     item.mesh.position.copy(item.pBody.position);
     item.mesh.quaternion.copy(item.pBody.quaternion);
     // item.mesh.position.x = item.pBody.position.x;

@@ -202,8 +202,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           camera.rotation.copy(camRotation);
           // console.log(camera.rotation);
           // camera.up.set(0, 1, 0);
-        }
+        } 
       } else {
+        // state.playerMesh.position.set(29.769230678613624, 3.786877672092211, 10.47371273939536);
         camera.position.set(initialPos[0], initialPos[1], initialPos[2]);
         camera.up.set(0, 1, 0);
         camera.lookAt(cameraMesh.position);
@@ -215,6 +216,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       //   dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
       // console.log(camera.rotation);
+      // state.playerMesh.position.set(38.65398141975322, 3.7736001150512695, -2.316898333158968);
       if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
         scene1.nodes["Tutorial"].material.opacity += 0.05;
     }
@@ -336,6 +338,18 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         // }
       }
     });
+
+    let tableCoverGeometry = new BoxGeometry(3.4, 2, 1);
+    let tableCover = new Mesh(tableCoverGeometry, new MeshBasicMaterial({color: 0x00ff00}));
+    tableCover.position.set(38.334056074594814, 1.3713684053557624, -9.542654586242868);
+    scene.add(tableCover);
+
+    // let tableGeom = tableCover.geometry.clone();
+    // tableGeom.applyMatrix4(tableCover.matrixWorld);
+    // let buffer = BufferGeometryUtils.mergeVertices(tableGeom);
+    // console.log(buffer);
+    // geoms.push(buffer);
+
     stateValtio.geometries = geoms;
     // create the merged geometry
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
