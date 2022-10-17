@@ -173,16 +173,15 @@ export const Stage1 = () => {
       (check) => check.collected
     );
     if (collectedCheckpoints.length === 10) {
+      expanderCloseToggle = false;
       setIsFinished(true);
       setIsPopup(false);
       allCollected = true;
-      expanderCloseToggle = false;
       standardIcon.classList.add('gc-hide');
       partyPopper.classList.remove('gc-hide');
-      finalContent.classList.remove('gc-hide');
       //aboutContent.classList.add('gc-hide');
-      innerExpander.click();
       startConfetti();
+      simulateEnding();
       setTimeout(function() {
         stopConfetti();
       },5000)
