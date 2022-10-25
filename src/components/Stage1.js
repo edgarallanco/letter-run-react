@@ -195,7 +195,9 @@ export const Stage1 = () => {
       localStorage.setItem('EA_checkpoints', JSON.stringify([checkpoint]));
     }
     // console.log("Checkpoint is:", checkpoint);
-    UpdateItems(checkpoint.item_id, true);
+    if (checkpoint.item_id !== 'rocket'){
+      UpdateItems(checkpoint.item_id, true);
+    }
     collectedItems.innerText = collectedCheckpoints.length + " of 10 items";
     //itemHeader.innerText = checkpoint.item_headline;
     //itemLabel.innerText = checkpoint.item_body_copy;

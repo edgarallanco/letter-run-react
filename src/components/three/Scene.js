@@ -425,6 +425,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
                 // state.camera.zoom = 4.5;
                 // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
                 actions["Anim_Rocket"].stop();
+                UpdateItems('rocket', true);
               }, 2000)
             }, 1000);
           }, 1500);
