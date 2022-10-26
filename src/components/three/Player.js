@@ -43,6 +43,7 @@ const Player = ({
   const [velocity, setVelocity] = useState(new Vector3());
   const [player, setPlayer] = useState();
   const [checkpointsMesh, setCheckpointMesh] = useState([]);
+  const [launchRocket, setLaunchRocket] = useState(true);
   const rotateAngle = new Vector3(0, 1, 0);
   const rotateQuarternion = new Quaternion();
   const { nodes, materials, animations } = useGLTF(
@@ -150,7 +151,8 @@ const Player = ({
       let box = new Box3();
       box.setFromObject(hitPoint);
       let checkpoint = stateValtio.checkpoints[index];
-      if (!checkpoint.collected && box.containsPoint(player.position)) {
+      if ((!checkpoint.collected || (checkpoint.item_name === "Spaceship" && launchRocket)) 
+        && box.containsPoint(player.position)) {
         // console.log(index, checkpoints[index]);
         setCheckpoint(checkpoint);
         checkpoint.collected = true;
@@ -158,6 +160,8 @@ const Player = ({
         if (checkpoint.item_name !== "Spaceship") {
           stateValtio.action = "Anim_Idle";
           setIsModal(true);
+        } else {
+          setLaunchRocket(false);
         }
         // console.log(stateValtio.checkpoints);
       }
@@ -295,6 +299,8 @@ const Player = ({
         setTrack(insideLetter.track);
     } else {
       setIsInLetter(false);
+      setLaunchRocket(true);
+      setCheckpoint(null);
     }
 
     let tempVector = new Vector3();
