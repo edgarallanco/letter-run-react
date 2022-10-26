@@ -106,16 +106,16 @@ export const loadPoolNoodles = (scene, world, material) => {
       // noodle.physics.material = material;
 
       let pBody = new CANNON.Body({
-        mass: 5,
+        mass: 1,
         shape: noodle.physics,
         position: noodle.position,
-        fixedRotation: !noodle.rotate,
+        // fixedRotation: !noodle.rotate,
         material: material
         // torque: new CANNON.Vec3(1, 1, 1),
         // linearDamping: new CANNON.Vec3(1, 0, 1)
         // force: new CANNON.Vec3(1, 0, 1)
       });
-      // pBody.linearDamping = 0.1;
+      pBody.linearDamping = 0.1;
       // pBody.linearFactor = new CANNON.Vec3(1, 1, 0);
       pBody.quaternion.copy(mesh.quaternion);
       world.addBody(pBody);
@@ -142,7 +142,7 @@ export const loadPoolNoodles = (scene, world, material) => {
 export const updatePosition = (playerPosition) => {
   // console.log(poolItems);
   let geoms = [];
-  poolItems.forEach((item) => {
+  poolItems.forEach((item, index) => {
     item.mesh.position.copy(item.pBody.position);
     item.mesh.quaternion.copy(item.pBody.quaternion);
     // item.mesh.position.x = item.pBody.position.x;

@@ -206,8 +206,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           camera.rotation.copy(camRotation);
           // console.log(camera.rotation);
           // camera.up.set(0, 1, 0);
-        }
+        } 
       } else {
+        // state.playerMesh.position.set(29.769230678613624, 3.786877672092211, 10.47371273939536);
         camera.position.set(initialPos[0], initialPos[1], initialPos[2]);
         camera.up.set(0, 1, 0);
         camera.lookAt(cameraMesh.position);
@@ -322,8 +323,7 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
               (check) => check.object === c.userData.name
             )
             : undefined;
-          c.visible = found ? false : true;
-          
+          c.visible = found && c.userData.name !== '7_L_Object' ? false : true;
           if (!found) {
             cloned.name = c.userData.name;
             geoms.push(cloned);
@@ -357,6 +357,18 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         // }
       }
     });
+
+    let tableCoverGeometry = new BoxGeometry(3.4, 2, 1);
+    let tableCover = new Mesh(tableCoverGeometry, new MeshBasicMaterial({color: 0x00ff00}));
+    tableCover.position.set(38.334056074594814, 1.3713684053557624, -9.542654586242868);
+    scene.add(tableCover);
+
+    // let tableGeom = tableCover.geometry.clone();
+    // tableGeom.applyMatrix4(tableCover.matrixWorld);
+    // let buffer = BufferGeometryUtils.mergeVertices(tableGeom);
+    // console.log(buffer);
+    // geoms.push(buffer);
+
     stateValtio.geometries = geoms;
     // create the merged geometry
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
@@ -393,24 +405,32 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
   useEffect(() => {
     // if (!isModal) return;
-    if (!checkpoint) return;
+    if (!checkpoint) { 
+      // when checkpoint is null, reset the rocket
+      scene1.nodes["7_L_Object"].visible = true;
+      scene1.nodes["7_L_Button"].position.y = 0;
+      return;
+    }
     environment = scene1.scene;
     // console.log(checkpoint);
     let currentStair = stateValtio.stairs.find(
       (stair) => stair.name === checkpoint.stair
     );
-    if (!currentStair) return;
+    console.log("Stair is: ", currentStair);
+    // if (!currentStair) return;
     environment.children.map((c) => {
-      if (c.userData.name === currentStair.name) {
-        c.visible = true;
+      if (currentStair) {
+        if (c.userData.name === currentStair.name) {
+          c.visible = true;
+        }
       }
       if (c.userData.name === checkpoint.object) {
         if (checkpoint.item_name === 'Spaceship') {
           // console.log("Spaceship.")
           
           stateValtio.action = 'Anim_Idle';
-          setLaunchRocket(true);
           setIsplaying(false);
+          setLaunchRocket(true);
           setTimeout(() => {
             // state.camera.zoom = 6;
             // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
@@ -434,11 +454,14 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
         }
       }
     });
-    currentStair && stateValtio.collection.push(checkpoint.item_name);
-    currentStair && stateValtio.geometries.push(currentStair);
-    stateValtio.geometries = currentStair
-      ? stateValtio.geometries.filter((geom) => geom.name !== checkpoint.object)
-      : stateValtio.geometries;
+    if (currentStair) {
+      currentStair && stateValtio.collection.push(checkpoint.item_name);
+      currentStair && stateValtio.geometries.push(currentStair);
+      stateValtio.geometries = currentStair
+        ? stateValtio.geometries.filter((geom) => geom.name !== checkpoint.object)
+        : stateValtio.geometries;
+    }
+
     const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
       stateValtio.geometries,
       false
