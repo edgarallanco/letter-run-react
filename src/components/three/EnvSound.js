@@ -5,11 +5,11 @@ function EnvSound({isSound, isInLetter}) {
   const envSound = useRef();
 
   useEffect(() => {
-    /* if (isInLetter) {
-      envSound.current.howler.fade(1.0, 0.0, 3000);
+    if (isInLetter) {
+      envSound.current.howler.fade(1.0, 0.4, 3000);
     } else {
-      envSound.current.howler.fade(0.0, 1.0, 2000);
-    } */
+      envSound.current.howler.fade(0.4, 1.0, 2000);
+    } 
     //envSound.current.seek(0.04702083333333333);
     //envSound.current.howler.fade(0.0, 1.0, 2000);
   }, [isInLetter]);

@@ -57,7 +57,7 @@ export const lettersCoordinates = [
       [47.81017012507292, 0.8409412387171286],
       [31.263652764258627, 0.8350332582407988],
     ],
-    track: 'https://fargamot.s3.amazonaws.com/resources/room.mp3',
+    track: 'https://fargamot.s3.amazonaws.com/resources/club.mp3',
     nudge_text: 'Stuck? Drop the needle.',
     cta_text: 'I hear it!',
   },
