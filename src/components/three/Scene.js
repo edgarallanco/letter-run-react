@@ -22,7 +22,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   const [stairs, setStairs] = useState([]);
   const [launchRocket, setLaunchRocket] = useState(false);
   const [zoomCamera, setZoomCamera] = useState(false);
-  // const [moveToStart, setMoveToStart] = useState(false);
   const [movement, setMovement] = useState();
   const [camereaMovment, setCameraMovement] = useState();
   const [playerBody, setPlayerBody] = useState();
@@ -55,8 +54,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       animations.push(ani);
   });
 
-  // console.log(scene1);
-
   const { actions } = useAnimations(animations, scene1.scene);
 
   const zoomAnim = useSpring({
@@ -69,20 +66,9 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     zoomProp: !zoomCamera ? 1 : 4.5,
   });
 
- /*  useEffect(() => {
-    if (hideTutorial) {
-      // console.log(scene);
-      setTimeout(() => {
-        scene1.nodes["Tutorial"].material.opacity = 0;
-      }, 5000)
-    } 
-  }, [hideTutorial]) */
-
   useEffect(() => {
-    // console.log(scene1);
 
     let cm = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
-    // cm.quaternion.set(0, Math.PI / 2, 0);
     cm.position.set(initialPos[0], 3.79, initialPos[2]);
     cm.visible = false;
     cm.quaternion.setFromEuler(new Euler(Math.PI / 2, 0, 0))
@@ -106,23 +92,16 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
   useEffect(() => {
     if (!state.playerMesh)
       return;
-      state.playerMesh.material.opacity = 0;
-    //console.log(scene1.animations);
-    // setInterval(() => {
     scene1.animations.forEach((a) => {
       if (a.name !== 'Anim_Rocket')
         actions[a.name].play();
     });
 
-    // console.log(state.camera.position);
     let position = initialPos;
     let route = new Vector3(position[0], position[1], position[2]);
     let m = new LinearMovement(cameraMesh.position, route, 0.001);
     state.camera.zoom = 1;
     setMovement(m);
-
-    // console.log(state.playerMesh);
-    // state.playerMesh.material.opacity = 0.2;
 
     dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
     //setPlayerOpacity(state.playerMesh, 1, true);
@@ -170,54 +149,26 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
 
     worldStep(state?.playerMesh);
 
-    // playerBody.position.y = 3.5;
     setPlayerBody(playerBody);
-    // state.playerPhysics.position.copy(state.playerMesh.position);
-    // state.playerPhysics.quaternion.copy(state.playerMesh.quaternion);
-    // state.playerPhysics.velocity.set(2, 0, 2);
-    // dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: state.playerPhysics});
-    // // console.log(state.playerPhysics.velocity.x);
-
-    // let direction = new CANNON.Vec3();
-    // let endPosition = new CANNON.Vec3(state.playerMesh.position.x, state.playerMesh.position.y, state.playerMesh.position.z);
-    // endPosition.vsub(playerBody.position, direction);
-    // let totalLenght = direction.length();
-    // direction.normalize();
-    // let speed = totalLenght / 0.5;
-    // direction.scale(speed, playerBody.velocity);
-    // playerBody.position.vadd(endPosition, playerBody.position);
-
-
-    // camera.position.y = 175;
     state.playerMesh.visible = playerVis; 
     if ((playerVis === true) && (state.playerMesh.material.opacity < 1)){
       console.log(state.playerMesh.material.opacity + " = player opacity")
       state.playerMesh.material.opacity += .02;
     } 
-   // console.log(state.playerMesh.position.y + " is the player position")
-    //scene1.nodes["Tutorial"].visible = false;
 
     if (!isPlaying) {
-      // console.log(camera.position);
       if (moveToStart) {
         if (!introDone) {
           camera.position.copy(camPosition);
-          // camera.lookAt(cameraMesh.position);
           camera.rotation.copy(camRotation);
-          // console.log(camera.rotation);
-          // camera.up.set(0, 1, 0);
         } 
       } else {
-        // state.playerMesh.position.set(29.769230678613624, 3.786877672092211, 10.47371273939536);
         camera.position.set(initialPos[0], initialPos[1], initialPos[2]);
         camera.up.set(0, 1, 0);
         camera.lookAt(cameraMesh.position);
         let rotation = new Euler().copy(camera.rotation);
         setCamRotation(rotation);
       }
-      //   // console.log(camera);
-      //   dispatch({ type: Actions.UPDATE_CAMERA, payload: camera });
-      //   dispatch({ type: Actions.UPDATE_CONTROLS, payload: state.controls });
     } else {
       window.addEventListener( "mousedown", event => {  
         if (orbitChange === false){
@@ -231,8 +182,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           console.log( controls.object.position );  
         }
       }) 
-      /* if (scene1.nodes["Tutorial"].material.opacity < 1 && !hideTutorial)
-        scene1.nodes["Tutorial"].material.opacity += 0.05; */
     }
 
 
@@ -274,20 +223,10 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     environment.scale.set(1.5, 1.5, 1.5);
     // environment.matrix.makeScale(1.5, 1.5, 1.5)
     environment.updateMatrixWorld(true);
-    /* scene1.nodes["Tutorial"].material.transparent = true;
-    scene1.nodes["Tutorial"].material.opacity = 0.01;
-    scene1.nodes['1_E_Object'].material.metalness = 0; */
-    // scene1.nodes['1_E_Object'].visible = false;
-    // console.log(scene1);
-    // scene1.nodes['Letters'].children.forEach((mesh) => {
-    //   mesh.material.metalness = 1;
-    // });
 
     environment.traverse((c) => {
       // console.log(c);
       if (c.geometry) {
-        // console.log(c.name);
-        // console.log(poolItemNames[c.name]);
         if (poolItemNames.indexOf(c.name) >= 0) {
           // console.log("Skip Pool item");
           return;
@@ -339,22 +278,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
           console.log("x =" + c.position.x + ", y = " + c.position.y + ", z =" + c.position.z + " is the position");
           console.log(cloned)
         }
-
-        // if (c.name.includes('Plane012')) {
-        //   const groundBody = new CANNON.Body();
-        //   let groundShape = CannonUtils.CreateTrimesh(c.geometry);
-        //   groundBody.addShape(groundShape);
-        //   world.addBody(groundBody);
-
-        //   let groundFrame = new WireframeGeometry(c.geometry);
-        //   let groundMesh = new Mesh(groundFrame, new MeshBasicMaterial({ color: 0x00ff00 }));
-        //   groundMesh.position.copy(c.position);
-        //   scene.add(groundMesh);
-        // }
-
-        // if(c.name === '7_L_Button') {
-        //   c.position.y = -0.05;
-        // }
       }
     });
 
@@ -362,12 +285,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     let tableCover = new Mesh(tableCoverGeometry, new MeshBasicMaterial({color: 0x00ff00}));
     tableCover.position.set(38.334056074594814, 1.3713684053557624, -9.542654586242868);
     scene.add(tableCover);
-
-    // let tableGeom = tableCover.geometry.clone();
-    // tableGeom.applyMatrix4(tableCover.matrixWorld);
-    // let buffer = BufferGeometryUtils.mergeVertices(tableGeom);
-    // console.log(buffer);
-    // geoms.push(buffer);
 
     stateValtio.geometries = geoms;
     // create the merged geometry
@@ -382,13 +299,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
     const collider = new THREE.Mesh(mergedGeometry);
     collider.material.opacity = 0;
     collider.material.transparent = true;
-    //collider.material.visible = true;
-    //collider.position.y = 0.49;
-    // visualizer = new MeshBVHVisualizer(collider, 10);
-    // let groundFrame = new WireframeGeometry(mergedGeometry);
-    // let groundMesh = new Mesh(groundFrame, new MeshBasicMaterial({ color: 0x00ff00 }));
-    // // groundMesh.position.copy(groundBody.position);
-    // scene.add(groundMesh);
     dispatch({ type: Actions.UPDATE_COLLIDER, payload: collider });
 
     environment.traverse((c) => {
@@ -426,14 +336,10 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
       }
       if (c.userData.name === checkpoint.object) {
         if (checkpoint.item_name === 'Spaceship') {
-          // console.log("Spaceship.")
-          
           stateValtio.action = 'Anim_Idle';
           setIsplaying(false);
           setLaunchRocket(true);
           setTimeout(() => {
-            // state.camera.zoom = 6;
-            // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
             setTimeout(() => {
               actions["Anim_Rocket"].play();
               setTimeout(() => {
@@ -441,9 +347,6 @@ const Scene = ({ checkpoint, isModal, setZoom, hideTutorial, moveToStart, setMod
                 setModal(true);
                 // setLaunchRocket(false);
                 setZoomCamera(false);
-                // setIsplaying(true);
-                // state.camera.zoom = 4.5;
-                // dispatch({ type: Actions.UPDATE_CAMERA, payload: state.camera });
                 actions["Anim_Rocket"].stop();
                 UpdateItems('rocket', true);
               }, 2000)
