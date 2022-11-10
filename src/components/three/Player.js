@@ -62,7 +62,6 @@ const Player = ({
     velocity.set(0, 0, 0);
     setVelocity(velocity);
 
-    // camera.position.add(meshRef.current.position);
     scene.add(meshRef.current);
     state.controls.update();
     dispatch({ type: Actions.UPDATE_PLAYER_MESH, payload: meshRef.current });
@@ -70,14 +69,6 @@ const Player = ({
 
     camera.position.sub(state.controls.target);
     state.controls.target.copy(meshRef.current.position);
-
-    // let wireframe = new WireframeGeometry(nodes.Plane022.geometry);
-
-    // let mesh = new Mesh(wireframe, new MeshBasicMaterial({ color: 0xff0000 }));
-    // mesh.position.copy(meshRef.current.position);
-    // setPlayerFrame(mesh);
-
-    // scene.add(mesh);
   }, [state.controls]);
 
   // add the hit points
@@ -126,27 +117,6 @@ const Player = ({
       setPlayer(meshRef.current);
     }
 
-    // playerFrame.position.copy(meshRef.current.position);
-
-    // stateValtio.checkpoints.find((checkpoint) => {
-    //   if (
-    //     equal(state.playerPosition, {
-    //       x: checkpoint.position[0],
-    //       y: checkpoint.position[1],
-    //       z: checkpoint.position[2],
-    //     }) &&
-    //     !checkpoint.collected
-    //   ) {
-    //     setCheckpoint(checkpoint);
-    //     checkpoint.collected = true;
-    //     checkpoint.last = true;
-    //     if (checkpoint.item_name !== "Spaceship") {
-    //       stateValtio.action = "Anim_Idle";
-    //       setIsModal(true);
-    //     }
-    //   }
-    // });
-
     checkpointsMesh.forEach((hitPoint, index) => {
       let box = new Box3();
       box.setFromObject(hitPoint);
@@ -188,11 +158,6 @@ const Player = ({
           setVelocity(velocity);
           // stateValtio.action = 'Anim_Jump_Air';
         }, 60);
-        // setTimeout(() => {
-        //   if (stateValtio.action == 'Anim_Jump') stateValtio.action = 'Anim_Idle';
-        //   //   // velocity.y = 2;
-        //   //   setVelocity(velocity);
-        // }, 370);
         setTimeout(() => {
           setJump(false);
         }, 460);
@@ -204,32 +169,20 @@ const Player = ({
     if (!isPlaying) {
       stateValtio.action = 'Anim_Idle';
       actions['Anim_Idle'].play(); // stop any action of the character
-      // return;
     } else {
-      // state.camera.fov = window.screen.width >= 1920 ? 75: 50;
-      // if (!state.move) {
-      //   stateValtio.action = 'Anim_Idle';
-      //   actions['Anim_Idle'].play(); // stop any action of the character
-      //   return;
-      // }
 
       if (!state.controls && !state.collider) return;
       let player = meshRef.current;
       let angle = state.controls.getAzimuthalAngle();
-      // console.log(player.position);
-      // state.playerPhysics.velocity.set(0, 0, 0);
 
       if(hasReset && !resetDone) {
         resetCamera();
       }
-
-      // if (!isModal) {
       if (fwdPressed) {
         stateValtio.action = 'Anim_Walk';
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, -1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // state.playerPhysics.velocity.set(0, 0, -2);
       }
 
       if (bkdPressed) {
@@ -237,7 +190,6 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(0, 0, 1).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // state.playerPhysics.velocity.set(0, 0, 2);
       }
 
       if (lftPressed) {
@@ -245,7 +197,6 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // state.playerPhysics.velocity.set(-2, 0, 0);
       }
 
       if (rgtPressed) {
@@ -253,7 +204,6 @@ const Player = ({
         speed <= 7 && setSpeed(speed + 0.2);
         vector.set(1, 0, 0).applyAxisAngle(upVector, angle);
         player.position.addScaledVector(vector, speed * delta);
-        // state.playerPhysics.velocity.set(2, 0, 0);
       }
 
       dispatch({ type: Actions.UPDATE_PLAYER_PHYSICS, payload: state.playerPhysics });
@@ -279,7 +229,6 @@ const Player = ({
         setSpeed(1);
         stateValtio.action = 'Anim_Idle';
       } 
-      // }
     }
 
     if (!player)
@@ -418,10 +367,6 @@ const Player = ({
         })
       }
     });
-    // resetZoomVar = false;
-    // setTimeout(function () {
-    //   console.log("After: " + camera.position.x + " = x, " + camera.position.y + " = y, " + camera.position.z + " = z," + camera.zoom + " = zoom, " + camera.rotation.x + " = x rotation, " + camera.rotation.y + " = y rotation, " + camera.rotation.z + " = z rotation.")
-    // }, 1000);
 
     setResetDone(true);
   }
